@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="utf-8">
+  <title>Sign Up - CodeJava</title>
+<!--  <link rel="stylesheet" type="text/css" href="/webjars/bootstrap/css/bootstrap.min.css" />-->
+<!--  <script type="text/javascript" src="/webjars/jquery/jquery.min.js"></script>-->
+<!--  <script type="text/javascript" src="/webjars/bootstrap/js/bootstrap.min.js"></script>-->
+<!--  <link th:href="@{/public/style.css}" rel="stylesheet" />-->
+</head>
+<body>
+    <div id="container">
+
+        <div th:if="${param.success}">
+          <div class="alert alert-info">You've successfully registered
+              to our awesome app!</div>
+        </div>
+
+        <h2>Register</h2>
+
+        <form th:action="@{/registration}" th:object="${user}" method="post" >
+            <label for="username">Username</label>
+            <input type="text" id="username" th:field="*{username}" class="form-control" required />
+
+            <label for="password">Password</label>
+            <input type="password" id="password" th:field="*{password}" class="form-control" required minlength="6"/>
+
+        <div class="form-group">
+          <button type="submit" class="btn btn-success">Register</button>
+          <span>Already registered? <a href="/" th:href="@{/login}">Login here</a></span>
+        </div></form>
+  </div>
+
+<!--    <script type="text/javascript"-->
+<!--            th:src="@{/webjars/jquery/3.2.1/jquery.min.js/}"></script>-->
+<!--    <script type="text/javascript"-->
+<!--            th:src="@{/webjars/bootstrap/3.3.7/js/bootstrap.min.js}"></script>-->
+</body>
+</html>

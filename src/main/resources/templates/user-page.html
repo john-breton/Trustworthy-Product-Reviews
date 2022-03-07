@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>User Page</title>
+</head>
+<body>
+<nav class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container">
+        <div id="navbar" class="collapse navbar-collapse">
+
+                <div sec:authorize="isAuthenticated()"><a th:href="@{/logout}">Logout</a></div>
+
+        </div>
+    </div>
+</nav>
+
+<br>
+<br>
+<div class="container">
+    <h2>My Reviews</h2>
+
+    <p>
+        Welcome <span sec:authentication="principal.getUsername()"></span>
+
+
+    </p>
+
+</div>
+
+</body>
+</html>
