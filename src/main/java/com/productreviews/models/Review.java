@@ -1,5 +1,8 @@
 package com.productreviews.models;
 
+
+import javax.persistence.*;
+
 /**
  * Review represents a minimal entity that has an author
  * username for identification purposes, a score to
@@ -9,20 +12,25 @@ package com.productreviews.models;
  * a review can be associated with a single Product, but a Product
  * can have multiple reviews associated with it.
  */
+@Entity
 public class Review {
+
     /**
      * A unique ID for the Review object for persistence purposes.
      */
+    @Id
+    @GeneratedValue(strategy= GenerationType.AUTO)
     private long id;
 
     /**
      * A username that can be used to key the author of a review.
      */
-    private String authorUsername; // We could include the actual user object here, but the username should be enough
+    private String author; // We could include the actual user object here, but the username should be enough
 
     /**
      * The product a particular review is associated with. A single product can have multiple reviews.
      */
+    @OneToOne(targetEntity = Product.class)
     private Product associatedProduct;
 
     /**
@@ -43,12 +51,12 @@ public class Review {
         this.id = id;
     }
 
-    public String getAuthorUsername() {
-        return authorUsername;
+    public String getAuthor() {
+        return author;
     }
 
-    public void setAuthorUsername(String authorUsername) {
-        this.authorUsername = authorUsername;
+    public void setAuthor(String authorUsername) {
+        this.author = authorUsername;
     }
 
     public Product getAssociatedProduct() {
@@ -71,7 +79,18 @@ public class Review {
         return content;
     }
 
-    public void setContent() {
+    public void setContent(String content) {
         this.content = content;
+    }
+
+    @Override
+    public String toString() {
+        return "Review{" +
+                "id=" + id +
+                ", author='" + author + '\'' +
+                ", associatedProduct=" + associatedProduct +
+                ", score=" + score +
+                ", content='" + content + '\'' +
+                '}';
     }
 }

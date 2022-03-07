@@ -1,5 +1,6 @@
 package com.productreviews.models;
 
+import javax.persistence.*;
 import java.util.List;
 
 /**
@@ -9,10 +10,13 @@ import java.util.List;
  * followed by a given user, the more trustworthy their
  * review will be.
  */
+@Entity
 public class User {
     /**
      * A unique ID for the User object for persistence purposes.
      */
+    @Id
+    @GeneratedValue(strategy= GenerationType.AUTO)
     private long id;
 
     /**
@@ -23,6 +27,7 @@ public class User {
     /**
      * A list contained the users a particular user is following.
      */
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, targetEntity=User.class)
     private List<User> followingList;
 
     public long getId() {
@@ -49,5 +54,14 @@ public class User {
 
     public List<User> getFollowingList() {
         return followingList;
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", username='" + username + '\'' +
+                ", followingList=" + followingList +
+                '}';
     }
 }

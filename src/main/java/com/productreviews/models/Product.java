@@ -1,14 +1,23 @@
 package com.productreviews.models;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+
 /**
  * Product represents a minimal entity that has a name,
  * textual description, and an image reference. The image
  * itself is not persisted, but the href link is maintained.
  */
+@Entity
 public class Product {
+
     /**
      * A unique ID for the Product object for persistence purposes.
      */
+    @Id
+    @GeneratedValue(strategy= GenerationType.AUTO)
     private long id;
 
     /**
@@ -57,5 +66,15 @@ public class Product {
 
     public void setHrefImage(String hrefImage) {
         this.hrefImage = hrefImage;
+    }
+
+    @Override
+    public String toString() {
+        return "Product{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                ", hrefImage='" + hrefImage + '\'' +
+                '}';
     }
 }
