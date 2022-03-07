@@ -1,27 +1,39 @@
-<!DOCTYPE HTML>
-<html xmlns:th="https://www.thymeleaf.org" lang="HTML">
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Amazon Registration</title>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  <meta charset="utf-8">
+  <title>Sign Up</title>
+<!--  <link rel="stylesheet" type="text/css" href="/webjars/bootstrap/css/bootstrap.min.css" />-->
+<!--  <script type="text/javascript" src="/webjars/jquery/jquery.min.js"></script>-->
+<!--  <script type="text/javascript" src="/webjars/bootstrap/js/bootstrap.min.js"></script>-->
+<!--  <link th:href="@{/public/style.css}" rel="stylesheet" />-->
 </head>
 <body>
-<h1>Register Your Account!!! :)</h1>
-<a th:href="'/cancelRegistration'" th:text="'Back'"></a>
-<form action="#" th:action="@{/login}" method="post">
-    <p><text>Required fields are denoted with a (*)</text></p>
-    <p><label>
-        <input type="text" placeholder="First Name" />
-    </label></p>
-    <p><label>
-        <input type="text" placeholder="Last Name" />
-    </label></p>
-    <p><label>
-        <input type="email" placeholder="Username" />
-    </label>*</p>
-    <p><label>
-        <input type="password" placeholder="Password" />
-    </label>*</p>
-    <p><input type="submit" value="Register" /></p>
-</form>
+    <div id="container">
+
+        <div th:if="${param.success}">
+          <div class="alert alert-info">You've successfully registered
+              to our awesome app!</div>
+        </div>
+
+        <h2>Register</h2>
+
+        <form th:action="@{/registration}" th:object="${user}" method="post" >
+            <label for="username">Username</label>
+            <input type="text" id="username" th:field="*{username}" class="form-control" required />
+
+            <label for="password">Password</label>
+            <input type="password" id="password" th:field="*{password}" class="form-control" required minlength="6"/>
+
+        <div class="form-group">
+          <button type="submit" class="btn btn-success">Register</button>
+          <span>Already registered? <a href="/" th:href="@{/login}">Login here</a></span>
+        </div></form>
+  </div>
+
+<!--    <script type="text/javascript"-->
+<!--            th:src="@{/webjars/jquery/3.2.1/jquery.min.js/}"></script>-->
+<!--    <script type="text/javascript"-->
+<!--            th:src="@{/webjars/bootstrap/3.3.7/js/bootstrap.min.js}"></script>-->
 </body>
 </html>
