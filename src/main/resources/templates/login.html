@@ -1,0 +1,20 @@
+<!DOCTYPE HTML>
+<html xmlns:th="https://www.thymeleaf.org" lang="HTML">
+<head>
+    <title>Amazon Login</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+<body>
+<h1>Login to Your Account!!! :)</h1>
+<a th:href="'/registration'" th:text="'Register'"></a>
+<form action="#" th:action="@{/login}" method="post">
+    <p><label>
+        <input type="email" placeholder="Username" />
+    </label>*</p>
+    <p><label>
+        <input type="password" placeholder="Password" />
+    </label>*</p>
+    <p><input type="submit" value="Login" /></p>
+</form>
+</body>
+</html>

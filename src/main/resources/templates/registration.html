@@ -1,0 +1,27 @@
+<!DOCTYPE HTML>
+<html xmlns:th="https://www.thymeleaf.org" lang="HTML">
+<head>
+    <title>Amazon Registration</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+<body>
+<h1>Register Your Account!!! :)</h1>
+<a th:href="'/cancelRegistration'" th:text="'Back'"></a>
+<form action="#" th:action="@{/login}" method="post">
+    <p><text>Required fields are denoted with a (*)</text></p>
+    <p><label>
+        <input type="text" placeholder="First Name" />
+    </label></p>
+    <p><label>
+        <input type="text" placeholder="Last Name" />
+    </label></p>
+    <p><label>
+        <input type="email" placeholder="Username" />
+    </label>*</p>
+    <p><label>
+        <input type="password" placeholder="Password" />
+    </label>*</p>
+    <p><input type="submit" value="Register" /></p>
+</form>
+</body>
+</html>
