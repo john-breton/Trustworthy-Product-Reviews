@@ -12,9 +12,9 @@ Users review Products. These products could be identified by a link to the websi
 
 ## Milestone Objectives
 ### Milestone 1
- - [ ] Allow for the creation of user accounts
- - [ ] Manage persistence of user accounts
- - [ ] Allow for registered users to login to their accounts
+ - [X] Allow for the creation of user accounts
+ - [X] Manage persistence of user accounts
+ - [X] Allow for registered users to login to their accounts
  - [ ] Allow for users that are logged in to review products
  - [ ] Allow for users to quickly see which products they have previously reviewed
  - [ ] Allow for users to view all reviews for a product via a product page
