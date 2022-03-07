@@ -1,15 +1,11 @@
 package com.productreviews.Models;
 
-import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.*;
 
 @Entity
-public class mockProduct {
+public class Product {
 
     //id of the product
     @Id
@@ -23,13 +19,13 @@ public class mockProduct {
 
     //reviews of the product
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "product")
-    private List<mockReview> reviews;
+    private List<Review> reviews;
 
     /**
      * create a new product
      */
-    public mockProduct(){
-        reviews = new ArrayList<mockReview>();
+    public Product(){
+        reviews = new ArrayList<Review>();
     }
 
     /**
@@ -37,17 +33,17 @@ public class mockProduct {
      * @param name
      * @param image
      */
-    public mockProduct(String name, String image){
+    public Product(String name, String image){
         this.name=name;
         this.image=image;
-        reviews = new ArrayList<mockReview>();
+        reviews = new ArrayList<Review>();
     }
 
-    public mockProduct(String name, String image, Long id){
+    public Product(String name, String image, Long id){
         this.name=name;
         this.id=id;
         this.image=image;
-        reviews = new ArrayList<mockReview>();
+        reviews = new ArrayList<Review>();
     }
 
     /**
@@ -62,7 +58,7 @@ public class mockProduct {
      * getter for the reviews of the product
      * @return reviews of the product
      */
-    public List<mockReview> getReviews(){
+    public List<Review> getReviews(){
         return reviews;
     }
 
@@ -70,7 +66,7 @@ public class mockProduct {
      * add a product review
      * @param review review for the product
      */
-    public void addReview(mockReview review){
+    public void addReview(Review review){
         reviews.add(review);
     }
 
@@ -94,7 +90,7 @@ public class mockProduct {
         this.name=name;
     }
 
-    public void setReviews(ArrayList<mockReview> reviews)
+    public void setReviews(ArrayList<Review> reviews)
     {
         this.reviews=reviews;
     }

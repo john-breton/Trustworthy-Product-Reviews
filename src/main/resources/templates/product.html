@@ -33,7 +33,7 @@
     <!-- Add a product review -->
     <div class="row">
         <div class="col-md-6">
-            <form action="#" th:action="@{/review/__${product.id}__}" th:object="${newReview}" method="get">
+            <form action="#" th:action="@{/__${user_id}__/review/__${product.id}__}" th:object="${newReview}" method="get">
                 Rating: <select id="rating" class="col-sm"  th:field="*{rating}">
                 <option value="1">1</option>
                 <option value="2">2</option>

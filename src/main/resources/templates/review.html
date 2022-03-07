@@ -13,7 +13,7 @@
 <h1>Review Submitted !</h1>
 <p th:text="'rating: ' + ${review.rating}" />
 <p th:text="'comment: ' + ${review.comment}" />
-<form action="#" th:action="@{/product/__${product_id}__}"  method="get">
+<form action="#" th:action="@{/__${user_id}__/product/__${product.id}__}"  method="get">
     <button type="submit" id="submit">Back</button>
 </form>
 

@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-public class mockUser {
+public class User {
 
     //id of the user
     @Id
@@ -16,32 +16,32 @@ public class mockUser {
 
     //reviews of the user
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
-    private List<mockReview> reviews;
+    private List<Review> reviews;
 
     /**
      * create a user
      */
-    public mockUser(){
-        reviews = new ArrayList<mockReview>();
+    public User(){
+        reviews = new ArrayList<Review>();
     }
 
     /**
      * create a user with a name
      * @param name
      */
-    public mockUser(String name){
+    public User(String name){
         this.name=name;
-        reviews = new ArrayList<mockReview>();
+        reviews = new ArrayList<Review>();
     }
 
     /**
      * create a user with a name
      * @param name
      */
-    public mockUser(String name, Long id){
+    public User(String name, Long id){
         this.name=name;
         this.id=id;
-        reviews = new ArrayList<mockReview>();
+        reviews = new ArrayList<Review>();
     }
     /**
      * set the name of the user
@@ -51,7 +51,7 @@ public class mockUser {
         this.name=name;
     }
 
-    public void setReviews(ArrayList<mockReview> reviews){
+    public void setReviews(ArrayList<Review> reviews){
         this.reviews=reviews;
     }
 
@@ -59,7 +59,7 @@ public class mockUser {
      * add a new user review
      * @param review that a user made
      */
-    public void addReview(mockReview review){
+    public void addReview(Review review){
         reviews.add(review);
     }
 
@@ -67,7 +67,7 @@ public class mockUser {
      * get the user reviews
      * @return reviews of the user
      */
-    public List<mockReview> getReviews(){
+    public List<Review> getReviews(){
         return reviews;
     }
 

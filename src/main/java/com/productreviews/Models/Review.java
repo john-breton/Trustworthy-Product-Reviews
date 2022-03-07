@@ -3,7 +3,7 @@ package com.productreviews.Models;
 import javax.persistence.*;
 
 @Entity
-public class mockReview {
+public class Review {
 
     //if of the review
     @Id
@@ -12,7 +12,7 @@ public class mockReview {
     //user that wrote the review
     @ManyToOne
     @JoinColumn(name="user_id")
-    private mockUser user;
+    private User user;
 
     //review rating
     private int rating;
@@ -23,12 +23,12 @@ public class mockReview {
     //product of the review
     @ManyToOne
     @JoinColumn(name="product_id")
-    private mockProduct product;
+    private Product product;
 
     /**
      * create a review
      */
-    public mockReview(){
+    public Review(){
     }
 
     /**
@@ -38,14 +38,14 @@ public class mockReview {
      * @param rating of the review
      * @param comment of the review
      */
-    public mockReview(mockUser user, mockProduct product, int rating, String comment){
+    public Review(User user, Product product, int rating, String comment){
         this.user=user;
         this.product=product;
         this.rating=rating;
         this.comment=comment;
     }
 
-    public mockReview(Long id){
+    public Review(Long id){
         this.id=id;
     }
 
@@ -53,7 +53,7 @@ public class mockReview {
      * set the user of the review
      * @param user that wrote the review
      */
-    public void setUser(mockUser user){
+    public void setUser(User user){
         this.user=user;
     }
 
@@ -61,7 +61,7 @@ public class mockReview {
      * set the product of the review
      * @param product that the review is for
      */
-    public void setProduct(mockProduct product){
+    public void setProduct(Product product){
         this.product=product;
     }
 
@@ -82,7 +82,7 @@ public class mockReview {
         this.comment=comment;
     }
 
-    public mockUser getUser(){
+    public User getUser(){
         return user;
     }
 
@@ -110,7 +110,7 @@ public class mockReview {
         return comment;
     }
 
-    public mockProduct getProduct(){
+    public Product getProduct(){
         return product;
     }
 
