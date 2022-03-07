@@ -22,7 +22,13 @@ public class User {
     /**
      * A unique username used to represent the user's identity.
      */
+    @Column(unique = true)
     private String username;
+
+    /**
+     * A password associated with this user's account.
+     */
+    private String password;
 
     /**
      * A list contained the users a particular user is following.
