@@ -1,9 +1,6 @@
 package com.productreviews.models;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 /**
  * Product represents a minimal entity that has a name,
@@ -23,6 +20,7 @@ public class Product {
     /**
      * The name of the product. This can likely support HTML encodings.
      */
+    @Column(unique = true)
     private String name;
 
     /**
