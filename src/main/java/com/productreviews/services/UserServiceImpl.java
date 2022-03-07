@@ -1,22 +1,20 @@
-package com.productreviews.Services;
+package com.productreviews.services;
 
-import com.productreviews.Models.User;
-import com.productreviews.Models.UserRegistrationDto;
-import com.productreviews.Repositories.UserRepository;
+import com.productreviews.models.User;
+import com.productreviews.models.UserRegistrationDto;
+import com.productreviews.repositories.UserRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-//import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Iterator;
+import java.util.Collections;
 
 
 @Service
@@ -26,7 +24,7 @@ public class UserServiceImpl implements UserService {
     private UserRepository userRepository;
 
 //    @Autowired
-    private BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+    private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
     public User findByUsername(String username) {
         return userRepository.findByUsername(username);
@@ -51,7 +49,7 @@ public class UserServiceImpl implements UserService {
     }
 
     private Collection<? extends GrantedAuthority> getAuthorities(String role) {
-        return Arrays.asList(new SimpleGrantedAuthority(role));
+        return Collections.singletonList(new SimpleGrantedAuthority(role));
     }
 
 }

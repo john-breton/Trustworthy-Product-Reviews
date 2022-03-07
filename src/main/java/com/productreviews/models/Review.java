@@ -19,7 +19,7 @@ public class Review {
      * A unique ID for the Review object for persistence purposes.
      */
     @Id
-    @GeneratedValue(strategy= GenerationType.AUTO)
+    @GeneratedValue(strategy= GenerationType.IDENTITY)
     private long id;
 
     /**

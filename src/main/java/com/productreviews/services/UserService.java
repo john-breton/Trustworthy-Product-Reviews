@@ -1,7 +1,7 @@
-package com.productreviews.Services;
+package com.productreviews.services;
 
-import com.productreviews.Models.User;
-import com.productreviews.Models.UserRegistrationDto;
+import com.productreviews.models.User;
+import com.productreviews.models.UserRegistrationDto;
 import org.springframework.security.core.userdetails.UserDetailsService;
 
 public interface UserService extends UserDetailsService {

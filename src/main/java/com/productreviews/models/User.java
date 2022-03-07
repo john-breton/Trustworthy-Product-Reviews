@@ -16,25 +16,34 @@ public class User {
      * A unique ID for the User object for persistence purposes.
      */
     @Id
-    @GeneratedValue(strategy= GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
     /**
      * A unique username used to represent the user's identity.
      */
-    @Column(unique = true)
+    @Column(unique = true, nullable = false, length = 20)
     private String username;
 
     /**
      * A password associated with this user's account.
      */
+    @Column(nullable = false, length = 64)
     private String password;
 
     /**
      * A list contained the users a particular user is following.
      */
-    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, targetEntity=User.class)
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, targetEntity = User.class)
     private List<User> followingList;
+
+    public User() {
+    }
+
+    public User(String username, String password) {
+        this.username = username;
+        this.password = password;
+    }
 
     public long getId() {
         return id;
@@ -50,6 +59,14 @@ public class User {
 
     public void setUsername(String username) {
         this.username = username;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public void addFollowing(User following) {

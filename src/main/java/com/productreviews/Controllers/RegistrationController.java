@@ -1,10 +1,10 @@
-package com.productreviews.Controllers;
+package com.productreviews.controllers;
 
 import javax.validation.Valid;
 
-import com.productreviews.Services.UserService;
-import com.productreviews.Models.User;
-import com.productreviews.Models.UserRegistrationDto;
+import com.productreviews.services.UserService;
+import com.productreviews.models.User;
+import com.productreviews.models.UserRegistrationDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

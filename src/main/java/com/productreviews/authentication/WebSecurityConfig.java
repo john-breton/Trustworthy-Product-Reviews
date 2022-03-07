@@ -1,7 +1,7 @@
-package com.productreviews.Authentication;
+package com.productreviews.authentication;
 
 
-import com.productreviews.Services.UserService;
+import com.productreviews.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
