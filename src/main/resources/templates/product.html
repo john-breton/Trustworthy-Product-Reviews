@@ -21,7 +21,7 @@
     <!-- Display product Image -->
     <div class="row">
         <div class="col-md-12">
-            <img src="/Images/${product.image}" />
+            <img th:src="@{${'/images/'+ product.image}}">
         </div>
     </div>
     <!-- Display product average rating -->
