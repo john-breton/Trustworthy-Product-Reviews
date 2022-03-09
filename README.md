@@ -1,5 +1,5 @@
 # Trustworthy Product Reviews
-#### Group Members: Mariam Almalki, John Breton, Cameron Davies, Ryan Godfrey, Sarah Jaber
+#### Group Members: Mariam Almalki, John Breton, Cameron Davis, Ryan Godfrey, Sarah Jaber
 
 ##### Tools
 

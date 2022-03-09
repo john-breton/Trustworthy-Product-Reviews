@@ -3,7 +3,6 @@ package com.productreviews.services;
 import com.productreviews.models.User;
 import com.productreviews.models.UserRegistrationDto;
 import com.productreviews.repositories.UserRepository;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -12,7 +11,6 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 
@@ -23,7 +21,6 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private UserRepository userRepository;
 
-//    @Autowired
     private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
     public User findByUsername(String username) {
@@ -45,7 +42,7 @@ public class UserServiceImpl implements UserService {
         }
         return new org.springframework.security.core.userdetails.User(user.getUsername(),
                 user.getPassword(), getAuthorities("USER")
-            );
+        );
     }
 
     private Collection<? extends GrantedAuthority> getAuthorities(String role) {

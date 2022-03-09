@@ -5,6 +5,11 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 
+/**
+ * The ProductController is responsible for handling all entry-point
+ * related mappings. This currently includes the initial login page
+ * and redirection to the appropriate user page upon user authentication.
+ */
 @Controller
 @CrossOrigin(origins = "")
 public class MainController {

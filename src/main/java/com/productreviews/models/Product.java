@@ -13,27 +13,26 @@ import javax.persistence.*;
 public class Product {
 
     /**
-     * A unique ID for the Product object for persistence purposes.
+     * A unique ID for the Product object for persistence purposes
      */
     @Id
-    //@GeneratedValue(strategy= GenerationType.IDENTITY)
     private long id;
 
     /**
-     * The name of the product. This can likely support HTML encodings.
+     * The name of the product. This can likely support HTML encodings
      */
     @Column(unique = true)
     private String name;
 
     /**
-     * The textual description of a product. This can likely support HTML encodings.
+     * The textual description of a product. This can likely support HTML encodings
      */
     private String description; // This might not be strictly necessary to include in the app.
 
     /**
-     * An HTML reference to an image that is associated with this product.
+     * A reference to an image that is associated with this product
      */
-    private String hrefImage;
+    private String image;
 
     /**
      * A list of the reviews on the product
@@ -42,28 +41,36 @@ public class Product {
     private List<Review> reviews;
 
     /**
-     * create a new product
+     * Create a new empty product
      */
-    public Product(){
-        reviews = new ArrayList<Review>();
+    public Product() {
+        reviews = new ArrayList<>();
     }
 
     /**
-     * create a new product with a name and an image
-     * @param name
-     * @param image
+     * Create a new product with a name and an image
+     *
+     * @param name  The name of the product
+     * @param image The image that will be used for the product, placed in the /images/ directory
      */
-    public Product(String name, String image){
-        this.name=name;
-        this.hrefImage =image;
-        reviews = new ArrayList<Review>();
+    public Product(String name, String image) {
+        this.name = name;
+        this.image = image;
+        reviews = new ArrayList<>();
     }
 
-    public Product(String name, String image, Long id){
-        this.name=name;
-        this.id=id;
-        hrefImage =image;
-        reviews = new ArrayList<Review>();
+    /**
+     * Create an expanded new product with a name, image, and specific id
+     *
+     * @param name  The name of the product
+     * @param image The image that will be used for the product, placed in the /images/ directory
+     * @param id    The id number to be associated with this product.
+     */
+    public Product(String name, String image, Long id) {
+        this.name = name;
+        this.id = id;
+        this.image = image;
+        reviews = new ArrayList<>();
     }
 
     public long getId() {
@@ -90,48 +97,42 @@ public class Product {
         this.description = description;
     }
 
-    public String getHrefImage() {
-        return hrefImage;
+    public String getImage() {
+        return image;
     }
 
-    public void setHrefImage(String hrefImage) {
-        this.hrefImage = hrefImage;
+    public void setImage(String hrefImage) {
+        this.image = hrefImage;
     }
 
-    /**
-     * getter for the reviews of the product
-     * @return reviews of the product
-     */
-    public List<Review> getReviews(){
+    public List<Review> getReviews() {
         return reviews;
     }
 
-    public void setReviews(ArrayList<Review> reviews)
-    {
-        this.reviews=reviews;
+    public void setReviews(ArrayList<Review> reviews) {
+        this.reviews = reviews;
     }
 
     /**
-     * add a product review
-     * @param review review for the product
+     * Add a review to the list of reviews associated with this product
+     *
+     * @param review The review for the product
      */
-    public void addReview(Review review){
+    public void addReview(Review review) {
         reviews.add(review);
     }
 
     /**
      * Computes the average rating of the product
-     * @return average rating of the product
+     *
+     * @return The average rating of the product, as a double
      */
     public String getAverageRating() {
         if (reviews.size() == 0) {
             return "0";
         } else {
-            float sum = 0;
-            for (int i = 0; i < reviews.size(); i++) {
-                sum += reviews.get(i).getScore();
-            }
-            return String.format("%.2f",sum/reviews.size());
+            double sum = reviews.stream().mapToDouble(Review::getScore).sum();
+            return String.format("%.2f", sum / reviews.size());
         }
     }
 
@@ -141,9 +142,9 @@ public class Product {
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", description='" + description + '\'' +
-                ", hrefImage='" + hrefImage + '\'' +
+                ", hrefImage='" + image + '\'' +
+                ", reviews=" + reviews +
                 '}';
     }
-
 
 }
