@@ -1,5 +1,7 @@
 package com.productreviews.models;
 
+import java.util.ArrayList;
+import java.util.List;
 import javax.persistence.*;
 
 /**
@@ -14,7 +16,7 @@ public class Product {
      * A unique ID for the Product object for persistence purposes.
      */
     @Id
-    @GeneratedValue(strategy= GenerationType.IDENTITY)
+    //@GeneratedValue(strategy= GenerationType.IDENTITY)
     private long id;
 
     /**
@@ -33,6 +35,36 @@ public class Product {
      */
     private String hrefImage;
 
+    /**
+     * A list of the reviews on the product
+     */
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "associatedProduct")
+    private List<Review> reviews;
+
+    /**
+     * create a new product
+     */
+    public Product(){
+        reviews = new ArrayList<Review>();
+    }
+
+    /**
+     * create a new product with a name and an image
+     * @param name
+     * @param image
+     */
+    public Product(String name, String image){
+        this.name=name;
+        this.hrefImage =image;
+        reviews = new ArrayList<Review>();
+    }
+
+    public Product(String name, String image, Long id){
+        this.name=name;
+        this.id=id;
+        hrefImage =image;
+        reviews = new ArrayList<Review>();
+    }
 
     public long getId() {
         return id;
@@ -66,6 +98,43 @@ public class Product {
         this.hrefImage = hrefImage;
     }
 
+    /**
+     * getter for the reviews of the product
+     * @return reviews of the product
+     */
+    public List<Review> getReviews(){
+        return reviews;
+    }
+
+    public void setReviews(ArrayList<Review> reviews)
+    {
+        this.reviews=reviews;
+    }
+
+    /**
+     * add a product review
+     * @param review review for the product
+     */
+    public void addReview(Review review){
+        reviews.add(review);
+    }
+
+    /**
+     * Computes the average rating of the product
+     * @return average rating of the product
+     */
+    public String getAverageRating() {
+        if (reviews.size() == 0) {
+            return "0";
+        } else {
+            float sum = 0;
+            for (int i = 0; i < reviews.size(); i++) {
+                sum += reviews.get(i).getScore();
+            }
+            return String.format("%.2f",sum/reviews.size());
+        }
+    }
+
     @Override
     public String toString() {
         return "Product{" +
@@ -75,4 +144,6 @@ public class Product {
                 ", hrefImage='" + hrefImage + '\'' +
                 '}';
     }
+
+
 }

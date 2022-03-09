@@ -1,6 +1,7 @@
 package com.productreviews.models;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -12,6 +13,7 @@ import java.util.List;
  */
 @Entity
 public class User {
+
     /**
      * A unique ID for the User object for persistence purposes.
      */
@@ -37,12 +39,34 @@ public class User {
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, targetEntity = User.class)
     private List<User> followingList;
 
+    //reviews of the user
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
+    private List<Review> reviews;
+
     public User() {
     }
 
     public User(String username, String password) {
         this.username = username;
         this.password = password;
+    }
+
+    /**
+     * REMOVE LATER
+     * @param name
+     */
+    public User(String name){
+        this.username =name;
+
+    }
+
+    /**
+     * REMOVE LATER
+     * @param name
+     */
+    public User(String name, Long id){
+        this.username =name;
+        this.id=id;
     }
 
     public long getId() {
@@ -75,8 +99,48 @@ public class User {
         followingList.add(following);
     }
 
+    public void setFollowingList(List<User> followingList){
+        this.followingList=followingList;
+    }
+
     public List<User> getFollowingList() {
         return followingList;
+    }
+
+
+    public void setReviews(ArrayList<Review> reviews){
+        this.reviews=reviews;
+    }
+
+    /**
+     * add a new user review
+     * @param review that a user made
+     */
+    public void addReview(Review review){
+        reviews.add(review);
+    }
+
+    /**
+     * get the user reviews
+     * @return reviews of the user
+     */
+    public List<Review> getReviews(){
+        return reviews;
+    }
+
+    /**
+     * check if the user is following a specified user
+     * @param following
+     * @return
+     */
+    public boolean isFollowing(User following){
+        for(int i=0; i<followingList.size(); i++){
+            if(followingList.get(i).getUsername().equals(following.getUsername())){
+                return true;
+            }
+        }
+
+        return false;
     }
 
     @Override
@@ -87,4 +151,5 @@ public class User {
                 ", followingList=" + followingList +
                 '}';
     }
+
 }

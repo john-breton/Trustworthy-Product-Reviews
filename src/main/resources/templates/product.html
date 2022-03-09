@@ -1,0 +1,87 @@
+<!DOCTYPE HTML>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Product Page</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@300;700;900&display=swap" rel="stylesheet">
+<meta charset="UTF-8">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+    <script src="spa.js"></script>
+    <title>Product</title>
+</head>
+<body>
+<div class="container">
+    <!-- Display product name -->
+    <div class="row">
+        <div class="col-md-12">
+            <h1 th:text="${product.name}"></h1>
+        </div>
+    </div>
+    <!-- Display product Image -->
+    <div class="row">
+        <div class="col-md-12">
+            <img th:src="@{${'/images/'+ product.hrefImage}}">
+        </div>
+    </div>
+    <!-- Display product average rating -->
+    <div class="row">
+        <div class="col-md-12">
+            <h2 th:text="'Rating: ' +${product.getAverageRating()}"> </h2>
+        </div>
+    </div>
+    <!-- Display product description-->
+    <div class="row">
+        <div class="col-md-12">
+            <h3 th:text="'Description: ' +${product.description}"> </h3>
+        </div>
+    </div>
+    <!-- Add a product review -->
+    <div class="row">
+        <div class="col-md-6">
+            <form action="#" th:action="@{/review/__${product.id}__}" th:object="${newReview}" method="get">
+                Rating: <select id="score" class="col-sm"  th:field="*{score}">
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+            </select>
+                <br>
+                Comment: <input type="text"  th:field="*{content}" id="content"> <br>
+
+                <button type="submit" id="submit">Submit Review</button>
+            </form>
+        </div>
+    </div>
+    <!-- Display all product reviews -->
+    <div class="row">
+        <div class="col-md-6">
+            <table class="table">
+                <thead>
+                <tr>
+                    <th> User </th>
+                    <th> Rating </th>
+                    <th> Comment </th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:if="${reviews!=null and reviews.empty}">
+                    <td colspan="2"> No Reviews </td>
+                </tr>
+                <tr th:each="review : ${reviews}">
+                    <form action="#" class="form-horizontal" th:action="@{/follow/__${product.id}__/__${review.author}__}" method="get" >
+                        <td><span th:text="${review.author}">  </span></td>
+                        <td><span th:text="${review.score}">  </span></td>
+                        <td><span th:text="${review.content}">  </span></td>
+                        <!-- follow button that allows the user to follow another user and redirects to the user page -->
+                        <td th:if="${review.getUserID() != user.getId() and !(user.isFollowing(review.getUser())) }"><button type="submit" id="follow">Follow</button><td>
+                    </form>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+</body>
+</html>
