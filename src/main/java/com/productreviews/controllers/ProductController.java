@@ -1,7 +1,7 @@
-package com.productreviews.Controllers;
+package com.productreviews.controllers;
 
-import com.productreviews.Models.*;
-import com.productreviews.Repositories.*;
+import com.productreviews.models.*;
+import com.productreviews.repositories.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

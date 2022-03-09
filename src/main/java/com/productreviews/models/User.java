@@ -1,4 +1,4 @@
-package com.productreviews.Models;
+package com.productreviews.models;
 
 import javax.persistence.*;
 import java.util.ArrayList;

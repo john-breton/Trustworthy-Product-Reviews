@@ -1,6 +1,6 @@
-package com.productreviews.Repositories;
+package com.productreviews.repositories;
 
-import com.productreviews.Models.User;
+import com.productreviews.models.User;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 
