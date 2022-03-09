@@ -2,28 +2,52 @@ package com.productreviews.models;
 
 import javax.persistence.*;
 
+/**
+ * Review represents a minimal entity that has an author
+ * username for identification purposes, a score to
+ * show the rating associated with the review, and
+ * the actual review text. A review can be associated with
+ * a single user, but a user can make multiple reviews. Likewise,
+ * a review can be associated with a single Product, but a Product
+ * can have multiple reviews associated with it.
+ */
 @Entity
 public class Review {
 
-    //if of the review
+    /**
+     * A unique ID for the Review object for persistence purposes.
+     */
     @Id
-    private Long id;
+    @GeneratedValue(strategy= GenerationType.IDENTITY)
+    private long id;
 
-    //user that wrote the review
+    /**
+     * user that wrote the review
+     */
     @ManyToOne
     @JoinColumn(name="user_id")
     private User user;
 
-    //review rating
-    private int rating;
+    /**
+     * A username that can be used to key the author of a review.
+     */
+    private String author; // We could include the actual user object here, but the username should be enough
 
-    //review comment
-    private String comment;
+    /**
+     * The score associated with a review, between 0.0 and 5.0
+     */
+    private int score;
 
-    //product of the review
-    @ManyToOne
-    @JoinColumn(name="product_id")
-    private Product product;
+    /**
+     * The textual content of a review. This can likely support HTML encodings.
+     */
+    private String content;
+
+    /**
+     * The product a particular review is associated with. A single product can have multiple reviews.
+     */
+    @ManyToOne(targetEntity = Product.class)
+    private Product associatedProduct;
 
     /**
      * create a review
@@ -40,13 +64,53 @@ public class Review {
      */
     public Review(User user, Product product, int rating, String comment){
         this.user=user;
-        this.product=product;
-        this.rating=rating;
-        this.comment=comment;
+        associatedProduct=product;
+        score =rating;
+        content =comment;
     }
 
     public Review(Long id){
         this.id=id;
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public String getAuthor() {
+        return author;
+    }
+
+    public void setAuthor(String authorUsername) {
+        this.author = authorUsername;
+    }
+
+    public Product getAssociatedProduct() {
+        return associatedProduct;
+    }
+
+    public void setAssociatedProduct(Product associatedProduct) {
+        this.associatedProduct = associatedProduct;
+    }
+
+    public int getScore() {
+        return score;
+    }
+
+    public void setScore(int score) {
+        this.score = score;
+    }
+
+    public String getContent() {
+        return content;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
     }
 
     /**
@@ -57,72 +121,24 @@ public class Review {
         this.user=user;
     }
 
-    /**
-     * set the product of the review
-     * @param product that the review is for
-     */
-    public void setProduct(Product product){
-        this.product=product;
-    }
-
-
-    /**
-     * set the review rating
-     * @param rating of the review
-     */
-    public void setRating(int rating){
-        this.rating=rating;
-    }
-
-    /**
-     * set the comment of the review
-     * @param comment of the review
-     */
-    public void setComment(String comment){
-        this.comment=comment;
-    }
 
     public User getUser(){
         return user;
     }
 
-    /**
-     * get the name of the user
-     * @return the name of the user that wrote the review
-     */
-    public String getUserName(){
-        return user.getName();
-    }
-
-    /**
-     * get the rating of the review
-     * @return rating of the review
-     */
-    public int getRating(){
-        return rating;
-    }
-
-    /**
-     * get the comment of the review
-     * @return comment of the review
-     */
-    public String getComment(){
-        return comment;
-    }
-
-    public Product getProduct(){
-        return product;
-    }
-
-    public Long getId(){
-        return id;
-    }
-
-    public void setId(Long id){
-        this.id=id;
-    }
-
     public Long getUserID(){
-        return user.getID();
+        return user.getId();
     }
+
+    @Override
+    public String toString() {
+        return "Review{" +
+                "id=" + id +
+                ", author='" + author + '\'' +
+                ", associatedProduct=" + associatedProduct +
+                ", score=" + score +
+                ", content='" + content + '\'' +
+                '}';
+    }
+
 }

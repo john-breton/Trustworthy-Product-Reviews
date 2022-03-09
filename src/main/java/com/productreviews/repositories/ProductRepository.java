@@ -4,9 +4,6 @@ import com.productreviews.models.Product;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 
-@RepositoryRestResource(collectionResourceRel = "products", path = "products")
+@RepositoryRestResource(collectionResourceRel = "product", path = "product")
 public interface ProductRepository extends CrudRepository<Product, Long> {
-
-    Product findById(long id);
-
 }

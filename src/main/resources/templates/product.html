@@ -21,7 +21,7 @@
     <!-- Display product Image -->
     <div class="row">
         <div class="col-md-12">
-            <img th:src="@{${'/images/'+ product.image}}">
+            <img th:src="@{${'/images/'+ product.hrefImage}}">
         </div>
     </div>
     <!-- Display product average rating -->
@@ -30,11 +30,17 @@
             <h2 th:text="'Rating: ' +${product.getAverageRating()}"> </h2>
         </div>
     </div>
+    <!-- Display product description-->
+    <div class="row">
+        <div class="col-md-12">
+            <h3 th:text="'Description: ' +${product.description}"> </h3>
+        </div>
+    </div>
     <!-- Add a product review -->
     <div class="row">
         <div class="col-md-6">
-            <form action="#" th:action="@{/__${user_id}__/review/__${product.id}__}" th:object="${newReview}" method="get">
-                Rating: <select id="rating" class="col-sm"  th:field="*{rating}">
+            <form action="#" th:action="@{/review/__${product.id}__}" th:object="${newReview}" method="get">
+                Rating: <select id="score" class="col-sm"  th:field="*{score}">
                 <option value="1">1</option>
                 <option value="2">2</option>
                 <option value="3">3</option>
@@ -42,7 +48,7 @@
                 <option value="5">5</option>
             </select>
                 <br>
-                Comment: <input type="text"  th:field="*{comment}" id="comment"> <br>
+                Comment: <input type="text"  th:field="*{content}" id="content"> <br>
 
                 <button type="submit" id="submit">Submit Review</button>
             </form>
@@ -64,12 +70,12 @@
                     <td colspan="2"> No Reviews </td>
                 </tr>
                 <tr th:each="review : ${reviews}">
-                    <form action="#" class="form-horizontal" th:action="@{/follow/__${review.getUserID()}__}" method="get" >
-                        <td><span th:text="${review.getUserName()}">  </span></td>
-                        <td><span th:text="${review.rating}">  </span></td>
-                        <td><span th:text="${review.comment}">  </span></td>
+                    <form action="#" class="form-horizontal" th:action="@{/follow/__${product.id}__/__${review.author}__}" method="get" >
+                        <td><span th:text="${review.author}">  </span></td>
+                        <td><span th:text="${review.score}">  </span></td>
+                        <td><span th:text="${review.content}">  </span></td>
                         <!-- follow button that allows the user to follow another user and redirects to the user page -->
-                        <td><button type="submit" id="follow">Follow</button><td>
+                        <td th:if="${review.getUserID() != user.getId() and !(user.isFollowing(review.getUser())) }"><button type="submit" id="follow">Follow</button><td>
                     </form>
                 </tr>
                 </tbody>

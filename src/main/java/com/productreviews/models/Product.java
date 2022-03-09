@@ -4,21 +4,41 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.*;
 
+/**
+ * Product represents a minimal entity that has a name,
+ * textual description, and an image reference. The image
+ * itself is not persisted, but the href link is maintained.
+ */
 @Entity
 public class Product {
 
-    //id of the product
+    /**
+     * A unique ID for the Product object for persistence purposes.
+     */
     @Id
-    private Long id;
+    //@GeneratedValue(strategy= GenerationType.IDENTITY)
+    private long id;
 
-    //name of the product
+    /**
+     * The name of the product. This can likely support HTML encodings.
+     */
+    @Column(unique = true)
     private String name;
 
-    //image of the product
-    private String image;
+    /**
+     * The textual description of a product. This can likely support HTML encodings.
+     */
+    private String description; // This might not be strictly necessary to include in the app.
 
-    //reviews of the product
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "product")
+    /**
+     * An HTML reference to an image that is associated with this product.
+     */
+    private String hrefImage;
+
+    /**
+     * A list of the reviews on the product
+     */
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "associatedProduct")
     private List<Review> reviews;
 
     /**
@@ -35,23 +55,47 @@ public class Product {
      */
     public Product(String name, String image){
         this.name=name;
-        this.image=image;
+        this.hrefImage =image;
         reviews = new ArrayList<Review>();
     }
 
     public Product(String name, String image, Long id){
         this.name=name;
         this.id=id;
-        this.image=image;
+        hrefImage =image;
         reviews = new ArrayList<Review>();
     }
 
-    /**
-     * getter for the name of the product
-     * @return name of the product
-     */
-    public String getName(){
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public String getName() {
         return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getHrefImage() {
+        return hrefImage;
+    }
+
+    public void setHrefImage(String hrefImage) {
+        this.hrefImage = hrefImage;
     }
 
     /**
@@ -62,6 +106,11 @@ public class Product {
         return reviews;
     }
 
+    public void setReviews(ArrayList<Review> reviews)
+    {
+        this.reviews=reviews;
+    }
+
     /**
      * add a product review
      * @param review review for the product
@@ -70,40 +119,31 @@ public class Product {
         reviews.add(review);
     }
 
-    public int getAverageRating(){
-        if(reviews.size() == 0){
-            return 0;
-        }else {
-            int sum=0;
-            for(int i=0; i<reviews.size();i++ ){
-                sum+=reviews.get(i).getRating();
+    /**
+     * Computes the average rating of the product
+     * @return average rating of the product
+     */
+    public String getAverageRating() {
+        if (reviews.size() == 0) {
+            return "0";
+        } else {
+            float sum = 0;
+            for (int i = 0; i < reviews.size(); i++) {
+                sum += reviews.get(i).getScore();
             }
-            return sum/reviews.size();
+            return String.format("%.2f",sum/reviews.size());
         }
     }
 
-    public Long getId(){
-        return id;
+    @Override
+    public String toString() {
+        return "Product{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                ", hrefImage='" + hrefImage + '\'' +
+                '}';
     }
 
-    public void setName(String name){
-        this.name=name;
-    }
 
-    public void setReviews(ArrayList<Review> reviews)
-    {
-        this.reviews=reviews;
-    }
-
-    public void setId(Long id){
-        this.id=id;
-    }
-
-    public void setImage(String image){
-        this.image=image;
-    }
-
-    public String getImage(){
-        return image;
-    }
 }
