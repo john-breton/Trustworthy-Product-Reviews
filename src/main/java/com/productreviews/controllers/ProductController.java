@@ -42,7 +42,7 @@ public class ProductController {
      */
     @GetMapping("/create/{productId}")
     public String createProduct(@PathVariable int productId, Authentication authentication, Model model) {
-        Product product = new Product("ProductName", "product1.jpg");
+        Product product = new Product("ProductName", "product1.jpg", (long) productId);
         productRepository.save(product);
         return "createProduct";
     }

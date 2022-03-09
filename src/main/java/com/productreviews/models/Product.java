@@ -18,7 +18,7 @@ public class Product {
      * A unique ID for the Product object for persistence purposes
      */
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+//    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private long id;
 
     /**
