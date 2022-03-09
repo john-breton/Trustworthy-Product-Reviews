@@ -90,21 +90,16 @@ public class ProductController {
         if (user == null || !authentication.isAuthenticated()) {
             log.error("User not found or not authenticated");
         }
-        // TODO Map this to an error page rather than crash the entire program :')
-        if (reviewRepository.findByUser(user).stream().anyMatch(review -> review.getAssociatedProduct().equals(productRepository.findById((long) productId).orElse(null)))) {
-            log.error("User has already created a review for this product.");
-        } else {
-            Review review = new Review();
-            review.setScore(score);
-            review.setContent(content);
-            review.setUser(user);
-            review.setAssociatedProduct(product);
-            reviewRepository.save(review);
-            Objects.requireNonNull(user).addReview(review);
-            Objects.requireNonNull(product).addReview(review);
-            model.addAttribute("product", product);
-            model.addAttribute("review", review);
-        }
+        Review review = new Review();
+        review.setScore(score);
+        review.setContent(content);
+        review.setUser(user);
+        review.setAssociatedProduct(product);
+        reviewRepository.save(review);
+        Objects.requireNonNull(user).addReview(review);
+        Objects.requireNonNull(product).addReview(review);
+        model.addAttribute("product", product);
+        model.addAttribute("review", review);
         return "review";
     }
 
