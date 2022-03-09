@@ -14,6 +14,12 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 
+/**
+ * The RegistrationController is responsible for handling all
+ * registration related mappings. This currently includes
+ * the creation of user accounts and handling the event where
+ * an account with a given username already exists in the system.
+ */
 @Controller
 @CrossOrigin
 @RequestMapping("/registration")
@@ -41,7 +47,7 @@ public class RegistrationController {
         User existing = userService.findByUsername(userDto.getUsername());
 
         if (existing != null) {
-            result.rejectValue("username", null, "There is already an account registered with that email");
+            result.rejectValue("username", null, "There is already an account registered with that username");
         }
 
         if (result.hasErrors()) {

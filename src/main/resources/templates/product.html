@@ -21,7 +21,7 @@
     <!-- Display product Image -->
     <div class="row">
         <div class="col-md-12">
-            <img th:src="@{${'/images/'+ product.hrefImage}}">
+            <img th:src="@{'/images/' + ${product.image}}" alt="An image of the product">
         </div>
     </div>
     <!-- Display product average rating -->
@@ -66,12 +66,12 @@
                 </tr>
                 </thead>
                 <tbody>
-                <tr th:if="${reviews!=null and reviews.empty}">
+                <tr th:if="${reviews!=null and reviews.isEmpty()}">
                     <td colspan="2"> No Reviews </td>
                 </tr>
                 <tr th:each="review : ${reviews}">
-                    <form action="#" class="form-horizontal" th:action="@{/follow/__${product.id}__/__${review.author}__}" method="get" >
-                        <td><span th:text="${review.author}">  </span></td>
+                    <form action="#" class="form-horizontal" th:action="@{/follow/__${product.id}__/__${review.user.username}__}" method="get" >
+                        <td><span th:text="${review.user.username}">  </span></td>
                         <td><span th:text="${review.score}">  </span></td>
                         <td><span th:text="${review.content}">  </span></td>
                         <!-- follow button that allows the user to follow another user and redirects to the user page -->

@@ -15,58 +15,72 @@ import java.util.List;
 public class User {
 
     /**
-     * A unique ID for the User object for persistence purposes.
+     * A unique ID for the User object for persistence purposes
      */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
     /**
-     * A unique username used to represent the user's identity.
+     * A unique username used to represent the user's identity
      */
     @Column(unique = true, nullable = false, length = 20)
     private String username;
 
     /**
-     * A password associated with this user's account.
+     * A password associated with this user's account
      */
     @Column(nullable = false, length = 64)
     private String password;
 
     /**
-     * A list contained the users a particular user is following.
+     * A list contained the users a particular user is following
      */
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, targetEntity = User.class)
     private List<User> followingList;
 
-    //reviews of the user
+    /**
+     * A list of reviews the user has created for products in the system
+     */
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
     private List<Review> reviews;
 
+    /**
+     * Create a new empty user
+     */
     public User() {
     }
 
+    /**
+     * Create a new user with their login credentials
+     *
+     * @param username The username for the user, which should be unique
+     * @param password The password for the user that will be authenticated on login
+     */
     public User(String username, String password) {
         this.username = username;
         this.password = password;
     }
 
     /**
-     * REMOVE LATER
-     * @param name
+     * Create a new base user with a username, but no password
+     *
+     * @param username The username for the user, which should be unique
      */
-    public User(String name){
-        this.username =name;
+    public User(String username) {
+        this.username = username;
 
     }
 
     /**
-     * REMOVE LATER
-     * @param name
+     * Create a new base user with a username and specific id, but no password
+     *
+     * @param username The username for the user, which should be unique
+     * @param id       The specific ID that will be assigned to the user
      */
-    public User(String name, Long id){
-        this.username =name;
-        this.id=id;
+    public User(String username, Long id) {
+        this.username = username;
+        this.id = id;
     }
 
     public long getId() {
@@ -93,14 +107,19 @@ public class User {
         this.password = password;
     }
 
+    /**
+     * Add a new follower to the list of users this user is following
+     *
+     * @param following The new user to be added to the following list, should they not already exist
+     */
     public void addFollowing(User following) {
         // We might want to consider a hash map to have Jaccard distance info
         // ready for lookup. Extra argument would be the distance.
         followingList.add(following);
     }
 
-    public void setFollowingList(List<User> followingList){
-        this.followingList=followingList;
+    public void setFollowingList(List<User> followingList) {
+        this.followingList = followingList;
     }
 
     public List<User> getFollowingList() {
@@ -108,39 +127,36 @@ public class User {
     }
 
 
-    public void setReviews(ArrayList<Review> reviews){
-        this.reviews=reviews;
+    public void setReviews(ArrayList<Review> reviews) {
+        this.reviews = reviews;
     }
 
     /**
-     * add a new user review
-     * @param review that a user made
+     * Add a new user review to the list of reviews this user has created
+     *
+     * @param review The review that a user made
      */
-    public void addReview(Review review){
+    public void addReview(Review review) {
         reviews.add(review);
     }
 
     /**
-     * get the user reviews
-     * @return reviews of the user
+     * Get the reviews a user has created
+     *
+     * @return A List of reviews the user has created
      */
-    public List<Review> getReviews(){
+    public List<Review> getReviews() {
         return reviews;
     }
 
     /**
-     * check if the user is following a specified user
-     * @param following
-     * @return
+     * Check if the user is following a specified user
+     *
+     * @param following The target user that we wish to determine if this user is following
+     * @return True if the user is following the target, false otherwise
      */
-    public boolean isFollowing(User following){
-        for(int i=0; i<followingList.size(); i++){
-            if(followingList.get(i).getUsername().equals(following.getUsername())){
-                return true;
-            }
-        }
-
-        return false;
+    public boolean isFollowing(User following) {
+        return followingList.stream().anyMatch(user -> user.equals(following));
     }
 
     @Override
@@ -148,7 +164,9 @@ public class User {
         return "User{" +
                 "id=" + id +
                 ", username='" + username + '\'' +
+                ", password='" + password + '\'' +
                 ", followingList=" + followingList +
+                ", reviews=" + reviews +
                 '}';
     }
 
