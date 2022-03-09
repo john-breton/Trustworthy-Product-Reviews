@@ -71,6 +71,26 @@ public class ProductController {
         return "product";
     }
 
+    /**
+     * View the user landing page. This page features a main list of all products in alphabetical order with their name, image and average reviews.
+     * It also features a sidebar with users that are similar to the user
+     *
+     * @param model The model which the changes will be rendered on
+     * @return The Landing Page
+     */
+    @GetMapping("/home")
+    public String viewLandingPage(Model model) {
+        //String currentUser = authentication.getName();
+        //User user = userRepository.findByUsername(currentUser);
+        //if (user == null || !authentication.isAuthenticated()) {
+          //  log.error("User not found or not authenticated");
+        //}
+        //model.addAttribute("user", user);
+        model.addAttribute("users", userRepository.findAll());
+        model.addAttribute("products", productRepository.findAll());
+        return "landingPage";
+    }
+
 
     /**
      * View the review page for a product after a review for a product is

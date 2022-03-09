@@ -1,0 +1,87 @@
+<!DOCTYPE HTML>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Landing Page</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Merryweather:wght@300;700;900&display=swap" rel="stylesheet">
+    <meta charset="UTF-8">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+    <script src="spa.js"></script>
+</head>
+<body>
+<nav class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container">
+        <div id="navbar" class="collapse navbar-collapse">
+        </div>
+    </div>
+</nav>
+
+<br>
+<br>
+
+<main>
+
+    <section>
+        <form method="get">
+            <h4>Filters/Search</h4>
+            <div>
+                <label>Sort By</label>
+                <select name = "Sort">
+                    <option>Select Sort</option>
+                </select>
+            </div>
+            <div>
+                <label>Search</label>
+                <input type="text" id="search"/>
+            </div>
+            <button type="submit">
+                <i></i> Filter/Search
+            </button>
+        </form>
+    </section>
+
+
+    <section>
+        <h3>Products</h3>
+        <table>
+            <thead>
+            <tr>
+                <th>Name</th>
+                <th>Average Rating</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:if="${products.empty}">
+                <td colspan="2"> No Products Available </td>
+            </tr>
+            <tr th:each="product : ${products}">
+                <td><span th:text="${product.name}"> Product </span></td>
+                <td><span th:text="${product.getAverageRating()}"> Average Rating </span></td>
+            </tr>
+            </tbody>
+        </table>
+    </section>
+
+    <section>
+        <h3>Users with Similar Tastes</h3>
+        <table>
+            <thead>
+            <tr>
+                <th>User</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:if="${users.empty}">
+                <td colspan="2"> No Other Users </td>
+            </tr>
+            <tr th:each="user : ${users}">
+                <td><span th:text="${user.name}"> User </span></td>
+            </tr>
+            </tbody>
+        </table>
+    </section>
+
+</main>
+</body>
+</html>
