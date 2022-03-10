@@ -163,6 +163,7 @@ public class ProductController {
         }
         User followedUser = userRepository.findByUsername(username);
         Objects.requireNonNull(user).addFollowing(followedUser);
+        userRepository.save(user);
         model.addAttribute("product", product);
         model.addAttribute("author", username);
         return "follow-page";
