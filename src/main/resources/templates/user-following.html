@@ -73,15 +73,15 @@
                 <tbody>
                 <tr th:each="follower : ${user.getFollowingList()}">
                     <td><p th:text="${follower.getUsername()}"></p></td>
-                    <td> <p th:text="${follower.getJaccardDistance(user)}"/> </td>
-                    <td> <button type="submit" th:onclick="${user.unFollow(follower)}">Follow</button> </td>
-                </tr>
-                </tbody>
-            </table>
-        </div>
-    </div>
+                   <!-- <td> <p th:text="${follower.getJaccardDistance(user)}"/> </td> -->
+                   <!-- <td> <button type="submit" th:onclick="${user.unFollow(follower)}">Follow</button> </td> -->
+                 </tr>
+                 </tbody>
+             </table>
+         </div>
+     </div>
 
-</div>
+ </div>
 
-</body>
-</html>
+ </body>
+ </html>

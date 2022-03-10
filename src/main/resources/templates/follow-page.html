@@ -1,0 +1,20 @@
+<!DOCTYPE HTML>
+<html xmlns:th="https://www.thymeleaf.org">
+<head>
+    <title>Review Page</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" />
+    <meta charset="UTF-8">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+    <script src="spa.js"></script>
+    <title>Review</title>
+</head>
+<body>
+<h1>Followed User !</h1>
+<p th:text="'user: ' + ${author}" />
+<form action="#" th:action="@{/product/__${product.id}__}"  method="get">
+    <button type="submit" id="submit">Back</button>
+</form>
+
+</body>
+</html>
