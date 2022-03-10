@@ -118,6 +118,14 @@ public class User {
         followingList.add(following);
     }
 
+    /**
+     * This method allows another user to unfollow this user
+     * @param follower the follower that wants to unfollow
+     */
+    public void unFollow(User follower){
+        this.followingList.remove(follower);
+    }
+
     public void setFollowingList(List<User> followingList) {
         this.followingList = followingList;
     }
@@ -157,6 +165,17 @@ public class User {
      */
     public boolean isFollowing(User following) {
         return followingList.stream().anyMatch(user -> user.equals(following));
+    }
+
+    /**
+     * A method to return the Jaccard distance between this and another user
+     * @param otherUser
+     * @return
+     */
+    public int getJaccardDistance(User otherUser){
+        List<User> followerFollowingList = otherUser.getFollowingList();
+        // TO DO: calculate jaccard
+        return 0;
     }
 
     @Override

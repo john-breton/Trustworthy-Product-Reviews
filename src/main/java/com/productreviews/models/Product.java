@@ -1,5 +1,7 @@
 package com.productreviews.models;
 
+import org.hibernate.annotations.GeneratorType;
+
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.*;
@@ -16,6 +18,7 @@ public class Product {
      * A unique ID for the Product object for persistence purposes
      */
     @Id
+//    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private long id;
 
     /**

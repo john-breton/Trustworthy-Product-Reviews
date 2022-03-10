@@ -11,12 +11,17 @@ import org.springframework.web.bind.annotation.GetMapping;
  * and redirection to the appropriate user page upon user authentication.
  */
 @Controller
-@CrossOrigin(origins = "")
+@CrossOrigin
 public class MainController {
 
+    /**
+     * This method returns the landing page for the site.
+     * ie. the page landed on after login.
+     * @return the landing page template
+     */
     @GetMapping("/")
     public String root() {
-        return "user-page";
+        return "redirect:/user/products";
     }
 
     /**
@@ -34,8 +39,4 @@ public class MainController {
         return "login";
     }
 
-    @GetMapping("/user")
-    public String userIndex() {
-        return "user/index";
-    }
 }
