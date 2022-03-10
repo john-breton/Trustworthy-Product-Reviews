@@ -1,20 +1,19 @@
-import static org.assertj.core.api.Assertions.*;
+package controllers;
+
 import static org.hamcrest.Matchers.containsString;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-import com.productreviews.TrustworthyProductReviewsApplication;
-import com.productreviews.controllers.RegistrationController;
 import org.junit.jupiter.api.Test;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.*;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.*;
+
+import com.productreviews.TrustworthyProductReviewsApplication;
+import com.productreviews.controllers.RegistrationController;
 
 @SpringBootTest(classes = {TrustworthyProductReviewsApplication.class})
 @AutoConfigureMockMvc(addFilters = false)
