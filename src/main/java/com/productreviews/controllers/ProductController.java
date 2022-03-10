@@ -90,14 +90,33 @@ public class ProductController {
         if (user == null || !authentication.isAuthenticated()) {
             log.error("User not found or not authenticated");
         }
-        Review review = new Review();
-        review.setScore(score);
-        review.setContent(content);
-        review.setUser(user);
-        review.setAssociatedProduct(product);
-        reviewRepository.save(review);
-        Objects.requireNonNull(user).addReview(review);
-        Objects.requireNonNull(product).addReview(review);
+        boolean reviewExists = false;
+        Long reviewID = new Long(0);
+        Review review;
+
+        //check if the user already reviewed this product, then override with the new review
+        for(int i=0; i<product.getReviews().size(); i++){
+            if(user.hasReview(product.getReviews().get(i).getId())){
+                reviewID = product.getReviews().get(i).getId();
+                reviewExists = true;
+            }
+        }
+        if(reviewExists){
+            review = reviewRepository.findById(reviewID).orElse(null);
+            review.setScore(score);
+            review.setContent(content);
+            reviewRepository.save(review);
+        }else {
+            review = new Review();
+            review.setScore(score);
+            review.setContent(content);
+            review.setUser(user);
+            review.setAssociatedProduct(product);
+            reviewRepository.save(review);
+            Objects.requireNonNull(user).addReview(review);
+            Objects.requireNonNull(product).addReview(review);
+        }
+
         model.addAttribute("product", product);
         model.addAttribute("review", review);
         return "review";
