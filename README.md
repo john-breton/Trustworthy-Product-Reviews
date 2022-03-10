@@ -20,3 +20,8 @@ Users review Products. These products could be identified by a link to the websi
  - [X] Allow for users to view all reviews for a product via a product page
 
 ## Current Database Diagram
+
+<p style="text-align:right">
+<img src="documentation\ERDiagram.png" alt="ER Diagram">
+</p>
+Date: March 10th, 2022
