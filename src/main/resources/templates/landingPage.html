@@ -2,40 +2,29 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>Landing Page</title>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" />
-    <link href="https://fonts.googleapis.com/css2?family=Merryweather:wght@300;700;900&display=swap" rel="stylesheet">
-    <meta charset="UTF-8">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
-    <script src="spa.js"></script>
+    <script>
+    $(function() {
+        $("#navigation").load("nav.html");
+    });
+    </script>
     <style>
-        table, th, td {
+table, th, td {
             border: 1px solid black;
             padding: 5px;
-        }
-        table {
+}
+table {
             border-spacing: 15px;
-        }
-    </style>
+}</style>
 </head>
 <body>
-<nav class="navbar navbar-inverse navbar-fixed-top">
-    <div class="container">
-        <div id="navbar" class="collapse navbar-collapse">
-        </div>
-    </div>
-</nav>
-
-<br>
-<br>
-<br>
-
+<div id="navigation" class="container">
+</div>
 <p>
     Welcome <span th:text="${mainUser.username}"></span>
 </p>
 
 <main>
-
     <section>
         <form method="get">
             <h4>Filters/Search</h4>
@@ -55,10 +44,9 @@
         </form>
     </section>
 
-
     <section>
         <h3>Products</h3>
-        <table>
+        <table class = "spaced-table">
             <thead>
             <tr>
                 <th>Name</th>
@@ -81,7 +69,7 @@
 
     <section>
         <h3>Users with Similar Tastes</h3>
-        <table>
+        <table class = "spaced-table">
             <thead>
             <tr>
                 <th>User</th>

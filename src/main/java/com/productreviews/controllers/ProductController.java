@@ -71,6 +71,7 @@ public class ProductController {
         return "product";
     }
 
+
     /**
      * View the user landing page. This page features a main list of all products in alphabetical order with their name, image and average reviews.
      * It also features a sidebar with users that are similar to the user

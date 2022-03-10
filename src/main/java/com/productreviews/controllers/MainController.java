@@ -19,6 +19,16 @@ public class MainController {
         return "user-page";
     }
 
+    /**
+     * A navigation bar for the entirety of the website
+     *
+     * @return The NavBar
+     */
+    @GetMapping("/nav.html")
+    public String navBar() {
+        return "nav";
+    }
+
     @GetMapping("/login")
     public String login(Model model) {
         return "login";
