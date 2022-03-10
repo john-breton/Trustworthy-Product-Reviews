@@ -157,6 +157,15 @@ public class User {
         return reviews;
     }
 
+    public boolean hasReview(Long id){
+        for(int i=0; i< reviews.size(); i++){
+            if(reviews.get(i).getId() == id){
+                return true;
+            }
+        }
+        return false;
+    }
+
     /**
      * Check if the user is following a specified user
      *
