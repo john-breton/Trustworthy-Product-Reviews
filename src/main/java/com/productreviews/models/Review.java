@@ -1,6 +1,5 @@
 package com.productreviews.models;
 
-
 import javax.persistence.*;
 
 /**
@@ -16,32 +15,59 @@ import javax.persistence.*;
 public class Review {
 
     /**
-     * A unique ID for the Review object for persistence purposes.
+     * A unique ID for the Review object for persistence purposes
      */
     @Id
-    @GeneratedValue(strategy= GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
     /**
-     * A username that can be used to key the author of a review.
+     * The user that wrote the review
      */
-    private String author; // We could include the actual user object here, but the username should be enough
-
-    /**
-     * The product a particular review is associated with. A single product can have multiple reviews.
-     */
-    @OneToOne(targetEntity = Product.class)
-    private Product associatedProduct;
+    @ManyToOne
+    @JoinColumn(name = "user_id") // TODO Investigate this datasource error
+    private User user;
 
     /**
      * The score associated with a review, between 0.0 and 5.0
      */
-    private float score;
+    private int score;
 
     /**
-     * The textual content of a review. This can likely support HTML encodings.
+     * The textual content of a review. This can likely support HTML encodings
      */
     private String content;
+
+    /**
+     * The product a particular review is associated with. A single product can have multiple reviews
+     */
+    @ManyToOne(targetEntity = Product.class)
+    private Product associatedProduct;
+
+    /**
+     * Create an empty review.
+     */
+    public Review() {
+    }
+
+    /**
+     * Create a review with the user, product, rating, and comment
+     *
+     * @param user    The user that wrote the review
+     * @param product The product that the review is for
+     * @param rating  The rating of the review
+     * @param comment The textual comment of the review
+     */
+    public Review(User user, Product product, int rating, String comment) {
+        this.user = user;
+        associatedProduct = product;
+        score = rating;
+        content = comment;
+    }
+
+    public Review(Long id) {
+        this.id = id;
+    }
 
     public long getId() {
         return id;
@@ -51,12 +77,12 @@ public class Review {
         this.id = id;
     }
 
-    public String getAuthor() {
-        return author;
+    public void setUser(User user) {
+        this.user = user;
     }
 
-    public void setAuthor(String authorUsername) {
-        this.author = authorUsername;
+    public User getUser() {
+        return user;
     }
 
     public Product getAssociatedProduct() {
@@ -67,11 +93,11 @@ public class Review {
         this.associatedProduct = associatedProduct;
     }
 
-    public float getScore() {
+    public int getScore() {
         return score;
     }
 
-    public void setScore(float score) {
+    public void setScore(int score) {
         this.score = score;
     }
 
@@ -83,14 +109,23 @@ public class Review {
         this.content = content;
     }
 
+    public Long getUserID() {
+        return user.getId();
+    }
+
+    public String getUsername() {
+        return user.getUsername();
+    }
+
     @Override
     public String toString() {
         return "Review{" +
                 "id=" + id +
-                ", author='" + author + '\'' +
-                ", associatedProduct=" + associatedProduct +
+                ", user=" + user +
                 ", score=" + score +
                 ", content='" + content + '\'' +
+                ", associatedProduct=" + associatedProduct +
                 '}';
     }
+
 }

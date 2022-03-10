@@ -1,5 +1,9 @@
 package com.productreviews.models;
 
+import org.hibernate.annotations.GeneratorType;
+
+import java.util.ArrayList;
+import java.util.List;
 import javax.persistence.*;
 
 /**
@@ -11,28 +15,66 @@ import javax.persistence.*;
 public class Product {
 
     /**
-     * A unique ID for the Product object for persistence purposes.
+     * A unique ID for the Product object for persistence purposes
      */
     @Id
-    @GeneratedValue(strategy= GenerationType.IDENTITY)
+//    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private long id;
 
     /**
-     * The name of the product. This can likely support HTML encodings.
+     * The name of the product. This can likely support HTML encodings
      */
     @Column(unique = true)
     private String name;
 
     /**
-     * The textual description of a product. This can likely support HTML encodings.
+     * The textual description of a product. This can likely support HTML encodings
      */
     private String description; // This might not be strictly necessary to include in the app.
 
     /**
-     * An HTML reference to an image that is associated with this product.
+     * A reference to an image that is associated with this product
      */
-    private String hrefImage;
+    private String image;
 
+    /**
+     * A list of the reviews on the product
+     */
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "associatedProduct")
+    private List<Review> reviews;
+
+    /**
+     * Create a new empty product
+     */
+    public Product() {
+        reviews = new ArrayList<>();
+    }
+
+    /**
+     * Create a new product with a name and an image
+     *
+     * @param name  The name of the product
+     * @param image The image that will be used for the product, placed in the /images/ directory
+     */
+    public Product(String name, String image) {
+        this.name = name;
+        this.image = image;
+        reviews = new ArrayList<>();
+    }
+
+    /**
+     * Create an expanded new product with a name, image, and specific id
+     *
+     * @param name  The name of the product
+     * @param image The image that will be used for the product, placed in the /images/ directory
+     * @param id    The id number to be associated with this product.
+     */
+    public Product(String name, String image, Long id) {
+        this.name = name;
+        this.id = id;
+        this.image = image;
+        reviews = new ArrayList<>();
+    }
 
     public long getId() {
         return id;
@@ -58,12 +100,43 @@ public class Product {
         this.description = description;
     }
 
-    public String getHrefImage() {
-        return hrefImage;
+    public String getImage() {
+        return image;
     }
 
-    public void setHrefImage(String hrefImage) {
-        this.hrefImage = hrefImage;
+    public void setImage(String hrefImage) {
+        this.image = hrefImage;
+    }
+
+    public List<Review> getReviews() {
+        return reviews;
+    }
+
+    public void setReviews(ArrayList<Review> reviews) {
+        this.reviews = reviews;
+    }
+
+    /**
+     * Add a review to the list of reviews associated with this product
+     *
+     * @param review The review for the product
+     */
+    public void addReview(Review review) {
+        reviews.add(review);
+    }
+
+    /**
+     * Computes the average rating of the product
+     *
+     * @return The average rating of the product, as a double
+     */
+    public String getAverageRating() {
+        if (reviews.size() == 0) {
+            return "0";
+        } else {
+            double sum = reviews.stream().mapToDouble(Review::getScore).sum();
+            return String.format("%.2f", sum / reviews.size());
+        }
     }
 
     @Override
@@ -72,7 +145,9 @@ public class Product {
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", description='" + description + '\'' +
-                ", hrefImage='" + hrefImage + '\'' +
+                ", hrefImage='" + image + '\'' +
+                ", reviews=" + reviews +
                 '}';
     }
+
 }

@@ -12,6 +12,13 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
+/**
+ * The WebSecurityConfig class is responsible for ensuring that
+ * only users that have been authorized by the system can view
+ * pages that are restricted to authorized users. This also
+ * prevents other users from accessing the user page that belongs
+ * to a different account.
+ */
 @Configuration
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
@@ -23,7 +30,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         http
                 .authorizeRequests()
                 .antMatchers(
-                        "/registration**",
+                        "/registration/**",
                         "/js/**",
                         "/css/**",
                         "/img/**",

@@ -1,0 +1,128 @@
+<!DOCTYPE HTML>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Product Page</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@300;700;900&display=swap" rel="stylesheet">
+
+<meta charset="UTF-8">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+    <script src="spa.js"></script>
+    <script type="text/javascript" src="/webjars/bootstrap/js/bootstrap.min.js"></script>
+
+    <title>Product</title>
+</head>
+<body>
+<div class="container">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">Trusty Reviews</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown"
+                    aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNavDropdown">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item active">
+                        <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Products</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Reviewers</a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            My Stuff
+                        </a>
+                        <div class="dropdown-menu dropdown-content" aria-labelledby="navbarDropdownMenuLink">
+                            <a class="dropdown-item" href="/user/products">My Products</a>
+                            <a class="dropdown-item" href="/user/people">My People</a>
+                        </div>
+                    </li>
+                </ul>
+                <ul class="navbar-nav">
+                    <li class="nav-item me-auto dropdown-menu-end">
+                        <a class="nav-link" style="color: cornflowerblue" th:href="@{/logout}">Logout</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+</div>
+<div class="container">
+    <!-- Display product name -->
+    <div class="row">
+        <div class="col-md-12">
+            <h1 th:text="${product.name}"></h1>
+        </div>
+    </div>
+    <!-- Display product Image -->
+    <div class="row">
+        <div class="col-md-12">
+            <img th:src="@{'/images/' + ${product.image}}" alt="An image of the product">
+        </div>
+    </div>
+    <!-- Display product average rating -->
+    <div class="row">
+        <div class="col-md-12">
+            <h2 th:text="'Rating: ' +${product.getAverageRating()}"> </h2>
+        </div>
+    </div>
+    <!-- Display product description-->
+    <div class="row">
+        <div class="col-md-12">
+            <h3 th:text="'Description: ' +${product.description}"> </h3>
+        </div>
+    </div>
+    <!-- Add a product review -->
+    <div class="row">
+        <div class="col-md-6">
+            <form action="#" th:action="@{/review/__${product.id}__}" th:object="${newReview}" method="get">
+                Rating: <select id="score" class="col-sm"  th:field="*{score}">
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+            </select>
+                <br>
+                Comment: <input type="text"  th:field="*{content}" id="content"> <br>
+
+                <button type="submit" id="submit">Submit Review</button>
+            </form>
+        </div>
+    </div>
+    <!-- Display all product reviews -->
+    <div class="row">
+        <div class="col-md-6">
+            <table class="table">
+                <thead>
+                <tr>
+                    <th> User </th>
+                    <th> Rating </th>
+                    <th> Comment </th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:if="${reviews!=null and reviews.isEmpty()}">
+                    <td colspan="2"> No Reviews </td>
+                </tr>
+                <tr th:each="review : ${reviews}">
+                    <form action="#" class="form-horizontal" th:action="@{/follow/__${product.id}__/__${review.user.username}__}" method="get" >
+                        <td><span th:text="${review.user.username}">  </span></td>
+                        <td><span th:text="${review.score}">  </span></td>
+                        <td><span th:text="${review.content}">  </span></td>
+                        <!-- follow button that allows the user to follow another user and redirects to the user page -->
+                        <td th:if="${review.getUserID() != user.getId() and !(user.isFollowing(review.getUser())) }"><button type="submit" id="follow">Follow</button><td>
+                    </form>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+</body>
+</html>

@@ -5,13 +5,23 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 
+/**
+ * The ProductController is responsible for handling all entry-point
+ * related mappings. This currently includes the initial login page
+ * and redirection to the appropriate user page upon user authentication.
+ */
 @Controller
-@CrossOrigin(origins = "")
+@CrossOrigin
 public class MainController {
 
+    /**
+     * This method returns the landing page for the site.
+     * ie. the page landed on after login.
+     * @return the landing page template
+     */
     @GetMapping("/")
     public String root() {
-        return "user-page";
+        return "redirect:/user/products";
     }
 
     @GetMapping("/login")
@@ -19,8 +29,4 @@ public class MainController {
         return "login";
     }
 
-    @GetMapping("/user")
-    public String userIndex() {
-        return "user/index";
-    }
 }
