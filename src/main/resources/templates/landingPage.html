@@ -1,0 +1,91 @@
+<!DOCTYPE HTML>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Landing Page</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+    <script>
+    $(function() {
+        $("#navigation").load("nav.html");
+    });
+    </script>
+    <style>
+table, th, td {
+            border: 1px solid black;
+            padding: 5px;
+}
+table {
+            border-spacing: 15px;
+}</style>
+</head>
+<body>
+<div id="navigation" class="container">
+</div>
+<p>
+    Welcome <span th:text="${mainUser.username}"></span>
+</p>
+
+<main>
+    <section>
+        <form method="get">
+            <h4>Filters/Search</h4>
+            <div>
+                <label>Sort By</label>
+                <select name = "Sort">
+                    <option>Select Sort</option>
+                </select>
+            </div>
+            <div>
+                <label>Search</label>
+                <input type="text" id="search"/>
+            </div>
+            <button type="submit">
+                <i></i> Filter/Search
+            </button>
+        </form>
+    </section>
+
+    <section>
+        <h3>Products</h3>
+        <table class = "spaced-table">
+            <thead>
+            <tr>
+                <th>Name</th>
+                <th>Average Rating</th>
+                <th>Image</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:if="${products.empty}">
+                <td colspan="3"> No Products Available </td>
+            </tr>
+            <tr th:each="product : ${products}">
+                <td><a th:href="@{/product/{id}(id=${product.id})}"><span th:text="${product.name}"> Product </span></a></td>
+                <td><span th:text="${product.getAverageRating()}"> Average Rating </span></td>
+                <td><a th:href="@{/product/{id}(id=${product.id})}"><img th:src="@{'/images/' + ${product.image}}" alt="An image of the product"></a></td>
+            </tr>
+            </tbody>
+        </table>
+    </section>
+
+    <section>
+        <h3>Users with Similar Tastes</h3>
+        <table class = "spaced-table">
+            <thead>
+            <tr>
+                <th>User</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:if="${users.empty} or ${users.size() == 1} ">
+                <td colspan="2"> No Other Users </td>
+            </tr>
+            <tr th:each="user : ${users}">
+                <td th:if="${user.id != mainUser.id}"><span th:text="${user.username}"> User </span></td>
+            </tr>
+            </tbody>
+        </table>
+    </section>
+
+</main>
+</body>
+</html>

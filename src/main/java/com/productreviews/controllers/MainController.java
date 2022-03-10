@@ -24,6 +24,16 @@ public class MainController {
         return "redirect:/user/products";
     }
 
+    /**
+     * A navigation bar for the entirety of the website
+     *
+     * @return The NavBar
+     */
+    @GetMapping("/nav.html")
+    public String navBar() {
+        return "nav";
+    }
+
     @GetMapping("/login")
     public String login(Model model) {
         return "login";
