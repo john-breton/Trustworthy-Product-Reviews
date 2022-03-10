@@ -27,6 +27,10 @@ public class RegistrationControllerTest {
     @Autowired
     private RegistrationController rc;
 
+    /**
+     * Test that a new user can be added to the application
+     * @throws Exception
+     */
     @Test
     public void addValidNewUser() throws Exception {
         String username = "TestUsername";
@@ -51,6 +55,10 @@ public class RegistrationControllerTest {
                .andExpect(status().isOk());
     }
 
+    /**
+     * Tests that a duplicate user cannot be added to the application and ensures the error is displayed correctly
+     * @throws Exception
+     */
     @Test
     public void addDuplicateUser() throws Exception {
         String username = "SecondUsername";
