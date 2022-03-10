@@ -79,13 +79,13 @@ public class ProductController {
      * @return The Landing Page
      */
     @GetMapping("/home")
-    public String viewLandingPage(Model model) {
-        //String currentUser = authentication.getName();
-        //User user = userRepository.findByUsername(currentUser);
-        //if (user == null || !authentication.isAuthenticated()) {
-          //  log.error("User not found or not authenticated");
-        //}
-        //model.addAttribute("user", user);
+    public String viewLandingPage(Authentication authentication, Model model) {
+        String currentUser = authentication.getName();
+        User user = userRepository.findByUsername(currentUser);
+        if (user == null || !authentication.isAuthenticated()) {
+          log.error("User not found or not authenticated");
+        }
+        model.addAttribute("mainUser", user);
         model.addAttribute("users", userRepository.findAll());
         model.addAttribute("products", productRepository.findAll());
         return "landingPage";

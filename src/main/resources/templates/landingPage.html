@@ -8,6 +8,15 @@
     <meta charset="UTF-8">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
     <script src="spa.js"></script>
+    <style>
+        table, th, td {
+            border: 1px solid black;
+            padding: 5px;
+        }
+        table {
+            border-spacing: 15px;
+        }
+    </style>
 </head>
 <body>
 <nav class="navbar navbar-inverse navbar-fixed-top">
@@ -19,6 +28,11 @@
 
 <br>
 <br>
+<br>
+
+<p>
+    Welcome <span th:text="${mainUser.username}"></span>
+</p>
 
 <main>
 
@@ -49,15 +63,17 @@
             <tr>
                 <th>Name</th>
                 <th>Average Rating</th>
+                <th>Image</th>
             </tr>
             </thead>
             <tbody>
             <tr th:if="${products.empty}">
-                <td colspan="2"> No Products Available </td>
+                <td colspan="3"> No Products Available </td>
             </tr>
             <tr th:each="product : ${products}">
-                <td><span th:text="${product.name}"> Product </span></td>
+                <td><a th:href="@{/product/{id}(id=${product.id})}"><span th:text="${product.name}"> Product </span></a></td>
                 <td><span th:text="${product.getAverageRating()}"> Average Rating </span></td>
+                <td><a th:href="@{/product/{id}(id=${product.id})}"><img th:src="@{'/images/' + ${product.image}}" alt="An image of the product"></a></td>
             </tr>
             </tbody>
         </table>
@@ -72,11 +88,11 @@
             </tr>
             </thead>
             <tbody>
-            <tr th:if="${users.empty}">
+            <tr th:if="${users.empty} or ${users.size() == 1} ">
                 <td colspan="2"> No Other Users </td>
             </tr>
             <tr th:each="user : ${users}">
-                <td><span th:text="${user.name}"> User </span></td>
+                <td th:if="${user.id != mainUser.id}"><span th:text="${user.username}"> User </span></td>
             </tr>
             </tbody>
         </table>
