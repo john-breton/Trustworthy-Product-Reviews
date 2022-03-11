@@ -15,8 +15,20 @@ Users review Products. These products could be identified by a link to the websi
  - [X] Allow for the creation of user accounts
  - [X] Manage persistence of user accounts
  - [X] Allow for registered users to login to their accounts
- - [ ] Allow for users that are logged in to review products
- - [ ] Allow for users to quickly see which products they have previously reviewed
- - [ ] Allow for users to view all reviews for a product via a product page
+ - [X] Allow for users that are logged in to review products
+ - [X] Allow for users to quickly see which products they have previously reviewed
+ - [X] Allow for users to view all reviews for a product via a product page
 
-## Current Database Diagram
+## Current ER Diagram
+
+<p style="text-align:right">
+<img src="documentation\ERDiagram.png" alt="ER Diagram">
+</p>
+Date: March 10th, 2022
+
+## Current UML Class Diagram of Models
+
+<p style="text-align:right">
+<img src="documentation\ClassDiagram.png" alt="Class Diagram">
+</p>
+Date: March 10th, 2022

@@ -49,6 +49,19 @@ public class User {
      * Create a new empty user
      */
     public User() {
+        followingList = new ArrayList<>();
+        reviews = new ArrayList<>();
+    }
+
+    /**
+     * Create a new base user with a username, but no password
+     *
+     * @param username The username for the user, which should be unique
+     */
+    public User(String username) {
+        this.username = username;
+        followingList = new ArrayList<>();
+        reviews = new ArrayList<>();
     }
 
     /**
@@ -60,16 +73,8 @@ public class User {
     public User(String username, String password) {
         this.username = username;
         this.password = password;
-    }
-
-    /**
-     * Create a new base user with a username, but no password
-     *
-     * @param username The username for the user, which should be unique
-     */
-    public User(String username) {
-        this.username = username;
-
+        followingList = new ArrayList<>();
+        reviews = new ArrayList<>();
     }
 
     /**
@@ -81,6 +86,8 @@ public class User {
     public User(String username, Long id) {
         this.username = username;
         this.id = id;
+        followingList = new ArrayList<>();
+        reviews = new ArrayList<>();
     }
 
     public long getId() {
@@ -107,6 +114,22 @@ public class User {
         this.password = password;
     }
 
+    public void setFollowingList(List<User> followingList) {
+        this.followingList = followingList;
+    }
+
+    public List<User> getFollowingList() {
+        return followingList;
+    }
+
+    public void setReviews(ArrayList<Review> reviews) {
+        this.reviews = reviews;
+    }
+
+    public List<Review> getReviews() {
+        return reviews;
+    }
+
     /**
      * Add a new follower to the list of users this user is following
      *
@@ -120,50 +143,11 @@ public class User {
 
     /**
      * This method allows another user to unfollow this user
+     *
      * @param follower the follower that wants to unfollow
      */
-    public void unFollow(User follower){
+    public void unFollow(User follower) {
         this.followingList.remove(follower);
-    }
-
-    public void setFollowingList(List<User> followingList) {
-        this.followingList = followingList;
-    }
-
-    public List<User> getFollowingList() {
-        return followingList;
-    }
-
-
-    public void setReviews(ArrayList<Review> reviews) {
-        this.reviews = reviews;
-    }
-
-    /**
-     * Add a new user review to the list of reviews this user has created
-     *
-     * @param review The review that a user made
-     */
-    public void addReview(Review review) {
-        reviews.add(review);
-    }
-
-    /**
-     * Get the reviews a user has created
-     *
-     * @return A List of reviews the user has created
-     */
-    public List<Review> getReviews() {
-        return reviews;
-    }
-
-    public boolean hasReview(Long id){
-        for(int i=0; i< reviews.size(); i++){
-            if(reviews.get(i).getId() == id){
-                return true;
-            }
-        }
-        return false;
     }
 
     /**
@@ -177,11 +161,31 @@ public class User {
     }
 
     /**
-     * A method to return the Jaccard distance between this and another user
-     * @param otherUser
-     * @return
+     * Add a new user review to the list of reviews this user has created
+     *
+     * @param review The review that a user made
      */
-    public int getJaccardDistance(User otherUser){
+    public void addReview(Review review) {
+        reviews.add(review);
+    }
+
+    /**
+     * Determine if this User has the target review within their list of reviews
+     *
+     * @param id The unique id of the target review
+     * @return True if the user has the target, false otherwise
+     */
+    public boolean hasReview(Long id) {
+        return reviews.stream().anyMatch(review -> review.getId() == id);
+    }
+
+    /**
+     * A method to return the Jaccard distance between this and another user
+     *
+     * @param otherUser The other user that we wish to calculate the Jaccard distance between
+     * @return The calculated Jaccard distance between the users, as an int
+     */
+    public int getJaccardDistance(User otherUser) {
         List<User> followerFollowingList = otherUser.getFollowingList();
         // TO DO: calculate jaccard
         return 0;
@@ -197,5 +201,4 @@ public class User {
                 ", reviews=" + reviews +
                 '}';
     }
-
 }

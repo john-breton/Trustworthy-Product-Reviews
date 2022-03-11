@@ -43,7 +43,7 @@ public class RegistrationController {
     @PostMapping
     public String registerUserAccount(@ModelAttribute("user") @Valid UserRegistrationDto userDto,
                                       BindingResult result) {
-        log.info("registering user, user = " + userDto.getUsername() + " " + userDto.getPassword());
+        log.info("registering user, username = " + userDto.getUsername() + ", password = " + userDto.getPassword());
         User existing = userService.findByUsername(userDto.getUsername());
 
         if (existing != null) {
