@@ -6,6 +6,7 @@ import com.productreviews.TrustworthyProductReviewsApplication;
 import com.productreviews.models.User;
 import com.productreviews.repositories.ProductRepository;
 import com.productreviews.repositories.UserRepository;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -60,6 +61,11 @@ public class ProductControllerTest {
                 .webAppContextSetup(context)
                 .apply(springSecurity())
                 .build();
+    }
+
+    @After
+    public void cleanup() {
+        userRepository.deleteAll();
     }
 
     /**
