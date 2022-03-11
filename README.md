@@ -20,6 +20,7 @@ Users review Products. These products could be identified by a link to the websi
  - [X] Allow for users to quickly see which products they have previously reviewed
  - [X] Allow for users to view all reviews for a product via a product page
  - [X] Allow for users to view all the users they followed
+ - [X] Allow for users that are logged in to view a landing page with all the available products and other users
 
 ## Current ER Diagram
 
