@@ -16,8 +16,10 @@ Users review Products. These products could be identified by a link to the websi
  - [X] Manage persistence of user accounts
  - [X] Allow for registered users to login to their accounts
  - [X] Allow for users that are logged in to review products
+ - [X] Allow for users that are logged in to follow other users
  - [X] Allow for users to quickly see which products they have previously reviewed
  - [X] Allow for users to view all reviews for a product via a product page
+ - [X] Allow for users to view all the users they followed
 
 ## Current ER Diagram
 
