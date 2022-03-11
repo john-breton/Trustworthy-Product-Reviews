@@ -1,6 +1,5 @@
 package models;
 
-import com.productreviews.models.Product;
 import com.productreviews.models.Review;
 import com.productreviews.models.User;
 import org.junit.jupiter.api.BeforeEach;
