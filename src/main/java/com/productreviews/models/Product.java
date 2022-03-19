@@ -1,5 +1,6 @@
 package com.productreviews.models;
 
+import com.productreviews.models.common.Category;
 import org.hibernate.annotations.GeneratorType;
 
 import java.util.ArrayList;
@@ -30,7 +31,7 @@ public class Product {
     /**
      * The textual description of a product. This can likely support HTML encodings
      */
-    private String description; // This might not be strictly necessary to include in the app.
+    private String description;
 
     /**
      * A reference to an image that is associated with this product
@@ -42,6 +43,11 @@ public class Product {
      */
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "associatedProduct")
     private List<Review> reviews;
+
+    /**
+     * The category this product belongs to
+     */
+    private Category category;
 
     /**
      * Create a new empty product
@@ -73,6 +79,24 @@ public class Product {
         this.name = name;
         this.id = id;
         this.image = image;
+        reviews = new ArrayList<>();
+    }
+
+    /**
+     * Create an expanded new product with a name, image, id, category, and description.
+     *
+     * @param name        The name of the product
+     * @param image       The image that will be used for the product, placed in the /images/ directory
+     * @param id          The id number to be associated with this product.
+     * @param description The description for this product, supports HTML encoding
+     * @param category    The category for this product, from the Category enumeration.
+     */
+    public Product(String name, String image, Long id, String description, Category category) {
+        this.name = name;
+        this.id = id;
+        this.image = image;
+        this.description = description;
+        this.category = category;
         reviews = new ArrayList<>();
     }
 
@@ -116,6 +140,14 @@ public class Product {
         this.reviews = reviews;
     }
 
+    public Category getCategory() {
+        return category;
+    }
+
+    public void setCategory(Category category) {
+        this.category = category;
+    }
+
     /**
      * Add a review to the list of reviews associated with this product
      *
@@ -145,9 +177,9 @@ public class Product {
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", description='" + description + '\'' +
-                ", hrefImage='" + image + '\'' +
+                ", image='" + image + '\'' +
                 ", reviews=" + reviews +
+                ", category=" + category +
                 '}';
     }
-
 }
