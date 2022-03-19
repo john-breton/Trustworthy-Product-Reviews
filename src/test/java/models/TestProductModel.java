@@ -76,9 +76,11 @@ public class TestProductModel {
     public void testProductConstructors() {
         String name = "test";
         String image = "test.jpg";
+        String description="test";
+        String category = Product.CATEGORY1;
 
-        Product product1 = new Product(name, image);
-        Product product2 = new Product(name, image, 2L);
+        Product product1 = new Product(name, image, description, category);
+        Product product2 = new Product(name, image, category, 2L);
 
         assertEquals(0, product.getId());
         assertNull(product.getImage());

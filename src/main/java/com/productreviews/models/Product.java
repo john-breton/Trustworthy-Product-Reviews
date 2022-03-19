@@ -14,6 +14,12 @@ import javax.persistence.*;
 @Entity
 public class Product {
 
+    public static final String CATEGORY1="Category1";
+    public static final String CATEGORY2="Category2";
+    public static final String CATEGORY3="Category3";
+    public static final String CATEGORY4="Category4";
+
+
     /**
      * A unique ID for the Product object for persistence purposes
      */
@@ -44,6 +50,16 @@ public class Product {
     private List<Review> reviews;
 
     /**
+     * The category that the product belongs to
+     */
+    private String category;
+
+    /**
+     * The average rating of a product
+     */
+    private double averageRating;
+
+    /**
      * Create a new empty product
      */
     public Product() {
@@ -55,10 +71,14 @@ public class Product {
      *
      * @param name  The name of the product
      * @param image The image that will be used for the product, placed in the /images/ directory
+     * @param description the description of the product
+     * @param category the category that the product belongs to
      */
-    public Product(String name, String image) {
+    public Product(String name, String image, String description, String category) {
         this.name = name;
         this.image = image;
+        this.description=description;
+        this.category=category;
         reviews = new ArrayList<>();
     }
 
@@ -68,11 +88,14 @@ public class Product {
      * @param name  The name of the product
      * @param image The image that will be used for the product, placed in the /images/ directory
      * @param id    The id number to be associated with this product.
+     * @param category  the category the product belongs to
      */
-    public Product(String name, String image, Long id) {
+    public Product(String name, String image, String category, Long id) {
         this.name = name;
         this.id = id;
         this.image = image;
+        this.category=category;
+        averageRating=0;
         reviews = new ArrayList<>();
     }
 
@@ -116,27 +139,33 @@ public class Product {
         this.reviews = reviews;
     }
 
+    public void setCategory(String category) {
+        this.category = category;
+    }
+
+    public String getCategory(){
+        return category;
+    }
+
+    public double getAverageRating() {
+        return averageRating;
+    }
+    public void setAverageRating(double averageRating){
+        this.averageRating=averageRating;
+    }
+
+    public void updateAverageRating(){
+        averageRating = reviews.stream().mapToDouble(Review::getScore).sum()/reviews.size();
+    }
+
     /**
      * Add a review to the list of reviews associated with this product
+     * and computes the new average rating of the product
      *
      * @param review The review for the product
      */
     public void addReview(Review review) {
         reviews.add(review);
-    }
-
-    /**
-     * Computes the average rating of the product
-     *
-     * @return The average rating of the product, as a double
-     */
-    public String getAverageRating() {
-        if (reviews.size() == 0) {
-            return "0";
-        } else {
-            double sum = reviews.stream().mapToDouble(Review::getScore).sum();
-            return String.format("%.2f", sum / reviews.size());
-        }
     }
 
     @Override
