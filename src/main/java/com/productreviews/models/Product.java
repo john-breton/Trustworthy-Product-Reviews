@@ -1,11 +1,10 @@
 package com.productreviews.models;
 
 import com.productreviews.models.common.Category;
-import org.hibernate.annotations.GeneratorType;
 
+import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
-import javax.persistence.*;
 
 /**
  * Product represents a minimal entity that has a name,
@@ -182,4 +181,5 @@ public class Product {
                 ", category=" + category +
                 '}';
     }
+
 }
