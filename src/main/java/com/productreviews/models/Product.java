@@ -57,6 +57,11 @@ public class Product {
     }
 
     /**
+     * The average rating of a product
+     */
+    private double averageRating;
+
+    /**
      * Create a new product with a name and an image
      *
      * @param name  The name of the product
@@ -65,6 +70,24 @@ public class Product {
     public Product(String name, String image) {
         this.name = name;
         this.image = image;
+        averageRating=0;
+        reviews = new ArrayList<>();
+    }
+
+    /**
+     * Create an expanded new product with a name, image, and specific id
+     *
+     * @param name  The name of the product
+     * @param image The image that will be used for the product, placed in the /images/ directory
+     * @param category  the category that the product belongs to
+     * @param id    The id number to be associated with this product.
+     */
+    public Product(String name, String image,Category category,Long id) {
+        this.name = name;
+        this.id = id;
+        this.image = image;
+        this.category=category;
+        averageRating=0;
         reviews = new ArrayList<>();
     }
 
@@ -75,10 +98,11 @@ public class Product {
      * @param image The image that will be used for the product, placed in the /images/ directory
      * @param id    The id number to be associated with this product.
      */
-    public Product(String name, String image, Long id) {
+    public Product(String name, String image,Long id) {
         this.name = name;
         this.id = id;
         this.image = image;
+        averageRating=0;
         reviews = new ArrayList<>();
     }
 
@@ -164,6 +188,17 @@ public class Product {
         this.category = category;
     }
 
+    public double getAverageRating() {
+        return averageRating;
+    }
+    public void setAverageRating(double averageRating){
+        this.averageRating=averageRating;
+    }
+
+    public void updateAverageRating(){
+        averageRating = reviews.stream().mapToDouble(Review::getScore).sum()/reviews.size();
+    }
+
     /**
      * Add a review to the list of reviews associated with this product
      *
@@ -173,19 +208,6 @@ public class Product {
         reviews.add(review);
     }
 
-    /**
-     * Computes the average rating of the product
-     *
-     * @return The average rating of the product, as a double
-     */
-    public String getAverageRating() {
-        if (reviews.size() == 0) {
-            return "0";
-        } else {
-            double sum = reviews.stream().mapToDouble(Review::getScore).sum();
-            return String.format("%.2f", sum / reviews.size());
-        }
-    }
 
     @Override
     public String toString() {

@@ -14,7 +14,7 @@ public enum Category {
         this.name = name;
     }
 
-    public String getNameAsString() {
-        return name;
+    public String getName() {
+        return this.name;
     }
 }

@@ -63,13 +63,16 @@ public class TestProductModel {
 
         assertEquals(0, product.getReviews().size());
         product.addReview(review);
+        product.updateAverageRating();
         assertEquals(1, product.getReviews().size());
         product.addReview(review2);
+        product.updateAverageRating();
         assertEquals(2, product.getReviews().size());
-        assertEquals("3.00", product.getAverageRating());
+        assertEquals(3.0, product.getAverageRating());
         product.setReviews(reviews);
+        product.updateAverageRating();
         assertEquals(1, product.getReviews().size());
-        assertEquals("2.00", product.getAverageRating());
+        assertEquals(2.0, product.getAverageRating());
     }
 
     /**

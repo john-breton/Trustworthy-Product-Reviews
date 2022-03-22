@@ -1,6 +1,7 @@
 package com.productreviews.controllers;
 
 import com.productreviews.models.*;
+import com.productreviews.models.common.Category;
 import com.productreviews.repositories.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.LinkedList;
 import java.util.Objects;
 
 /**
@@ -40,12 +42,16 @@ public class ProductController {
      * @param model     The model which the changes will be rendered on
      * @return On successful product creation, the createProduct page
      */
-    @GetMapping("/create/{productId}")
-    public String createProduct(@PathVariable int productId, Authentication authentication, Model model) {
-//        Product product = new Product("ProductName", "web-dev-book.jpg", (long) productId);
-        Product product = new Product("ProductName", "products/lawless-sofa.png", (long) productId);
+    @GetMapping("/create/{productId}/{productName}/{category}")
+    public String createProduct(@PathVariable int productId,@PathVariable String productName,@PathVariable String category, Authentication authentication, Model model) {
 
-        productRepository.save(product);
+        if (category.equals("book")){
+            Product product = new Product(productName, "product1.jpg", Category.BOOK, (long) productId);
+            productRepository.save(product);
+        }else {
+            Product product = new Product(productName, "product1.jpg", Category.NOT_BOOK, (long) productId);
+            productRepository.save(product);
+        }
         return "createProduct";
     }
 
@@ -139,7 +145,8 @@ public class ProductController {
             Objects.requireNonNull(user).addReview(review);
             Objects.requireNonNull(product).addReview(review);
         }
-
+        product.updateAverageRating();
+        productRepository.save(product);
         model.addAttribute("product", product);
         model.addAttribute("review", review);
         return "review";
@@ -170,4 +177,44 @@ public class ProductController {
         model.addAttribute("author", username);
         return "follow-page";
     }
-}
+
+    /**
+     * sort the products by averahe rating. Sorting could be by average rating low to high
+     * or by average rating high to low
+     *
+     * @param model     The model which the changes will be rendered on
+     * @return On successful review creation, the review page
+     */
+    @GetMapping("/products/filterandsearch")
+    public String viewReviewPage(@RequestParam(required = false) String sort,@RequestParam(required = false) String category, Authentication authentication, Model model) {
+        String currentUser = authentication.getName();
+        User user = userRepository.findByUsername(currentUser);
+        if (user == null || !authentication.isAuthenticated()) {
+            log.error("User not found or not authenticated");
+        }
+        if(sort == null || category==null){
+            log.error("Invalid Page Request");
+            return "error-page";
+        }
+        model.addAttribute("mainUser", user);
+        model.addAttribute("users", userRepository.findAll());
+        if(sort.equals("asc") && category.equals("none") ) {
+            model.addAttribute("products", productRepository.findByOrderByAverageRatingAsc());
+        }else if (sort.equals("desc") && category.equals("none")){
+            model.addAttribute("products", productRepository.findByOrderByAverageRatingDesc());
+        }else if(category.equals("none") && sort.equals("none")) {
+            return "redirect:/home";
+        }else if (!category.equals("none") && sort.equals("none")) {
+            Category categoryEnum = Category.valueOf(category);
+            model.addAttribute("products", productRepository.findByCategory(categoryEnum));
+        }else if (sort.equals("asc")){
+            Category categoryEnum = Category.valueOf(category);
+            model.addAttribute("products", productRepository.findByCategoryOrderByAverageRatingAsc(categoryEnum));
+        }else if (sort.equals("desc")){
+            Category categoryEnum = Category.valueOf(category);
+            model.addAttribute("products", productRepository.findByCategoryOrderByAverageRatingDesc(categoryEnum));
+        }
+        return "landingPage";
+    }
+
+    }
