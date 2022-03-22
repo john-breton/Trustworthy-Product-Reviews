@@ -192,6 +192,10 @@ public class ProductController {
         if (user == null || !authentication.isAuthenticated()) {
             log.error("User not found or not authenticated");
         }
+        if(sort == null || category==null){
+            log.error("Invalid Page Request");
+            return "error-page";
+        }
         model.addAttribute("mainUser", user);
         model.addAttribute("users", userRepository.findAll());
         if(sort.equals("asc") && category.equals("none") ) {
@@ -203,10 +207,10 @@ public class ProductController {
         }else if (!category.equals("none") && sort.equals("none")) {
             Category categoryEnum = Category.valueOf(category);
             model.addAttribute("products", productRepository.findByCategory(categoryEnum));
-        }else if (sort.equals("asc") && !category.equals("none")){
+        }else if (sort.equals("asc")){
             Category categoryEnum = Category.valueOf(category);
             model.addAttribute("products", productRepository.findByCategoryOrderByAverageRatingAsc(categoryEnum));
-        }else if (sort.equals("desc") && !category.equals("none")){
+        }else if (sort.equals("desc")){
             Category categoryEnum = Category.valueOf(category);
             model.addAttribute("products", productRepository.findByCategoryOrderByAverageRatingDesc(categoryEnum));
         }
