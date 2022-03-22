@@ -20,11 +20,14 @@ table {
 <body>
 <div id="navigation" class="container">
 </div>
+
+<div class="container" style="padding: 1%">
 <p>
     Welcome <span th:text="${mainUser.username}"></span>
 </p>
 
 <main>
+
     <section>
         <form method="get">
             <h4>Filters/Search</h4>
@@ -43,7 +46,7 @@ table {
             </button>
         </form>
     </section>
-
+    <br> <hr>
     <section>
         <h3>Products</h3>
         <table class = "spaced-table">
@@ -66,7 +69,7 @@ table {
             </tbody>
         </table>
     </section>
-
+    <br> <hr>
     <section>
         <h3>Users with Similar Tastes</h3>
         <table class = "spaced-table">
@@ -87,5 +90,6 @@ table {
     </section>
 
 </main>
+</div>
 </body>
 </html>

@@ -42,7 +42,9 @@ public class ProductController {
      */
     @GetMapping("/create/{productId}")
     public String createProduct(@PathVariable int productId, Authentication authentication, Model model) {
-        Product product = new Product("ProductName", "product1.jpg", (long) productId);
+//        Product product = new Product("ProductName", "web-dev-book.jpg", (long) productId);
+        Product product = new Product("ProductName", "products/lawless-sofa.png", (long) productId);
+
         productRepository.save(product);
         return "createProduct";
     }

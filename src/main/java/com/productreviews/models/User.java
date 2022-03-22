@@ -42,7 +42,7 @@ public class User {
     /**
      * A list contained the users a particular user is following
      */
-    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, targetEntity = User.class)
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, targetEntity = User.class)
     private List<User> followingList;
 
     /**
@@ -216,14 +216,23 @@ public class User {
         return 1 - jaccardIndex;
     }
 
+//    @Override
+//    public String toString() {
+//        return "User{" +
+//                "id=" + id +
+//                ", username='" + username + '\'' +
+//                ", password='" + password + '\'' +
+//                ", followingList=" + followingList +
+//                ", reviews=" + reviews +
+//                '}';
+//    }
+
     @Override
     public String toString() {
         return "User{" +
                 "id=" + id +
                 ", username='" + username + '\'' +
                 ", password='" + password + '\'' +
-                ", followingList=" + followingList +
-                ", reviews=" + reviews +
                 '}';
     }
 

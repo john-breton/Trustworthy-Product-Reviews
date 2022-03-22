@@ -1,6 +1,7 @@
 package com.productreviews.models;
 
 import com.productreviews.models.common.Category;
+import jdk.tools.jlink.internal.plugins.ExcludePlugin;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -18,7 +19,7 @@ public class Product {
      * A unique ID for the Product object for persistence purposes
      */
     @Id
-//    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private long id;
 
     /**
@@ -93,6 +94,22 @@ public class Product {
     public Product(String name, String image, Long id, String description, Category category) {
         this.name = name;
         this.id = id;
+        this.image = image;
+        this.description = description;
+        this.category = category;
+        reviews = new ArrayList<>();
+    }
+
+    /**
+     * Create an expanded new product with a name, image, id, category, and description.
+     *
+     * @param name        The name of the product
+     * @param image       The image that will be used for the product, placed in the /images/ directory
+     * @param description The description for this product, supports HTML encoding
+     * @param category    The category for this product, from the Category enumeration.
+     */
+    public Product(String name, String image, String description, Category category) {
+        this.name = name;
         this.image = image;
         this.description = description;
         this.category = category;
@@ -180,6 +197,33 @@ public class Product {
                 ", reviews=" + reviews +
                 ", category=" + category +
                 '}';
+    }
+
+    /**
+     * Given a string, creates a new product
+     * @param product_str a comma separated product in the format name, image, category, description, url
+     * @return
+     */
+    public static Product createProductFromString(String product_str){
+
+        String[] params = product_str.split(",");
+
+        int i = 0;
+        String name = params[i].trim();
+        String image = "products/" + params[++i].trim();
+        String category = params[++i].trim();
+        String description = params[++i].trim();
+//        String url = params[++i]; // not used atm
+
+        Product product;
+        try {
+            product = new Product(name, image, description, Category.valueOf(category.toUpperCase()));
+        } catch (Exception e){
+            System.out.println("Exception creating product " + e);
+            return null;
+        }
+
+        return product;
     }
 
 }

@@ -6,7 +6,7 @@ package com.productreviews.models.common;
  * category, such as products that are books and those that are not.
  */
 public enum Category {
-    BOOK("Book"), NOT_BOOK("Not Book");
+    BOOK("Book"), NOT_BOOK("Not Book"), FURNITURE("Furniture");
 
     private final String name;
 
