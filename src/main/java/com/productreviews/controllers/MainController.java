@@ -21,7 +21,7 @@ public class MainController {
      */
     @GetMapping("/")
     public String root() {
-        return "redirect:/user/products";
+        return "redirect:/home";
     }
 
     /**
