@@ -1,6 +1,7 @@
 package com.productreviews.controllers;
 
 import com.productreviews.models.*;
+import com.productreviews.models.common.Category;
 import com.productreviews.repositories.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -43,8 +44,14 @@ public class ProductController {
      */
     @GetMapping("/create/{productId}/{productName}/{category}")
     public String createProduct(@PathVariable int productId,@PathVariable String productName,@PathVariable String category, Authentication authentication, Model model) {
-        Product product = new Product(productName, "product1.jpg", category, (long) productId);
-        productRepository.save(product);
+
+        if (category.equals("book")){
+            Product product = new Product(productName, "product1.jpg", Category.BOOK, (long) productId);
+            productRepository.save(product);
+        }else {
+            Product product = new Product(productName, "product1.jpg", Category.NOT_BOOK, (long) productId);
+            productRepository.save(product);
+        }
         return "createProduct";
     }
 
@@ -194,11 +201,14 @@ public class ProductController {
         }else if(category.equals("none") && sort.equals("none")) {
             return "redirect:/home";
         }else if (!category.equals("none") && sort.equals("none")) {
-            model.addAttribute("products", productRepository.findByCategory(category));
+            Category categoryEnum = Category.valueOf(category);
+            model.addAttribute("products", productRepository.findByCategory(categoryEnum));
         }else if (sort.equals("asc") && !category.equals("none")){
-            model.addAttribute("products", productRepository.findByCategoryOrderByAverageRatingAsc(category));
+            Category categoryEnum = Category.valueOf(category);
+            model.addAttribute("products", productRepository.findByCategoryOrderByAverageRatingAsc(categoryEnum));
         }else if (sort.equals("desc") && !category.equals("none")){
-            model.addAttribute("products", productRepository.findByCategoryOrderByAverageRatingDesc(category));
+            Category categoryEnum = Category.valueOf(category);
+            model.addAttribute("products", productRepository.findByCategoryOrderByAverageRatingDesc(categoryEnum));
         }
         return "landingPage";
     }

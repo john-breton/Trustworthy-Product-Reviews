@@ -82,10 +82,8 @@ table {
                 <label>Filter By</label>
                 <select name ="category" id = "category">
                     <option value="none">No Filter</option>
-                    <option value="Category1" >Category 1</option>
-                    <option value="Category2">Category 2</option>
-                    <option value="Category3">Category 3</option>
-                    <option value="Category4">Category 4</option>
+                    <option value="BOOK" >Book</option>
+                    <option value="NOT_BOOK">Not Book</option>
                 </select>
             </div>
             <div>
@@ -115,7 +113,7 @@ table {
             </tr>
             <tr th:each="product : ${products}">
                 <td><a th:href="@{/product/{id}(id=${product.id})}"><span th:text="${product.name}"> Product </span></a></td>
-                <td><span th:text="${product.getCategory()}"> Category </span></td>
+                <td><span th:text="${product.getCategory().getName()}"> Category </span></td>
                 <td><span th:text="${product.getAverageRating()}"> Average Rating </span></td>
                 <td><a th:href="@{/product/{id}(id=${product.id})}"><img th:src="@{'/images/' + ${product.image}}" alt="An image of the product"></a></td>
             </tr>

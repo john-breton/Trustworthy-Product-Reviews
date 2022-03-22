@@ -1,5 +1,6 @@
 package com.productreviews.repositories;
 import com.productreviews.models.Product;
+import com.productreviews.models.common.Category;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 
@@ -10,7 +11,7 @@ public interface ProductRepository extends CrudRepository<Product, Long> {
 
     List<Product> findByOrderByAverageRatingAsc();
     List<Product> findByOrderByAverageRatingDesc();
-    List<Product> findByCategory(String category);
-    List<Product> findByCategoryOrderByAverageRatingAsc(String catgeory);
-    List<Product> findByCategoryOrderByAverageRatingDesc(String catgeory);
+    List<Product> findByCategory(Category category);
+    List<Product> findByCategoryOrderByAverageRatingAsc(Category category);
+    List<Product> findByCategoryOrderByAverageRatingDesc(Category category);
 }
