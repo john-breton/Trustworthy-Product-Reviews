@@ -1,8 +1,14 @@
 package com.productreviews.models;
 
+import com.google.common.collect.HashMultiset;
+import com.google.common.collect.Multiset;
+import com.google.common.collect.Multisets;
+import com.google.common.collect.Sets;
+
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * User represents a minimal entity that has a username and
@@ -180,15 +186,34 @@ public class User {
     }
 
     /**
-     * A method to return the Jaccard distance between this and another user
+     * A method to return the Jaccard distance between this and another user across all of their reviews
      *
      * @param otherUser The other user that we wish to calculate the Jaccard distance between
      * @return The calculated Jaccard distance between the users, as an int
      */
-    public int getJaccardDistance(User otherUser) {
-        List<User> followerFollowingList = otherUser.getFollowingList();
-        // TO DO: calculate jaccard
-        return 0;
+    public double getJaccardDistanceReviews(User otherUser) {
+        List<Review> followerFollowingList = otherUser.getReviews();
+
+        // Jaccard distance between this user's review scores and another user's review scores using Guava
+        Multiset<Double> localScores = HashMultiset.create();
+        Multiset<Double> followerScores = HashMultiset.create();
+
+        // Get a multiset for all the reviews written by the this user and then the other user
+        localScores.addAll(getReviews().stream().mapToDouble(Review::getScore).boxed().collect(Collectors.toList()));
+        followerScores.addAll(followerFollowingList.stream().mapToDouble(Review::getScore).boxed().collect(Collectors.toList()));
+
+        // Jaccard distance is 0 if both sets are empty, which is an edge case.
+        if (localScores.size() == 0 && followerScores.size() == 0) {
+            return 0;
+        }
+
+        // Union in multisets is unstable, so we can expand out and do the long form calculation for the Jaccard Index
+        // Long form is size of intersection divided by the size of set a + size of set b - size of intersection.
+        double intersectSize = Multisets.intersection(localScores, followerScores).size();
+        double jaccardIndex = intersectSize / (localScores.size() + followerScores.size() - intersectSize);
+
+        // Jaccard distance is 1 - Jaccard Index
+        return 1 - jaccardIndex;
     }
 
     @Override
@@ -201,4 +226,5 @@ public class User {
                 ", reviews=" + reviews +
                 '}';
     }
+
 }

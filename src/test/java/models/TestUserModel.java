@@ -1,5 +1,6 @@
 package models;
 
+import com.productreviews.models.Product;
 import com.productreviews.models.Review;
 import com.productreviews.models.User;
 import org.junit.jupiter.api.BeforeEach;
@@ -118,5 +119,59 @@ public class TestUserModel {
         assertEquals(1, user3.getId());
         assertEquals(username, user3.getUsername());
         assertNull(user3.getPassword());
+    }
+
+    /**
+     * A test to exercise the Jaccard Distance calculations that
+     * can be performed between the review scores of one user
+     * and the review scores of another user.
+     */
+    @Test
+    public void testUserJaccardDistance() {
+        User user1 = new User("john", "john");
+        User user2 = new User("John2", "John2");
+
+        // Base case, both review lists are empty, so distance should be 0 by definition.
+        assertEquals(0, user1.getJaccardDistanceReviews(user2));
+        // Shouldn't matter which user is first
+        assertEquals(0, user2.getJaccardDistanceReviews(user1));
+
+        Product product = new Product();
+        Product product2 = new Product();
+        Review rev1 = new Review(user1, product, 4, "Cool");
+        Review rev2 = new Review(user2, product, 5, "Nice");
+        Review rev3 = new Review(user1, product, 1, "not nice");
+        Review rev4 = new Review(user1, product2, 1, "also not nice");
+        Review rev5 = new Review(user2, product2, 4, "It's alright");
+        Review rev6 = new Review(user2, product2, 1, "It's bad");
+        Review rev7 = new Review(user2, product2, 2, "Not good");
+        user1.addReview(rev1);
+        user1.addReview(rev3);
+        user1.addReview(rev4);
+        user2.addReview(rev2);
+        user2.addReview(rev5);
+        user2.addReview(rev6);
+
+        // Assert Jaccard distance is what is expected.
+        assertEquals(0.5, user1.getJaccardDistanceReviews(user2));
+        assertEquals(0.5, user2.getJaccardDistanceReviews(user1));
+
+        // Modify the review lists and try again.
+        user2.addReview(rev7);
+
+        assertEquals(0.6, user1.getJaccardDistanceReviews(user2));
+        assertEquals(0.6, user2.getJaccardDistanceReviews(user1));
+
+        // Try for two identical review sets
+        user2.addReview(rev1);
+        user2.addReview(rev3);
+        user2.addReview(rev4);
+        user1.addReview(rev2);
+        user1.addReview(rev5);
+        user1.addReview(rev6);
+        user1.addReview(rev7);
+
+        assertEquals(0.0, user1.getJaccardDistanceReviews(user2));
+        assertEquals(0.0, user2.getJaccardDistanceReviews(user1));
     }
 }
