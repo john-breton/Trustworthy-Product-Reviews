@@ -71,7 +71,7 @@
                 </thead>
                 <tbody>
                     <tr th:each="review : ${user.getReviews()}">
-                        <td><a th:href="@{/product/${review.getAssociatedProduct().getId()}}">
+                        <td><a th:href="@{/product/{id}(id=${review.getAssociatedProduct().getId()})}">
                             <span th:text="${review.getAssociatedProduct().getName()}"> </span></a></td>
                         <td> <p th:text="${review.getScore()}"/> </td>
                         <td> <p th:text="${review.getContent()}"/> </td>

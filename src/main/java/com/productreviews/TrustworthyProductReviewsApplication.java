@@ -152,7 +152,7 @@ public class TrustworthyProductReviewsApplication {
                 }
 
                 // Have users follow each other
-                num_of_following = random.nextInt(num_of_users - 1); // minus 1 because a person can't follow themselves
+                num_of_following = random.nextInt(num_of_users - 2); // minus 1 because a person can't follow themselves
                 System.out.println("\n\tgonna follow " + num_of_following + " people");
                 for (int i = 0; i < num_of_following; i++){
                     random_user_i = random.nextInt(num_of_users);

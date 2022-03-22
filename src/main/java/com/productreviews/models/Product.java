@@ -4,6 +4,7 @@ import com.productreviews.models.common.Category;
 import jdk.tools.jlink.internal.plugins.ExcludePlugin;
 
 import javax.persistence.*;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,6 +15,8 @@ import java.util.List;
  */
 @Entity
 public class Product {
+
+    private static final DecimalFormat df = new DecimalFormat("0.00");
 
     /**
      * A unique ID for the Product object for persistence purposes
@@ -189,8 +192,10 @@ public class Product {
     }
 
     public double getAverageRating() {
-        return averageRating;
+        updateAverageRating();
+        return Double.parseDouble(df.format(averageRating));
     }
+
     public void setAverageRating(double averageRating){
         this.averageRating=averageRating;
     }
