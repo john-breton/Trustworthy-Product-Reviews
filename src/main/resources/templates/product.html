@@ -1,16 +1,17 @@
 <!DOCTYPE HTML>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="utf-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>Product Page</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@300;700;900&display=swap" rel="stylesheet">
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link th:href="@{/public/style.css}" rel="stylesheet" />
     <script type="text/javascript" src="/webjars/bootstrap/js/bootstrap.min.js"></script>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" />
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
 
-
-    <title>Product</title>
 </head>
 <body>
 <div class="container">
@@ -33,7 +34,8 @@
                         <a class="nav-link" href="#">Reviewers</a>
                     </li>
                     <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink"
+                           data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             My Stuff
                         </a>
                         <div class="dropdown-menu dropdown-content" aria-labelledby="navbarDropdownMenuLink">
@@ -67,20 +69,20 @@
     <!-- Display product average rating -->
     <div class="row">
         <div class="col-md-12">
-            <h2 th:text="'Rating: ' +${product.getAverageRating()}"> </h2>
+            <h2 th:text="'Rating: ' +${product.getAverageRating()}"></h2>
         </div>
     </div>
     <!-- Display product description-->
     <div class="row">
         <div class="col-md-12">
-            <h3 th:text="'Description: ' +${product.description}"> </h3>
+            <h3 th:text="'Description: ' +${product.description}"></h3>
         </div>
     </div>
     <!-- Add a product review -->
     <div class="row">
         <div class="col-md-6">
             <form action="#" th:action="@{/review/__${product.id}__}" th:object="${newReview}" method="get">
-                Rating: <select id="score" class="col-sm"  th:field="*{score}">
+                Rating: <select id="score" class="col-sm" th:field="*{score}" style="margin: 5px">
                 <option value="1">1</option>
                 <option value="2">2</option>
                 <option value="3">3</option>
@@ -88,34 +90,65 @@
                 <option value="5">5</option>
             </select>
                 <br>
-                Comment: <input type="text"  th:field="*{content}" id="content"> <br>
-
-                <button type="submit" id="submit">Submit Review</button>
+                Comment: <input type="text" th:field="*{content}" id="content" style="margin: 5px">
+                <br>
+                <button type="submit" id="submit" style="margin-top: 5px; margin-bottom: 5px;">Submit Review</button>
             </form>
         </div>
     </div>
-    <!-- Display all product reviews -->
-    <div class="row">
+    <!-- Display all product reviews and filter options-->
+    <div class="row" style="margin-top: 20px;">
         <div class="col-md-6">
+            <form th:action="@{/filterreviews/__${product.id}__}" method="get">
+                <strong>Filter by User</strong>
+                <br/>
+                <select id="userReviewFilter" name="userReviewFilter" class="col-sm" style="margin-top: 5px; margin-bottom: 5px;">
+                <option value="all">All Reviews</option>
+                <option value="following">Users I Follow</option>
+            </select>
+                <br/><br/>
+                <strong>Filter by Rating</strong>
+                <br/>
+                Minimum Rating: <select id="minStarFilter" name="minStarFilter" class="col-sm" style="margin-top: 5px; margin-bottom: 5px;">
+                <option value="1" selected>1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+            </select>
+                <br/>
+                Maximum Rating: <select id="maxStarFilter" name="maxStarFilter" class="col-sm" style="margin: 5px;">
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5" selected>5</option>
+            </select>
+                <br/>
+                <button type="submit" id="filter" style="margin-top: 5px; margin-bottom: 5px;">Filter Reviews</button>
+            </form>
             <table class="table">
                 <thead>
                 <tr>
-                    <th> User </th>
-                    <th> Rating </th>
-                    <th> Comment </th>
+                    <th>User</th>
+                    <th>Rating</th>
+                    <th>Comment</th>
                 </tr>
                 </thead>
                 <tbody>
                 <tr th:if="${reviews!=null and reviews.isEmpty()}">
-                    <td colspan="2"> No Reviews </td>
+                    <td colspan="2"> No Reviews</td>
                 </tr>
                 <tr th:each="review : ${reviews}">
-                    <form action="#" class="form-horizontal" th:action="@{/follow/__${product.id}__/__${review.user.username}__}" method="get" >
+                    <form action="#" class="form-horizontal"
+                          th:action="@{/follow/__${product.id}__/__${review.user.username}__}" method="get">
                         <td><span th:text="${review.user.username}">  </span></td>
                         <td><span th:text="${review.score}">  </span></td>
                         <td><span th:text="${review.content}">  </span></td>
                         <!-- follow button that allows the user to follow another user and redirects to the user page -->
-                        <td th:if="${review.getUserID() != user.getId() and !(user.isFollowing(review.getUser())) }"><button type="submit" id="follow">Follow</button><td>
+                        <td th:if="${review.getUserID() != user.getId() and !(user.isFollowing(review.getUser())) }">
+                            <button type="submit" id="follow">Follow</button>
+                        <td>
                     </form>
                 </tr>
                 </tbody>
