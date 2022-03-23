@@ -1,7 +1,6 @@
 package com.productreviews.models;
 
 import com.productreviews.models.common.Category;
-import jdk.tools.jlink.internal.plugins.ExcludePlugin;
 
 import javax.persistence.*;
 import java.text.DecimalFormat;
