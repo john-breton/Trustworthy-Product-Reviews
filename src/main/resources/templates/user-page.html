@@ -24,7 +24,7 @@
     <div class="collapse navbar-collapse" id="navbarNavDropdown">
         <ul class="navbar-nav me-auto">
             <li class="nav-item active">
-                <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+                <a class="nav-link" href="/home">Home <span class="sr-only">(current)</span></a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" href="#">Products</a>
@@ -71,7 +71,7 @@
                 </thead>
                 <tbody>
                     <tr th:each="review : ${user.getReviews()}">
-                        <td><a th:href="@{/product/${review.getAssociatedProduct().getId()}}">
+                        <td><a th:href="@{/product/{id}(id=${review.getAssociatedProduct().getId()})}">
                             <span th:text="${review.getAssociatedProduct().getName()}"> </span></a></td>
                         <td> <p th:text="${review.getScore()}"/> </td>
                         <td> <p th:text="${review.getContent()}"/> </td>

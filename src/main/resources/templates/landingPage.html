@@ -62,11 +62,14 @@ table {
         </div>
     </nav>
 </div>
+
+<div class="container" style="padding: 1%">
 <p>
     Welcome <span th:text="${mainUser.username}"></span>
 </p>
 
 <main>
+
     <section>
         <form th:action="@{/products/filterandsearch}" method="GET">
             <h4>Filters/Search</h4>
@@ -84,6 +87,7 @@ table {
                     <option value="none">No Filter</option>
                     <option value="BOOK" >Book</option>
                     <option value="NOT_BOOK">Not Book</option>
+                    <option value="FURNITURE">Furniture</option>
                 </select>
             </div>
             <div>
@@ -95,7 +99,7 @@ table {
             </button>
         </form>
     </section>
-
+    <br> <hr>
     <section>
         <h3>Products</h3>
         <table class = "spaced-table">
@@ -120,7 +124,7 @@ table {
             </tbody>
         </table>
     </section>
-
+    <br> <hr>
     <section>
         <h3>Users with Similar Tastes</h3>
         <table class = "spaced-table">
@@ -141,5 +145,6 @@ table {
     </section>
 
 </main>
+</div>
 </body>
 </html>
