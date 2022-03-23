@@ -231,10 +231,15 @@ public class ProductController {
     }
 
     /**
-     * sort the reviews by all users or only the users that the current user follows
+     * Filters reviews based on followage or the entire list of reviews. Also filters based on min and max rating
      *
+     * @param productId the ID of the product to retreive the reviews for
+     * @param userReviewFilter indicates whether the reviews should include all or only the users the the current user follows
+     * @param minStarFilter indicates the minimum rating that the user wishes to see
+     * @param maxStarFilter indicates the maximum rating that the user wished to see
+     * @param authentication provides access to the current user object
      * @param model The model which the changes will be rendered on
-     * @return On successful review creation, the review page
+     * @return On successful product page updated, error page on error
      */
     @GetMapping("/filterreviews/{productId}")
     public String viewFilteredReviews(@PathVariable int productId,
