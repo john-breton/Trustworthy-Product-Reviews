@@ -1,7 +1,6 @@
 package com.productreviews.models;
 
 import com.productreviews.models.common.Category;
-import jdk.tools.jlink.internal.plugins.ExcludePlugin;
 
 import javax.persistence.*;
 import java.text.DecimalFormat;
@@ -181,6 +180,7 @@ public class Product {
 
     public void setReviews(ArrayList<Review> reviews) {
         this.reviews = reviews;
+        updateAverageRating();
     }
 
     public Category getCategory() {
@@ -192,7 +192,6 @@ public class Product {
     }
 
     public double getAverageRating() {
-        updateAverageRating();
         return Double.parseDouble(df.format(averageRating));
     }
 
@@ -211,6 +210,7 @@ public class Product {
      */
     public void addReview(Review review) {
         reviews.add(review);
+        updateAverageRating();
     }
 
 

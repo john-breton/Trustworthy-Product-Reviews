@@ -18,6 +18,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 
+import javax.transaction.Transactional;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -32,9 +33,6 @@ import java.util.Scanner;
  */
 @SpringBootApplication
 public class TrustworthyProductReviewsApplication {
-
-    @Autowired
-    UserRepository userRepository;
 
     public static void main(String[] args) {
         SpringApplication.run(TrustworthyProductReviewsApplication.class, args);
@@ -130,6 +128,8 @@ public class TrustworthyProductReviewsApplication {
                 // generate a random number to determine how many products they're gonna review
                 num_reviews = random.nextInt(num_of_products);
                 System.out.println("Gonna review " + num_reviews + " products");
+                Product product;
+
                 // Create reviews for each user
                 for (int i = 0; i < num_reviews; i++){
                     random_product_i = random.nextInt(num_of_products);
@@ -139,27 +139,28 @@ public class TrustworthyProductReviewsApplication {
                         random_product_i = random.nextInt(num_of_products);
                     }
 
+                    product = products.get(random_product_i);
+
                     already_reviewed.add(random_product_i);
 
                     int rating = random.nextInt(5) + 1; // choose a random number between 1 and 5
                     String comment = faker.hitchhikersGuideToTheGalaxy().marvinQuote();
                     if (comment.length() > 255 ) comment = comment.substring(0, 250) + "...";
-                    review = new Review(curr_user, products.get(random_product_i), rating, comment);
+                    review = new Review(curr_user, product, rating, comment);
                     reviewRepository.save(review);
+                    product.addReview(review);
+                    user.addReview(review);
                     System.out.println("\tadding review: " + review);
                     reviews.add(review);
-
                 }
 
                 // Have users follow each other
-                num_of_following = random.nextInt(num_of_users - 2); // minus 1 because a person can't follow themselves
+                num_of_following = random.nextInt(num_of_users - 1); // minus 1 because a person can't follow themselves
                 System.out.println("\n\tgonna follow " + num_of_following + " people");
                 for (int i = 0; i < num_of_following; i++){
                     random_user_i = random.nextInt(num_of_users);
                     while (already_followed.contains(random_user_i)){
-                        System.out.println("random user id = " +  random_user_i);
-
-                        random_user_i = random.nextInt(num_of_following);
+                        random_user_i = random.nextInt(num_of_users);
                     }
 
                     already_followed.add(random_user_i);
