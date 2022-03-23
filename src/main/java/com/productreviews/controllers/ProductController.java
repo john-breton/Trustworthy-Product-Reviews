@@ -252,6 +252,10 @@ public class ProductController {
             log.error("User not found or not authenticated");
             return "error-page";
         }
+        if (product == null) {
+            log.error("Product not found");
+            return "error-page";
+        }
         if (userReviewFilter == null || minStarFilter == -1 || maxStarFilter == -1) {
             log.error("Invalid Page Request");
             return "error-page";
@@ -264,10 +268,12 @@ public class ProductController {
             List<Review> reviews = reviewRepository.findAllByAssociatedProductIdAndScoreGreaterThanEqualAndScoreLessThanEqual(productId, minStarFilter,
                                                                                  maxStarFilter);
             model.addAttribute("reviews", reviews);
+            product.setAverageRating(reviews.size() > 0 ? reviews.stream().mapToDouble(Review::getScore).sum()/reviews.size() : 0.0);
         } else if (userReviewFilter.equals("following")) {
             List<Review> reviews = reviewRepository.findAllByAssociatedProductIdAndUserInAndScoreGreaterThanEqualAndScoreLessThanEqual(productId, user.getFollowingList(), minStarFilter,
                                                                     maxStarFilter);
             model.addAttribute("reviews", reviews);
+            product.setAverageRating(reviews.size() > 0 ? reviews.stream().mapToDouble(Review::getScore).sum()/reviews.size() : 0.0);
         }
 
         return "product";
