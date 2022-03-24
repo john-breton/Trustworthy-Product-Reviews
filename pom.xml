@@ -134,7 +134,11 @@
             <artifactId>javafaker</artifactId>
             <version>1.0.2</version>
         </dependency>
-
+        <dependency>
+            <groupId>org.javatuples</groupId>
+            <artifactId>javatuples</artifactId>
+            <version>1.2</version>
+        </dependency>
     </dependencies>
 
     <build>

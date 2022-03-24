@@ -3,11 +3,11 @@ package com.productreviews.models;
 import com.google.common.collect.HashMultiset;
 import com.google.common.collect.Multiset;
 import com.google.common.collect.Multisets;
-import com.google.common.collect.Sets;
+import org.javatuples.Pair;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
+import java.lang.reflect.Array;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -216,16 +216,80 @@ public class User {
         return 1 - jaccardIndex;
     }
 
-//    @Override
-//    public String toString() {
-//        return "User{" +
-//                "id=" + id +
-//                ", username='" + username + '\'' +
-//                ", password='" + password + '\'' +
-//                ", followingList=" + followingList +
-//                ", reviews=" + reviews +
-//                '}';
-//    }
+    /**
+     * Uses Dijkstra's shortest path algorithm to calculate the shortest distance between users,
+     * Ie. degrees of freedom.
+     * A higher degree of freedom indicates more separation
+     * @param dest the user who we want to find the shortest path to.
+     * @return int degree of freedom
+     */
+    public int getDegreesOfSeparation(User dest){
+
+        if (dest == this) return 0;
+
+        // What's the farthest they can be
+        int farthest = 0;
+
+        // Keeps track of the users, and the shortest distance to them from the source
+        // The pair represents the shortest distance from the source, and the last user in that shortest distance path
+        HashMap<User, Pair<Integer, User>> distances = new HashMap<>();
+        distances.put(this, Pair.with(0, this));
+
+        // Which user to visit next
+        Queue<User> not_visited = new LinkedList<>();
+        not_visited.add(this);
+
+        // Keep track of what's already been visited so we don't visit them again
+        ArrayList<User> visited = new ArrayList<>();
+
+        User curr_user, prev_user;
+
+        // Keep going until we visit everything
+        while (!not_visited.isEmpty()) {
+
+            // Get the next user from the queue
+            curr_user = not_visited.poll();
+
+            // Go through the users that curr_user is following
+            for (User following: curr_user.getFollowingList()) {
+
+                // If they're not in the distances map, add them
+                if (!distances.containsKey(following)){
+                    distances.put(following, Pair.with(Integer.MAX_VALUE, curr_user));
+                }
+
+                prev_user = distances.get(following).getValue1();
+                int curr_distance = distances.get(following).getValue0();
+
+                int prev_user_dist = distances.get(prev_user).getValue0();
+                int new_distance = prev_user_dist + 1;
+
+                // update the distance if it's less than the current
+                if (new_distance < curr_distance) {
+                    curr_distance = new_distance;
+                    distances.put(following, Pair.with(new_distance, curr_user));
+                    // Update the farthest distance
+                    if (new_distance > farthest) farthest = new_distance;
+                }
+
+                // If the curr_distance is 1, return because we know it can't get smaller
+                if (following.equals(dest) && curr_distance == 1){
+                    return 1;
+                }
+
+                if (!not_visited.contains(following) && !visited.contains(following)) not_visited.add(following);
+            }
+
+            visited.add(curr_user);
+        }
+
+        // if user is not here, that means they're far. Return max distance + 1
+        if (!distances.containsKey(dest)) {
+            return farthest + 1;
+        }
+
+        return distances.get(dest).getValue0();
+    }
 
     @Override
     public String toString() {
