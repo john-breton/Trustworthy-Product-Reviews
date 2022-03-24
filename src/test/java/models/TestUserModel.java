@@ -174,4 +174,32 @@ public class TestUserModel {
         assertEquals(0.0, user1.getJaccardDistanceReviews(user2));
         assertEquals(0.0, user2.getJaccardDistanceReviews(user1));
     }
+
+    @Test
+    public void testDegreesOfSeparation(){
+        User user1 = new User("john", "john");
+        User user2 = new User("John2", "John2");
+        User user3 = new User("john3", "john3");
+        User user4 = new User("john4", "John4");
+
+        // user 1 follows user2
+        user1.addFollowing(user2);
+
+        // user 2 follows user 3
+        user2.addFollowing(user3);
+
+        // degrees of separation between users 1 and 2 should be 1
+        assertEquals(1, user1.getDegreesOfSeparation(user2));
+
+        // degrees of separation between users 1 and 3 should be 2
+        assertEquals(2, user1.getDegreesOfSeparation(user3));
+
+        // degrees of separation between users 1 and 4 should be 3 (max + 1)
+        assertEquals(3, user1.getDegreesOfSeparation(user4));
+
+        // test cyclical following
+        user3.addFollowing(user1);
+        assertEquals(2, user1.getDegreesOfSeparation(user3));
+
+    }
 }

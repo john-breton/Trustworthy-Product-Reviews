@@ -131,6 +131,7 @@
                 <thead>
                 <tr>
                     <th>User</th>
+                    <th>Degrees of Separation</th>
                     <th>Rating</th>
                     <th>Comment</th>
                 </tr>
@@ -143,8 +144,10 @@
                     <form action="#" class="form-horizontal"
                           th:action="@{/follow/__${product.id}__/__${review.user.username}__}" method="get">
                         <td><span th:text="${review.user.username}">  </span></td>
+                        <td><span th:text="${user.getDegreesOfSeparation(review.user)}"></span></td>
                         <td><span th:text="${review.score}">  </span></td>
                         <td><span th:text="${review.content}">  </span></td>
+
                         <!-- follow button that allows the user to follow another user and redirects to the user page -->
                         <td th:if="${review.getUserID() != user.getId() and !(user.isFollowing(review.getUser())) }">
                             <button type="submit" id="follow">Follow</button>

@@ -56,7 +56,7 @@
 <br>
 <div class="container">
     <div class="row col-md-6 ">
-        <h2> <span th:text="${user.getUsername()}"></span>'s Followers</h2>
+        <h2> People <span th:text="${user.getUsername()}"></span> Follows</h2>
     </div>
 
     <div class="row">
@@ -66,13 +66,13 @@
                 <thead>
                 <tr>
                     <th> Name </th>
-                    <th> Degrees of Separation </th>
                     <th></th>
                 </tr>
                 </thead>
                 <tbody>
                 <tr th:each="follower : ${user.getFollowingList()}">
                     <td><p th:text="${follower.getUsername()}"></p></td>
+<!--                    TO DO: implement an unfollow button-->
                    <!-- <td> <p th:text="${follower.getJaccardDistance(user)}"/> </td> -->
                    <!-- <td> <button type="submit" th:onclick="${user.unFollow(follower)}">Follow</button> </td> -->
                  </tr>
