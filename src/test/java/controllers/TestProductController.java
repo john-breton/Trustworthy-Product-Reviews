@@ -3,6 +3,7 @@ package controllers;
 import com.productreviews.TrustworthyProductReviewsApplication;
 import com.productreviews.models.User;
 import com.productreviews.repositories.UserRepository;
+import org.junit.After;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -40,15 +41,17 @@ public class TestProductController {
                 .webAppContextSetup(context)
                 .apply(springSecurity())
                 .build();
+        userRepository.deleteAll();
     }
 
     /**
      * Delete all records in the repository after each test so that the user objects don't interfere with eachother.
      */
-    @AfterEach
-    public void resetRepo() {
+    @After
+    public void cleanUp() {
         userRepository.deleteAll();
     }
+
 
     /**
      * Test that a product page is rendered for a product and can use the product page
@@ -65,35 +68,46 @@ public class TestProductController {
         System.out.println(formLogin());
 
         //add a product and check the connection
-        mockMvc.perform(get("/create/5")
+        mockMvc.perform(get("/create/1/name1/book")
                         .contentType(MediaType.APPLICATION_FORM_URLENCODED))
                 .andExpect(model().hasNoErrors())
                 .andExpect(status().is2xxSuccessful());
 
         //add a product and check that the product is created
-        mockMvc.perform(get("/create/5")
+        mockMvc.perform(get("/create/1/name1/book")
                         .contentType(MediaType.APPLICATION_FORM_URLENCODED))
                 .andExpect(model().hasNoErrors())
                 .andExpect(content().string(containsString("Product Created")));
 
         //access the product page and check that there initially no reviews
-        mockMvc.perform(get("/product/5")
+        mockMvc.perform(get("/product/1")
                         .contentType(MediaType.APPLICATION_FORM_URLENCODED))
                 .andExpect(model().hasNoErrors())
                 .andExpect(content().string(containsString("No Reviews")));
 
         //try to add a review to the product and check that the review is added on the review page
-        mockMvc.perform(get("/review/5?score=1&content=review1")
+        mockMvc.perform(get("/review/1?score=1&content=review1")
                         .contentType(MediaType.APPLICATION_FORM_URLENCODED))
                 .andExpect(model().hasNoErrors())
                 .andExpect(content().string(containsString("review1")));
 
         //access the product page and check that the review is added
-        mockMvc.perform(get("/product/5")
+        mockMvc.perform(get("/product/1")
                         .contentType(MediaType.APPLICATION_FORM_URLENCODED))
                 .andExpect(model().hasNoErrors())
                 .andExpect(content().string(containsString("review1")));
 
+        //go the home page
+        mockMvc.perform(get("/home")
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED))
+                .andExpect(model().hasNoErrors())
+                .andExpect(status().is2xxSuccessful());
+
+        //check that the product is on the home page
+        mockMvc.perform(get("/home")
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED))
+                .andExpect(model().hasNoErrors())
+                .andExpect(content().string(containsString("name1")));
     }
 
 }

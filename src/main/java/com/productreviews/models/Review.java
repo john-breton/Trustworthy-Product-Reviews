@@ -124,7 +124,6 @@ public class Review {
                 ", user=" + user +
                 ", score=" + score +
                 ", content='" + content + '\'' +
-                ", associatedProduct=" + associatedProduct +
                 '}';
     }
 
