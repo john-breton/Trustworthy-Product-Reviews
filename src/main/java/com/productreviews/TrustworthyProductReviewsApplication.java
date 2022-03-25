@@ -40,23 +40,25 @@ public class TrustworthyProductReviewsApplication {
 
 
     public static int num_of_users = 10;
+
     /**
      * CommandLineRunner a special bean that lets you execute some logic
      * after the application context is loaded and started.
-     *
+     * <p>
      * This one in particular is used to populate the database with dummy data
+     *
      * @param userRepository
      * @param productRepository
      * @return
      */
     @Bean
     public CommandLineRunner populate(UserRepository userRepository, ProductRepository productRepository,
-                                      ReviewRepository reviewRepository, UserServiceImpl userService){
+                                      ReviewRepository reviewRepository, UserServiceImpl userService) {
         return args -> {
             Faker faker = new Faker();
 
             // Create a user we can login with
-            User user = null;
+            User user;
             ArrayList<User> users = new ArrayList<>();
 
             UserRegistrationDto userRegistrationDto = new UserRegistrationDto();
@@ -66,7 +68,7 @@ public class TrustworthyProductReviewsApplication {
             users.add(user);
 
             // Create the users
-            for (int i = 0; i < num_of_users; i++){
+            for (int i = 0; i < num_of_users; i++) {
                 String name = faker.funnyName().name();
 
                 //  if the name is longer than 20 characters, then splice it
@@ -108,7 +110,7 @@ public class TrustworthyProductReviewsApplication {
 
             int num_of_products = products.size();
             int num_of_users = users.size();
-            int num_of_following, num_reviews , random_product_i, random_user_i, index = 0;
+            int num_of_following, num_reviews, random_product_i, random_user_i, index = 0;
 
             ArrayList<Integer> already_reviewed, already_followed;
 
@@ -116,7 +118,7 @@ public class TrustworthyProductReviewsApplication {
 
             Review review;
 
-            for (User curr_user: users) {
+            for (User curr_user : users) {
 
                 System.out.println("****** curr user is " + curr_user);
                 // empty it for next user
@@ -131,11 +133,11 @@ public class TrustworthyProductReviewsApplication {
                 Product product;
 
                 // Create reviews for each user
-                for (int i = 0; i < num_reviews; i++){
+                for (int i = 0; i < num_reviews; i++) {
                     random_product_i = random.nextInt(num_of_products);
 
                     // make sure the same random number isn't chosen more than once
-                    while (already_reviewed.contains(random_product_i)){
+                    while (already_reviewed.contains(random_product_i)) {
                         random_product_i = random.nextInt(num_of_products);
                     }
 
@@ -145,7 +147,7 @@ public class TrustworthyProductReviewsApplication {
 
                     int rating = random.nextInt(5) + 1; // choose a random number between 1 and 5
                     String comment = faker.hitchhikersGuideToTheGalaxy().marvinQuote();
-                    if (comment.length() > 255 ) comment = comment.substring(0, 250) + "...";
+                    if (comment.length() > 255) comment = comment.substring(0, 250) + "...";
                     review = new Review(curr_user, product, rating, comment);
                     reviewRepository.save(review);
                     product.addReview(review);
@@ -157,9 +159,9 @@ public class TrustworthyProductReviewsApplication {
                 // Have users follow each other
                 num_of_following = random.nextInt(num_of_users - 1); // minus 1 because a person can't follow themselves
                 System.out.println("\n\tgonna follow " + num_of_following + " people");
-                for (int i = 0; i < num_of_following; i++){
+                for (int i = 0; i < num_of_following; i++) {
                     random_user_i = random.nextInt(num_of_users);
-                    while (already_followed.contains(random_user_i)){
+                    while (already_followed.contains(random_user_i)) {
                         random_user_i = random.nextInt(num_of_users);
                     }
 

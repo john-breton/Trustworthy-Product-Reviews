@@ -6,7 +6,7 @@ import com.google.common.collect.Multisets;
 import org.javatuples.Pair;
 
 import javax.persistence.*;
-import java.lang.reflect.Array;
+import java.text.DecimalFormat;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -213,7 +213,8 @@ public class User {
         double jaccardIndex = intersectSize / (localScores.size() + followerScores.size() - intersectSize);
 
         // Jaccard distance is 1 - Jaccard Index
-        return 1 - jaccardIndex;
+        DecimalFormat df = new DecimalFormat("#.###");
+        return Double.parseDouble(df.format(1 - jaccardIndex));
     }
 
     /**
