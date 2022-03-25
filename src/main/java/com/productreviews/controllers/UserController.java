@@ -65,10 +65,8 @@ public class UserController {
         Map<User, Double> sorted = usersAndJaccard.entrySet().stream()
                 .sorted(Map.Entry.comparingByValue())
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
-        List<User> sortedUsers = new ArrayList<>(sorted.keySet());
-        Collections.reverse(sortedUsers);
 
-        model.addAttribute("followers", sortedUsers);
+        model.addAttribute("followers", sorted.keySet());
         return "user-following";
     }
 

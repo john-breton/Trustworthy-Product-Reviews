@@ -115,10 +115,8 @@ public class ProductController {
         Map<User, Double> sorted = usersAndJaccard.entrySet().stream()
                 .sorted(Map.Entry.comparingByValue())
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
-        List<User> sortedUsers = new ArrayList<>(sorted.keySet());
-        Collections.reverse(sortedUsers);
 
-        model.addAttribute("users", sortedUsers);
+        model.addAttribute("users", sorted.keySet());
         model.addAttribute("products", productRepository.findAll());
         return "landingPage";
     }
