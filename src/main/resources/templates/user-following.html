@@ -29,14 +29,14 @@
                 <thead>
                 <tr>
                     <th> Name </th>
-                    <th></th>
+                    <th> Jaccard Distance </th>
                 </tr>
                 </thead>
                 <tbody>
-                <tr th:each="follower : ${user.getFollowingList()}">
+                <tr th:each="follower : ${followers}">
                     <td><p th:text="${follower.getUsername()}"></p></td>
 <!--                    TO DO: implement an unfollow button-->
-                   <!-- <td> <p th:text="${follower.getJaccardDistance(user)}"/> </td> -->
+                    <td><p th:text="${user.getJaccardDistanceReviews(follower)}"></p></td>
                    <!-- <td> <button type="submit" th:onclick="${user.unFollow(follower)}">Follow</button> </td> -->
                  </tr>
                  </tbody>

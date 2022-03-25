@@ -72,7 +72,24 @@ public class Product {
     public Product(String name, String image) {
         this.name = name;
         this.image = image;
-        averageRating=0;
+        averageRating = 0;
+        reviews = new ArrayList<>();
+    }
+
+    /**
+     * Create an expanded new product with a name, image, and specific id
+     *
+     * @param name     The name of the product
+     * @param image    The image that will be used for the product, placed in the /images/ directory
+     * @param category the category that the product belongs to
+     * @param id       The id number to be associated with this product.
+     */
+    public Product(String name, String image, Category category, Long id) {
+        this.name = name;
+        this.id = id;
+        this.image = image;
+        this.category = category;
+        averageRating = 0;
         reviews = new ArrayList<>();
     }
 
@@ -81,30 +98,13 @@ public class Product {
      *
      * @param name  The name of the product
      * @param image The image that will be used for the product, placed in the /images/ directory
-     * @param category  the category that the product belongs to
      * @param id    The id number to be associated with this product.
      */
-    public Product(String name, String image,Category category,Long id) {
+    public Product(String name, String image, Long id) {
         this.name = name;
         this.id = id;
         this.image = image;
-        this.category=category;
-        averageRating=0;
-        reviews = new ArrayList<>();
-    }
-
-    /**
-     * Create an expanded new product with a name, image, and specific id
-     *
-     * @param name  The name of the product
-     * @param image The image that will be used for the product, placed in the /images/ directory
-     * @param id    The id number to be associated with this product.
-     */
-    public Product(String name, String image,Long id) {
-        this.name = name;
-        this.id = id;
-        this.image = image;
-        averageRating=0;
+        averageRating = 0;
         reviews = new ArrayList<>();
     }
 
@@ -195,12 +195,12 @@ public class Product {
         return Double.parseDouble(df.format(averageRating));
     }
 
-    public void setAverageRating(double averageRating){
-        this.averageRating=averageRating;
+    public void setAverageRating(double averageRating) {
+        this.averageRating = averageRating;
     }
 
-    public void updateAverageRating(){
-        averageRating = reviews.stream().mapToDouble(Review::getScore).sum()/reviews.size();
+    public void updateAverageRating() {
+        averageRating = reviews.stream().mapToDouble(Review::getScore).sum() / reviews.size();
     }
 
     /**
@@ -228,10 +228,11 @@ public class Product {
 
     /**
      * Given a string, creates a new product
+     *
      * @param productStr a comma separated product in the format name, image, category, description, url
      * @return
      */
-    public static Product createProductFromString(String productStr){
+    public static Product createProductFromString(String productStr) {
 
         String[] params = productStr.split(",");
 
@@ -245,7 +246,7 @@ public class Product {
         Product product;
         try {
             product = new Product(name, image, description, Category.valueOf(category.toUpperCase()));
-        } catch (Exception e){
+        } catch (Exception e) {
             System.out.println("Exception creating product " + e);
             return null;
         }

@@ -17,6 +17,7 @@ public class MainController {
     /**
      * This method returns the landing page for the site.
      * ie. the page landed on after login.
+     *
      * @return the landing page template
      */
     @GetMapping("/")
