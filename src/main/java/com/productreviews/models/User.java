@@ -287,7 +287,7 @@ public class User {
 
         // if user is not here, that means they're far. Return max distance + 1
         if (!distances.containsKey(dest)) {
-            return "" + (farthest + 1);
+            return "-";
         }
 
         return distances.get(dest).getValue0() + "";
