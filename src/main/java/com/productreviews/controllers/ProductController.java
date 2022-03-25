@@ -248,7 +248,7 @@ public class ProductController {
      *
      * @param productId the ID of the product to retreive the reviews for
      * @param userReviewFilter indicates whether the reviews should include all or only the users the the current user follows
-     * @param JaccardFilter indicates whether the reviews should be ordered from High to Low Jaccard Distance or Low to High
+     //* @param JaccardFilter indicates whether the reviews should be ordered from High to Low Jaccard Distance or Low to High
      * @param minStarFilter indicates the minimum rating that the user wishes to see
      * @param maxStarFilter indicates the maximum rating that the user wished to see
      * @param authentication provides access to the current user object
@@ -258,7 +258,7 @@ public class ProductController {
     @GetMapping("/filterreviews/{productId}")
     public String viewFilteredReviews(@PathVariable int productId,
                                       @RequestParam(required = false) String userReviewFilter,
-                                      @RequestParam(required = false) String JaccardFilter,
+                                      //@RequestParam(required = false) String JaccardFilter,
                                       @RequestParam(required = false) int minStarFilter,
                                       @RequestParam(required = false) int maxStarFilter,
                                       Authentication authentication, Model model) {
@@ -266,7 +266,7 @@ public class ProductController {
         String currentUser = authentication.getName();
         User user = userRepository.findByUsername(currentUser);
 
-        log.info("Filtering reviews! " + userReviewFilter + JaccardFilter + " Max :" + maxStarFilter + " Min: " + minStarFilter);
+        log.info("Filtering reviews! " + userReviewFilter + " Max :" + maxStarFilter + " Min: " + minStarFilter);
 
         if (user == null || !authentication.isAuthenticated()) {
             log.error("User not found or not authenticated");
@@ -296,7 +296,7 @@ public class ProductController {
             product.setAverageRating(reviews.size() > 0 ? reviews.stream().mapToDouble(Review::getScore).sum()/reviews.size() : 0.0);
         }
 
-        if (JaccardFilter.equals("LH")) {
+      /*  if (JaccardFilter.equals("LH")) {
             List<Review> reviews = reviewRepository.findAllByAssociatedProductIdAndScoreGreaterThanEqualAndScoreLessThanEqual(productId, minStarFilter,
                     maxStarFilter);
             model.addAttribute("reviews", reviews);
@@ -306,7 +306,7 @@ public class ProductController {
                     maxStarFilter);
             model.addAttribute("reviews", reviews);
             product.setAverageRating(reviews.size() > 0 ? reviews.stream().mapToDouble(Review::getScore).sum()/reviews.size() : 0.0);
-        }
+        } */
 
         return "product";
     }
