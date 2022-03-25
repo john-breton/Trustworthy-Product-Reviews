@@ -1,7 +1,8 @@
 package com.productreviews.controllers;
 
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import com.productreviews.models.Product;
 import com.productreviews.models.Review;
@@ -103,7 +104,19 @@ public class ProductController {
             log.error("User not found or not authenticated");
         }
         model.addAttribute("mainUser", user);
-        model.addAttribute("users", userRepository.findAll());
+
+        // Order the users by Jaccard distance to avoid using JS at all costs
+        Map<User, Double> usersAndJaccard = new HashMap<>();
+        for (User currUser : userRepository.findAll()) {
+            usersAndJaccard.put(currUser, Objects.requireNonNull(user).getJaccardDistanceReviews(currUser));
+        }
+
+        // Magic
+        Map<User, Double> sorted = usersAndJaccard.entrySet().stream()
+                .sorted(Map.Entry.comparingByValue())
+                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
+
+        model.addAttribute("users", sorted.keySet());
         model.addAttribute("products", productRepository.findAll());
         return "landingPage";
     }

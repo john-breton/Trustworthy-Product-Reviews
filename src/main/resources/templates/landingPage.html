@@ -95,6 +95,7 @@
             <thead>
             <tr>
                 <th>User</th>
+                <th>Jaccard Distance</th>
             </tr>
             </thead>
             <tbody>
@@ -103,6 +104,7 @@
             </tr>
             <tr th:each="user : ${users}">
                 <td th:if="${user.id != mainUser.id}"><span th:text="${user.username}"> User </span></td>
+                <td th:if="${user.id != mainUser.id}"><span th:text="${mainUser.getJaccardDistanceReviews(user)}"> Jaccard Distance </span></td>
             </tr>
             </tbody>
         </table>
