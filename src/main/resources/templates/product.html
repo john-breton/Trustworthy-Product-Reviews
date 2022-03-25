@@ -65,27 +65,34 @@
                 <strong>Filter by User</strong>
                 <br/>
                 <select id="userReviewFilter" name="userReviewFilter" class="col-sm" style="margin-top: 5px; margin-bottom: 5px;">
-                <option value="all">All Reviews</option>
-                <option value="following">Users I Follow</option>
-            </select>
+                    <option value="all">All Reviews</option>
+                    <option value="following">Users I Follow</option>
+                </select>
+                <br/><br/>
+                <strong>Filter by Jaccard</strong>
+                <br/>
+                <select id="JaccardFilter" name="JaccardFilter" class="col-sm" style="margin-top: 5px; margin-bottom: 5px;">
+                    <option value="LH">Low to High</option>
+                    <option value="HL">High to Low</option>
+                </select>
                 <br/><br/>
                 <strong>Filter by Rating</strong>
                 <br/>
                 Minimum Rating: <select id="minStarFilter" name="minStarFilter" class="col-sm" style="margin-top: 5px; margin-bottom: 5px;">
-                <option value="1" selected>1</option>
-                <option value="2">2</option>
-                <option value="3">3</option>
-                <option value="4">4</option>
-                <option value="5">5</option>
-            </select>
+                    <option value="1" selected>1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                </select>
                 <br/>
                 Maximum Rating: <select id="maxStarFilter" name="maxStarFilter" class="col-sm" style="margin: 5px;">
-                <option value="1">1</option>
-                <option value="2">2</option>
-                <option value="3">3</option>
-                <option value="4">4</option>
-                <option value="5" selected>5</option>
-            </select>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5" selected>5</option>
+                </select>
                 <br/>
                 <button type="submit" id="filter" style="margin-top: 5px; margin-bottom: 5px;">Filter Reviews</button>
             </form>
@@ -96,6 +103,7 @@
                     <th>Degrees of Separation</th>
                     <th>Rating</th>
                     <th>Comment</th>
+                    <th>Jaccard Distance</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -109,6 +117,7 @@
                         <td><span th:text="${user.getDegreesOfSeparation(review.user)}"></span></td>
                         <td><span th:text="${review.score}">  </span></td>
                         <td><span th:text="${review.content}">  </span></td>
+                        <td><span th:text="${user.getJaccardDistanceReviews(review.user)}">  </span></td>
 
                         <!-- follow button that allows the user to follow another user and redirects to the user page -->
                         <td th:if="${review.getUserID() != user.getId() and !(user.isFollowing(review.getUser())) }">

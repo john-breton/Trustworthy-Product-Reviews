@@ -257,6 +257,7 @@ public class ProductController {
     @GetMapping("/filterreviews/{productId}")
     public String viewFilteredReviews(@PathVariable int productId,
                                       @RequestParam(required = false) String userReviewFilter,
+                                      @RequestParam(required = false) String JaccardFilter,
                                       @RequestParam(required = false) int minStarFilter,
                                       @RequestParam(required = false) int maxStarFilter,
                                       Authentication authentication, Model model) {
@@ -290,6 +291,18 @@ public class ProductController {
         } else if (userReviewFilter.equals("following")) {
             List<Review> reviews = reviewRepository.findAllByAssociatedProductIdAndUserInAndScoreGreaterThanEqualAndScoreLessThanEqual(productId, user.getFollowingList(), minStarFilter,
                                                                     maxStarFilter);
+            model.addAttribute("reviews", reviews);
+            product.setAverageRating(reviews.size() > 0 ? reviews.stream().mapToDouble(Review::getScore).sum()/reviews.size() : 0.0);
+        }
+
+        if (JaccardFilter.equals("LH")) {
+            List<Review> reviews = reviewRepository.findAllByAssociatedProductIdAndScoreGreaterThanEqualAndScoreLessThanEqual(productId, minStarFilter,
+                    maxStarFilter);
+            model.addAttribute("reviews", reviews);
+            product.setAverageRating(reviews.size() > 0 ? reviews.stream().mapToDouble(Review::getScore).sum()/reviews.size() : 0.0);
+        } else if (JaccardFilter.equals("HL")) {
+            List<Review> reviews = reviewRepository.findAllByAssociatedProductIdAndUserInAndScoreGreaterThanEqualAndScoreLessThanEqual(productId, user.getFollowingList(), minStarFilter,
+                    maxStarFilter);
             model.addAttribute("reviews", reviews);
             product.setAverageRating(reviews.size() > 0 ? reviews.stream().mapToDouble(Review::getScore).sum()/reviews.size() : 0.0);
         }
