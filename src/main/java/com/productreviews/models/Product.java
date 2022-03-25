@@ -228,12 +228,12 @@ public class Product {
 
     /**
      * Given a string, creates a new product
-     * @param product_str a comma separated product in the format name, image, category, description, url
+     * @param productStr a comma separated product in the format name, image, category, description, url
      * @return
      */
-    public static Product createProductFromString(String product_str){
+    public static Product createProductFromString(String productStr){
 
-        String[] params = product_str.split(",");
+        String[] params = productStr.split(",");
 
         int i = 0;
         String name = params[i].trim();
