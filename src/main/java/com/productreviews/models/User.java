@@ -218,14 +218,16 @@ public class User {
 
     /**
      * Uses Dijkstra's shortest path algorithm to calculate the shortest distance between users,
-     * Ie. degrees of freedom.
-     * A higher degree of freedom indicates more separation
+     * Ie. degrees of separation.
+     * A higher degree of separation indicates more separation
      * @param dest the user who we want to find the shortest path to.
-     * @return int degree of freedom
+     * @return degree of separation as a string
      */
-    public int getDegreesOfSeparation(User dest){
+    public String getDegreesOfSeparation(User dest){
 
-        if (dest == this) return 0;
+        if (dest == this) return "-";
+
+        if (this.getFollowingList().isEmpty()) return "-";
 
         // What's the farthest they can be
         int farthest = 0;
@@ -274,7 +276,7 @@ public class User {
 
                 // If the curr_distance is 1, return because we know it can't get smaller
                 if (following.equals(dest) && curr_distance == 1){
-                    return 1;
+                    return 1 + "";
                 }
 
                 if (!not_visited.contains(following) && !visited.contains(following)) not_visited.add(following);
@@ -285,10 +287,10 @@ public class User {
 
         // if user is not here, that means they're far. Return max distance + 1
         if (!distances.containsKey(dest)) {
-            return farthest + 1;
+            return "" + (farthest + 1);
         }
 
-        return distances.get(dest).getValue0();
+        return distances.get(dest).getValue0() + "";
     }
 
     @Override
