@@ -198,7 +198,7 @@ public class User {
         Multiset<Double> localScores = HashMultiset.create();
         Multiset<Double> followerScores = HashMultiset.create();
 
-        // Get a multiset for all the reviews written by the this user and then the other user
+        // Get a multiset for all the reviews written by the user and then the other user
         localScores.addAll(getReviews().stream().mapToDouble(Review::getScore).boxed().collect(Collectors.toList()));
         followerScores.addAll(followerFollowingList.stream().mapToDouble(Review::getScore).boxed().collect(Collectors.toList()));
 
@@ -219,12 +219,13 @@ public class User {
 
     /**
      * Uses Dijkstra's shortest path algorithm to calculate the shortest distance between users,
-     * Ie. degrees of separation.
-     * A higher degree of separation indicates more separation
+     * Ie. degrees of freedom.
+     * A higher degree of freedom indicates more separation
+     *
      * @param dest the user who we want to find the shortest path to.
      * @return degree of separation as a string
      */
-    public String getDegreesOfSeparation(User dest){
+    public String getDegreesOfSeparation(User dest) {
 
         if (dest == this) return "-";
 
@@ -254,10 +255,10 @@ public class User {
             curr_user = not_visited.poll();
 
             // Go through the users that curr_user is following
-            for (User following: curr_user.getFollowingList()) {
+            for (User following : curr_user.getFollowingList()) {
 
                 // If they're not in the distances map, add them
-                if (!distances.containsKey(following)){
+                if (!distances.containsKey(following)) {
                     distances.put(following, Pair.with(Integer.MAX_VALUE, curr_user));
                 }
 
@@ -276,7 +277,7 @@ public class User {
                 }
 
                 // If the curr_distance is 1, return because we know it can't get smaller
-                if (following.equals(dest) && curr_distance == 1){
+                if (following.equals(dest) && curr_distance == 1) {
                     return 1 + "";
                 }
 

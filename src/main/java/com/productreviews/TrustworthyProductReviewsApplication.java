@@ -47,9 +47,11 @@ public class TrustworthyProductReviewsApplication {
      * <p>
      * This one in particular is used to populate the database with dummy data
      *
-     * @param userRepository
-     * @param productRepository
-     * @return
+     * @param userRepository    The crud repository where User objects will be stored
+     * @param productRepository The crud repository where Product objects will be stored
+     * @param reviewRepository  The crud repository where Review objects will be stored
+     * @param userService       Authorization class that provides useful user lookup and saving services
+     * @return The CommandLineRunner that is used to pre-populate the database
      */
     @Bean
     public CommandLineRunner populate(UserRepository userRepository, ProductRepository productRepository,
