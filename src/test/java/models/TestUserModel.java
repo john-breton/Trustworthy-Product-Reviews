@@ -189,17 +189,17 @@ public class TestUserModel {
         user2.addFollowing(user3);
 
         // degrees of separation between users 1 and 2 should be 1
-        assertEquals(1, user1.getDegreesOfSeparation(user2));
+        assertEquals("1", user1.getDegreesOfSeparation(user2));
 
         // degrees of separation between users 1 and 3 should be 2
-        assertEquals(2, user1.getDegreesOfSeparation(user3));
+        assertEquals("2", user1.getDegreesOfSeparation(user3));
 
         // degrees of separation between users 1 and 4 should be 3 (max + 1)
-        assertEquals(3, user1.getDegreesOfSeparation(user4));
+        assertEquals("3", user1.getDegreesOfSeparation(user4));
 
         // test cyclical following
         user3.addFollowing(user1);
-        assertEquals(2, user1.getDegreesOfSeparation(user3));
+        assertEquals("2", user1.getDegreesOfSeparation(user3));
 
     }
 }
