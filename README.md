@@ -12,24 +12,24 @@ Users review Products. These products could be identified by a link to the websi
 
 ## Milestone Objectives
 ### Milestone 2
- - [ ] Populate the backend product database upon project boot
- - [ ] Implement and display Jaccard distance calculations
- - [ ] Add the ability to show the average rating for the users a given user is following
- - [ ] Implement and display degrees of separation calculations
- - [ ] Add the ability to rank product reviews based on the similarity score of the people that have reviewed them
- - [ ] Add the ability to list products by category and to sort them by average rating
- - [ ] Add a full site navigation bar that can reliably bring the user to any relevant webpage.
+ - [X] Populate the backend product database upon project boot
+ - [X] Implement and display Jaccard distance calculations
+ - [X] Add the ability to show the average rating for the users a given user is following
+ - [X] Implement and display degrees of separation calculations
+ - [X] Add the ability to rank product reviews based on the similarity score of the people that have reviewed them
+ - [X] Add the ability to list products by category and to sort them by average rating
+ - [X] Add a full site navigation bar that can reliably bring the user to any relevant webpage.
 
 ## Current ER Diagram
 
 <p style="text-align:right">
 <img src="documentation\ERDiagram.png" alt="ER Diagram">
 </p>
-Date: March 10th, 2022
+Date: March 24th, 2022
 
 ## Current UML Class Diagram of Models
 
 <p style="text-align:right">
 <img src="documentation\ClassDiagram.png" alt="Class Diagram">
 </p>
-Date: March 10th, 2022
+Date: March 24th, 2022
