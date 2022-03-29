@@ -10,6 +10,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.*;
@@ -43,7 +44,7 @@ public class UserController {
             log.error("user not found or not authenticated");
         }
         model.addAttribute("user", user);
-        return "user-page";
+        return "user-products";
     }
 
     @GetMapping("/people")
@@ -68,6 +69,29 @@ public class UserController {
 
         model.addAttribute("followers", sorted.keySet());
         return "user-following";
+    }
+
+    @GetMapping("/{username}")
+    public String other_user(@PathVariable String username, Model model){
+        User user = userRepository.findByUsername(username);
+        if (user == null){
+            System.out.println("Could not find user");
+            return "error-page";
+        }
+        // Order the users by Jaccard distance to avoid using JS at all costs
+        Map<User, Double> usersAndJaccard = new HashMap<>();
+        for (User currUser : Objects.requireNonNull(user).getFollowingList()) {
+            usersAndJaccard.put(currUser, Objects.requireNonNull(user).getJaccardDistanceReviews(currUser));
+        }
+
+        // Magic
+        Map<User, Double> sorted = usersAndJaccard.entrySet().stream()
+                .sorted(Map.Entry.comparingByValue())
+                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
+
+        model.addAttribute("followers", sorted.keySet());
+        model.addAttribute("user", user);
+        return "user-page";
     }
 
 }
