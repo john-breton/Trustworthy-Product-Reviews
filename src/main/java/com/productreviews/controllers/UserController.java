@@ -72,12 +72,22 @@ public class UserController {
     }
 
     @GetMapping("/{username}")
-    public String other_user(@PathVariable String username, Model model){
+    public String other_user(@PathVariable String username, Authentication authentication, Model model){
         User user = userRepository.findByUsername(username);
         if (user == null){
             System.out.println("Could not find user");
             return "error-page";
         }
+
+        // Get current user
+        String current_user = authentication.getName();
+        User curr_user = userRepository.findByUsername(current_user);
+        if (curr_user == null || !authentication.isAuthenticated()) {
+            log.error("user not found or not authenticated");
+        }
+
+        Double jacc_distance = curr_user.getJaccardDistanceReviews(user);
+
         // Order the users by Jaccard distance to avoid using JS at all costs
         Map<User, Double> usersAndJaccard = new HashMap<>();
         for (User currUser : Objects.requireNonNull(user).getFollowingList()) {
@@ -89,8 +99,10 @@ public class UserController {
                 .sorted(Map.Entry.comparingByValue())
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
 
+        model.addAttribute("jacc_distance", jacc_distance);
         model.addAttribute("followers", sorted.keySet());
         model.addAttribute("user", user);
+        model.addAttribute("curr_user", curr_user);
         return "user-page";
     }
 

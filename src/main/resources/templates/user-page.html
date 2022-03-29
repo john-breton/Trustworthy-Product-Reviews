@@ -22,6 +22,8 @@
 
         <div>
             <h2> <span th:text="${user.getUsername()}"></span></h2>
+            <h5> Degrees of Separation: <span th:text="${curr_user.getDegreesOfSeparation(user)}"></span></h5>
+            <h5> Jaccard Distance: <span th:text="${jacc_distance}"></span></h5>
         </div>
         <br>
         <ul class="nav nav-tabs">
@@ -58,12 +60,14 @@
                     <tr>
                         <th> Name </th>
                         <th> Jaccard Distance </th>
+                        <th> Degrees of Separation </th>
                     </tr>
                     </thead>
                     <tbody>
                     <tr th:each="follower : ${followers}">
                         <td><a th:href="@{/user/{username}(username=${follower.getUsername()})}"><p th:text="${follower.getUsername()}"></p></a></td>
                         <td><p th:text="${user.getJaccardDistanceReviews(follower)}"></p></td>
+                        <td><span th:text="${curr_user.getDegreesOfSeparation(follower)}"></span></td>
                     </tr>
                     </tbody>
                 </table>
