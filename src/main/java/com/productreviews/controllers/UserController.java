@@ -32,8 +32,11 @@ public class UserController {
      * @return redirect to products
      */
     @GetMapping
-    public String user() {
-        return "redirect:/user/products";
+    public String user(Authentication authentication) {
+        // Get current user
+        String current_user = authentication.getName();
+        User curr_user = userRepository.findByUsername(current_user);
+        return "redirect:/user/" + curr_user.getUsername();
     }
 
     @GetMapping("/products")
@@ -74,16 +77,13 @@ public class UserController {
     @GetMapping("/{username}")
     public String other_user(@PathVariable String username, Authentication authentication, Model model){
         User user = userRepository.findByUsername(username);
-        if (user == null){
-            System.out.println("Could not find user");
-            return "error-page";
-        }
 
         // Get current user
         String current_user = authentication.getName();
         User curr_user = userRepository.findByUsername(current_user);
-        if (curr_user == null || !authentication.isAuthenticated()) {
+        if (user==null || curr_user == null || !authentication.isAuthenticated()) {
             log.error("user not found or not authenticated");
+            return "error-page";
         }
 
         Double jacc_distance = curr_user.getJaccardDistanceReviews(user);
@@ -106,4 +106,17 @@ public class UserController {
         return "user-page";
     }
 
+    @GetMapping("/follow/{username}")
+    public String follow(@PathVariable String username, Authentication authentication, Model model){
+        String currentUser = authentication.getName();
+        User user = userRepository.findByUsername(currentUser);
+        if (user == null || !authentication.isAuthenticated()) {
+            log.error("User not found or not authenticated");
+            return "error-page";
+        }
+        User followedUser = userRepository.findByUsername(username);
+        Objects.requireNonNull(user).addFollowing(followedUser);
+        userRepository.save(user);
+        return "redirect:/user/" + followedUser.getUsername();
+    }
 }

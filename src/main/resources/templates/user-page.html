@@ -22,6 +22,14 @@
 
         <div>
             <h2> <span th:text="${user.getUsername()}"></span></h2>
+            <form action="#" class="form-horizontal"
+                  th:action="@{/user/follow/{username}(username=${user.getUsername()})}" method="get">
+
+                <!-- follow button that allows the user to follow another user and redirects to the user page -->
+                <td th:if="${user.getId() != curr_user.getId() and !(curr_user.isFollowing(user)) }">
+                    <button type="submit" id="follow">Follow</button>
+                <td>
+            </form>
             <h5> Degrees of Separation: <span th:text="${curr_user.getDegreesOfSeparation(user)}"></span></h5>
             <h5> Jaccard Distance: <span th:text="${jacc_distance}"></span></h5>
         </div>
