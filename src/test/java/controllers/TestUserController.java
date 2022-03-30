@@ -95,4 +95,20 @@ public class TestUserController {
                 .andExpect(content().string(containsString(USERNAME)))
                 .andExpect(status().isOk());
     }
+
+    /**
+     * Test that the user page is rendered with the correct user.
+     *
+     * @throws Exception
+     */
+    @Test
+    @WithMockUser(username = USERNAME)
+    public void testPersonPage() throws Exception {
+        mvc
+                .perform(get("/user/"+USERNAME)
+                        .contentType(MediaType.APPLICATION_FORM_URLENCODED))
+                .andExpect(model().hasNoErrors())
+                .andExpect(content().string(containsString(USERNAME)))
+                .andExpect(status().isOk());
+    }
 }

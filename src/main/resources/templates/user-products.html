@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+    <link rel="stylesheet" href="/static/styles/style.css" />
+    <link th:href="@{/public/style.css}" rel="stylesheet" />
+    <script type="text/javascript" src="/webjars/bootstrap/js/bootstrap.min.js"></script>
+    <title>User Page</title>
+</head>
+<body>
+<div th:insert="nav :: nav">  </div>
+<br>
+<br>
+<div class="container">
+    <div class="row col-md-6 ">
+        <h2> <span th:text="${user.getUsername()}"></span>'s Reviews</h2>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6">
+<!--            Reviews table-->
+            <table class="table">
+                <thead>
+                <tr>
+                    <th> Name </th>
+                    <th> Score </th>
+                    <th> Comment </th>
+                </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="review : ${user.getReviews()}">
+                        <td><a th:href="@{/product/{id}(id=${review.getAssociatedProduct().getId()})}">
+                            <span th:text="${review.getAssociatedProduct().getName()}"> </span></a></td>
+                        <td> <p th:text="${review.getScore()}"/> </td>
+                        <td> <p th:text="${review.getContent()}"/> </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+ </div>
+
+</body>
+</html>

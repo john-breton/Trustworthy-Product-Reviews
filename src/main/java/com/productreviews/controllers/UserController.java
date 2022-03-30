@@ -10,6 +10,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.*;
@@ -31,8 +32,11 @@ public class UserController {
      * @return redirect to products
      */
     @GetMapping
-    public String user() {
-        return "redirect:/user/products";
+    public String user(Authentication authentication) {
+        // Get current user
+        String current_user = authentication.getName();
+        User curr_user = userRepository.findByUsername(current_user);
+        return "redirect:/user/" + curr_user.getUsername();
     }
 
     @GetMapping("/products")
@@ -43,7 +47,7 @@ public class UserController {
             log.error("user not found or not authenticated");
         }
         model.addAttribute("user", user);
-        return "user-page";
+        return "user-products";
     }
 
     @GetMapping("/people")
@@ -70,4 +74,49 @@ public class UserController {
         return "user-following";
     }
 
+    @GetMapping("/{username}")
+    public String other_user(@PathVariable String username, Authentication authentication, Model model){
+        User user = userRepository.findByUsername(username);
+
+        // Get current user
+        String current_user = authentication.getName();
+        User curr_user = userRepository.findByUsername(current_user);
+        if (user==null || curr_user == null || !authentication.isAuthenticated()) {
+            log.error("user not found or not authenticated");
+            return "error-page";
+        }
+
+        Double jacc_distance = curr_user.getJaccardDistanceReviews(user);
+
+        // Order the users by Jaccard distance to avoid using JS at all costs
+        Map<User, Double> usersAndJaccard = new HashMap<>();
+        for (User currUser : Objects.requireNonNull(user).getFollowingList()) {
+            usersAndJaccard.put(currUser, Objects.requireNonNull(user).getJaccardDistanceReviews(currUser));
+        }
+
+        // Magic
+        Map<User, Double> sorted = usersAndJaccard.entrySet().stream()
+                .sorted(Map.Entry.comparingByValue())
+                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
+
+        model.addAttribute("jacc_distance", jacc_distance);
+        model.addAttribute("followers", sorted.keySet());
+        model.addAttribute("user", user);
+        model.addAttribute("curr_user", curr_user);
+        return "user-page";
+    }
+
+    @GetMapping("/follow/{username}")
+    public String follow(@PathVariable String username, Authentication authentication, Model model){
+        String currentUser = authentication.getName();
+        User user = userRepository.findByUsername(currentUser);
+        if (user == null || !authentication.isAuthenticated()) {
+            log.error("User not found or not authenticated");
+            return "error-page";
+        }
+        User followedUser = userRepository.findByUsername(username);
+        Objects.requireNonNull(user).addFollowing(followedUser);
+        userRepository.save(user);
+        return "redirect:/user/" + followedUser.getUsername();
+    }
 }

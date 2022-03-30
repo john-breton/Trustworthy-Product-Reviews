@@ -98,7 +98,7 @@
                 <td colspan="2"> No Other Users </td>
             </tr>
             <tr th:each="user : ${users}">
-                <td th:if="${user.id != mainUser.id}"><span th:text="${user.username}"> User </span></td>
+                <td th:if="${user.id != mainUser.id}"><a th:href="@{/user/{username}(username=${user.getUsername()})}"><span th:text="${user.username}"> User </span></a></td>
                 <td th:if="${user.id != mainUser.id}"><span th:text="${mainUser.getJaccardDistanceReviews(user)}"> Jaccard Distance </span></td>
             </tr>
             </tbody>
