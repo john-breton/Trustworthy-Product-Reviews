@@ -28,9 +28,25 @@
 </p>
 
 <main>
-
     <section>
         <form th:action="@{/products/filterandsearch}" method="GET">
+
+            <script>
+                window.onload = function() {
+                    const sort = sessionStorage.getItem("sort") ? sessionStorage.getItem("sort") : "asc";
+                    const category = sessionStorage.getItem("category") ? sessionStorage.getItem("category") : "BOOK";
+                    $('#sort').val(sort);
+                    $('#category').val(category);
+                }
+                $(document).on("click", "#filter", function() {
+                    const sort = $('#sort').val();
+                    const category = $('#category').val();
+
+                    sessionStorage.setItem("sort", sort);
+                    sessionStorage.setItem("category", category);
+                });
+            </script>
+
             <h4>Filters/Search</h4>
             <div>
                 <label>Sort By</label>
@@ -53,7 +69,7 @@
                 <label>Search</label>
                 <input type="text" id="search"/>
             </div>
-            <button type="submit">
+            <button type="submit" id="filter">
                 <i></i> Filter/Search
             </button>
         </form>
