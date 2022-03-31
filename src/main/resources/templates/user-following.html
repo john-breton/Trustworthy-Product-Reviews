@@ -34,11 +34,13 @@
                 </thead>
                 <tbody>
                 <tr th:each="follower : ${followers}">
+                    <form action="#" th:action="@{/user/unfollow/__${follower.getId()}__}" method="get">
                     <td><p th:text="${follower.getUsername()}"></p></td>
-<!--                    TO DO: implement an unfollow button-->
                     <td><p th:text="${user.getJaccardDistanceReviews(follower)}"></p></td>
                    <!-- <td> <button type="submit" th:onclick="${user.unFollow(follower)}">Follow</button> </td> -->
-                 </tr>
+                    <td> <button type="submit" id="submit" style="margin-top: 5px; margin-bottom: 5px;">Unfollow</button></td>
+                    </form>
+                </tr>
                  </tbody>
              </table>
          </div>

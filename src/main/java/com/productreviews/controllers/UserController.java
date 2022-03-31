@@ -1,5 +1,6 @@
 package com.productreviews.controllers;
 
+import com.productreviews.models.Product;
 import com.productreviews.models.User;
 import com.productreviews.repositories.UserRepository;
 import org.slf4j.Logger;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -118,5 +120,51 @@ public class UserController {
         Objects.requireNonNull(user).addFollowing(followedUser);
         userRepository.save(user);
         return "redirect:/user/" + followedUser.getUsername();
+    }
+    /**
+     * Unfollow a user from the following page
+     * @param userId of the user to be unfollowed
+     * @param authentication of the current logged in user
+     * @param model of the app
+     * @return the page that confirms the unfollowing of the user
+     */
+    @GetMapping("/unfollow/{userId}")
+    public String unfollowUser(@PathVariable Long userId,Authentication authentication,
+                                 Model model) {
+        User unfollowed = userRepository.findById(userId).orElse(null);
+        String currentUser = authentication.getName();
+        User user = userRepository.findByUsername(currentUser);
+        if (user == null || !authentication.isAuthenticated()) {
+            log.error("User not found or not authenticated");
+        }
+        user.unFollow(unfollowed);
+        userRepository.save(user);
+        model.addAttribute("user", unfollowed);
+        model.addAttribute("productid", null);
+        return "unfollow";
+
+    }
+
+    /**
+     * Unfollow a user from the product page
+     * @param userId of the user to be unfollowed
+     * @param authentication of the current logged in user
+     * @param model of the app
+     * @return the page that confirms the unfollowing of the user
+     */
+    @GetMapping("/unfollow/{userId}/{productId}")
+    public String unfollowUserProduct(@PathVariable Long userId,@PathVariable Long productId, Authentication authentication,
+                               Model model) {
+        User unfollowed = userRepository.findById(userId).orElse(null);
+        String currentUser = authentication.getName();
+        User user = userRepository.findByUsername(currentUser);
+        if (user == null || !authentication.isAuthenticated()) {
+            log.error("User not found or not authenticated");
+        }
+        user.unFollow(unfollowed);
+        userRepository.save(user);
+        model.addAttribute("user", unfollowed);
+        model.addAttribute("productid", productId);
+        return "unfollow";
     }
 }
