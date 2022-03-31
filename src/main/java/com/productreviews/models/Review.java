@@ -25,7 +25,7 @@ public class Review {
      * The user that wrote the review
      */
     @ManyToOne
-    @JoinColumn(name = "user_id") // TODO Investigate this datasource error
+    @JoinColumn(name = "user_id")
     private User user;
 
     /**

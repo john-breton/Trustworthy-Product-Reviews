@@ -52,6 +52,11 @@ public class Product {
     private Category category;
 
     /**
+     * The url where this product is listed for sale
+     */
+    private String url;
+
+    /**
      * Create a new empty product
      */
     public Product() {
@@ -133,12 +138,14 @@ public class Product {
      * @param image       The image that will be used for the product, placed in the /images/ directory
      * @param description The description for this product, supports HTML encoding
      * @param category    The category for this product, from the Category enumeration.
+     * @param url         The direct url to where this product is listed for sale.
      */
-    public Product(String name, String image, String description, Category category) {
+    public Product(String name, String image, String description, Category category, String url) {
         this.name = name;
         this.image = image;
         this.description = description;
         this.category = category;
+        this.url = url;
         reviews = new ArrayList<>();
     }
 
@@ -191,6 +198,14 @@ public class Product {
         this.category = category;
     }
 
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
+    }
+
     public double getAverageRating() {
         return Double.parseDouble(df.format(averageRating));
     }
@@ -199,6 +214,9 @@ public class Product {
         this.averageRating = averageRating;
     }
 
+    /**
+     * Update the average review score of a product for all reviews currently associated with it
+     */
     public void updateAverageRating() {
         averageRating = reviews.stream().mapToDouble(Review::getScore).sum() / reviews.size();
     }
@@ -213,24 +231,11 @@ public class Product {
         updateAverageRating();
     }
 
-
-    @Override
-    public String toString() {
-        return "Product{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", description='" + description + '\'' +
-                ", image='" + image + '\'' +
-                ", reviews=" + reviews +
-                ", category=" + category +
-                '}';
-    }
-
     /**
      * Given a string, creates a new product
      *
      * @param productStr a comma separated product in the format name, image, category, description, url
-     * @return
+     * @return The newly created Product from the string specification or null if an exception occurs
      */
     public static Product createProductFromString(String productStr) {
 
@@ -241,11 +246,11 @@ public class Product {
         String image = "products/" + params[++i].trim();
         String category = params[++i].trim();
         String description = params[++i].trim();
-//        String url = params[++i]; // not used atm
+        String url = params[++i].trim();
 
         Product product;
         try {
-            product = new Product(name, image, description, Category.valueOf(category.toUpperCase()));
+            product = new Product(name, image, description, Category.valueOf(category.toUpperCase()), url);
         } catch (Exception e) {
             System.out.println("Exception creating product " + e);
             return null;
@@ -254,4 +259,17 @@ public class Product {
         return product;
     }
 
+    @Override
+    public String toString() {
+        return "Product{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                ", image='" + image + '\'' +
+                ", reviews=" + reviews +
+                ", category=" + category +
+                ", url='" + url + '\'' +
+                ", averageRating=" + averageRating +
+                '}';
+    }
 }

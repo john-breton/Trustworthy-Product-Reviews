@@ -1,7 +1,6 @@
 package com.productreviews;
 
 import com.github.javafaker.Faker;
-import com.github.javafaker.FunnyName;
 import com.productreviews.models.Product;
 import com.productreviews.models.Review;
 import com.productreviews.models.User;
@@ -9,20 +8,14 @@ import com.productreviews.models.UserRegistrationDto;
 import com.productreviews.repositories.ProductRepository;
 import com.productreviews.repositories.ReviewRepository;
 import com.productreviews.repositories.UserRepository;
-import com.productreviews.services.UserService;
 import com.productreviews.services.UserServiceImpl;
-import org.checkerframework.checker.units.qual.A;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 
-import javax.transaction.Transactional;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Random;
 import java.util.Scanner;
@@ -38,8 +31,10 @@ public class TrustworthyProductReviewsApplication {
         SpringApplication.run(TrustworthyProductReviewsApplication.class, args);
     }
 
-
-    public static int num_of_users = 10;
+    /**
+     * The number of users to pre-populate the system with upon initialization
+     */
+    public static final int numOfUsers = 10;
 
     /**
      * CommandLineRunner a special bean that lets you execute some logic
@@ -70,7 +65,7 @@ public class TrustworthyProductReviewsApplication {
             users.add(user);
 
             // Create the users
-            for (int i = 0; i < num_of_users; i++) {
+            for (int i = 0; i < numOfUsers; i++) {
                 String name = faker.funnyName().name();
 
                 //  if the name is longer than 20 characters, then splice it
@@ -89,7 +84,7 @@ public class TrustworthyProductReviewsApplication {
             // Create the products
             ArrayList<Product> products = new ArrayList<>();
             try {
-                File file = new File("products.txt");
+                File file = new File("C:\\Users\\John_\\IdeaProjects\\SYSC4806-Project\\SYSC4806-Project\\products.txt");
                 Scanner myReader = new Scanner(file);
                 Product product;
                 while (myReader.hasNextLine()) {
@@ -110,11 +105,11 @@ public class TrustworthyProductReviewsApplication {
             // Create reviews for users and have them follow each other
             Random random = new Random();
 
-            int num_of_products = products.size();
-            int num_of_users = users.size();
-            int num_of_following, num_reviews, random_product_i, random_user_i, index = 0;
+            int numOfProducts = products.size();
+            int numOfUsers = users.size();
+            int numOfFollowing, numReviews, randomProductI, randomUserI, index = 0;
 
-            ArrayList<Integer> already_reviewed, already_followed;
+            ArrayList<Integer> alreadyReviewed, alreadyFollowed;
 
             ArrayList<Review> reviews = new ArrayList<>();
 
@@ -124,28 +119,28 @@ public class TrustworthyProductReviewsApplication {
 
                 System.out.println("****** curr user is " + curr_user);
                 // empty it for next user
-                already_reviewed = new ArrayList<>();
-                already_followed = new ArrayList<>();
-                already_followed.add(index); // add curr user to already followed so that they dont try following themselves
+                alreadyReviewed = new ArrayList<>();
+                alreadyFollowed = new ArrayList<>();
+                alreadyFollowed.add(index); // add curr user to already followed so that they dont try following themselves
                 index++;
 
                 // generate a random number to determine how many products they're gonna review
-                num_reviews = random.nextInt(num_of_products);
-                System.out.println("Gonna review " + num_reviews + " products");
+                numReviews = random.nextInt(numOfProducts);
+                System.out.println("Gonna review " + numReviews + " products");
                 Product product;
 
                 // Create reviews for each user
-                for (int i = 0; i < num_reviews; i++) {
-                    random_product_i = random.nextInt(num_of_products);
+                for (int i = 0; i < numReviews; i++) {
+                    randomProductI = random.nextInt(numOfProducts);
 
                     // make sure the same random number isn't chosen more than once
-                    while (already_reviewed.contains(random_product_i)) {
-                        random_product_i = random.nextInt(num_of_products);
+                    while (alreadyReviewed.contains(randomProductI)) {
+                        randomProductI = random.nextInt(numOfProducts);
                     }
 
-                    product = products.get(random_product_i);
+                    product = products.get(randomProductI);
 
-                    already_reviewed.add(random_product_i);
+                    alreadyReviewed.add(randomProductI);
 
                     int rating = random.nextInt(5) + 1; // choose a random number between 1 and 5
                     String comment = faker.hitchhikersGuideToTheGalaxy().marvinQuote();
@@ -159,17 +154,17 @@ public class TrustworthyProductReviewsApplication {
                 }
 
                 // Have users follow each other
-                num_of_following = random.nextInt(num_of_users - 1); // minus 1 because a person can't follow themselves
-                System.out.println("\n\tgonna follow " + num_of_following + " people");
-                for (int i = 0; i < num_of_following; i++) {
-                    random_user_i = random.nextInt(num_of_users);
-                    while (already_followed.contains(random_user_i)) {
-                        random_user_i = random.nextInt(num_of_users);
+                numOfFollowing = random.nextInt(numOfUsers - 1); // minus 1 because a person can't follow themselves
+                System.out.println("\n\tgonna follow " + numOfFollowing + " people");
+                for (int i = 0; i < numOfFollowing; i++) {
+                    randomUserI = random.nextInt(numOfUsers);
+                    while (alreadyFollowed.contains(randomUserI)) {
+                        randomUserI = random.nextInt(numOfUsers);
                     }
 
-                    already_followed.add(random_user_i);
-                    users.get(random_user_i).addFollowing(curr_user);
-                    System.out.println("\t\tfollowing user " + users.get(random_user_i));
+                    alreadyFollowed.add(randomUserI);
+                    users.get(randomUserI).addFollowing(curr_user);
+                    System.out.println("\t\tfollowing user " + users.get(randomUserI).getUsername());
                 }
             }
 

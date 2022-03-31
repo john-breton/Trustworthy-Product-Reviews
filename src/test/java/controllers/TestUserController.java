@@ -67,7 +67,7 @@ public class TestUserController {
     /**
      * Test that the product page is rendered with the correct user
      *
-     * @throws Exception
+     * @throws Exception Thrown if a GET request is unsuccessful
      */
     @Test
     @WithMockUser(username = USERNAME)
@@ -83,7 +83,7 @@ public class TestUserController {
     /**
      * Test that the people page is rendered with the correct user.
      *
-     * @throws Exception
+     * @throws Exception Thrown if a GET request is unsuccessful
      */
     @Test
     @WithMockUser(username = USERNAME)
@@ -99,7 +99,7 @@ public class TestUserController {
     /**
      * Test that the user page is rendered with the correct user.
      *
-     * @throws Exception
+     * @throws Exception Thrown if a GET request is unsuccessful
      */
     @Test
     @WithMockUser(username = USERNAME)

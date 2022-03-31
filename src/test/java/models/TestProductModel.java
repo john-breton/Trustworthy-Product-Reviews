@@ -5,6 +5,7 @@ import com.productreviews.models.Review;
 import com.productreviews.models.common.Category;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.security.core.parameters.P;
 
 import java.util.ArrayList;
 
@@ -85,10 +86,13 @@ public class TestProductModel {
         String image = "test.jpg";
         String description = "this is a test";
         Category book = Category.BOOK;
+        String url = "test";
 
         Product product1 = new Product(name, image);
         Product product2 = new Product(name, image, 2L);
         Product product3 = new Product(name, image, 2L, description, book);
+        Product product4 = new Product(name, image, description, book, url);
+        Product product5 = new Product(name, image, book, 2L);
 
         assertEquals(0, product.getId());
         assertNull(product.getImage());
@@ -96,6 +100,7 @@ public class TestProductModel {
         assertNull(product.getDescription());
         assertEquals(0, product.getReviews().size());
         assertNull(product.getCategory());
+        assertNull(product.getUrl());
 
         assertEquals(0, product1.getId());
         assertEquals(image, product1.getImage());
@@ -103,6 +108,7 @@ public class TestProductModel {
         assertNull(product1.getDescription());
         assertEquals(0, product1.getReviews().size());
         assertNull(product.getCategory());
+        assertNull(product2.getUrl());
 
         assertEquals(2, product2.getId());
         assertEquals(image, product2.getImage());
@@ -110,6 +116,7 @@ public class TestProductModel {
         assertNull(product2.getDescription());
         assertEquals(0, product2.getReviews().size());
         assertNull(product.getCategory());
+        assertNull(product3.getUrl());
 
         assertEquals(2, product3.getId());
         assertEquals(image, product3.getImage());
@@ -117,6 +124,22 @@ public class TestProductModel {
         assertEquals(description, product3.getDescription());
         assertEquals(0, product3.getReviews().size());
         assertEquals(book, product3.getCategory());
+
+        assertEquals(0, product4.getId());
+        assertEquals(image, product4.getImage());
+        assertEquals(name, product4.getName());
+        assertEquals(description, product4.getDescription());
+        assertEquals(0, product4.getReviews().size());
+        assertEquals(book, product4.getCategory());
+        assertEquals(url, product4.getUrl());
+
+        assertEquals(2, product5.getId());
+        assertEquals(image, product5.getImage());
+        assertEquals(name, product5.getName());
+        assertNull(product5.getDescription());
+        assertEquals(0, product5.getReviews().size());
+        assertEquals(book, product5.getCategory());
+        assertNull(product5.getUrl());
     }
 
 }

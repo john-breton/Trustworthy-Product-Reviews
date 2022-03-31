@@ -1,12 +1,11 @@
 package com.productreviews.controllers;
 
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 
 /**
- * The ProductController is responsible for handling all entry-point
+ * The MainController is responsible for handling all entry-point
  * related mappings. This currently includes the initial login page
  * and redirection to the appropriate user page upon user authentication.
  */
@@ -15,10 +14,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 public class MainController {
 
     /**
-     * This method returns the landing page for the site.
-     * ie. the page landed on after login.
+     * Gets the landing page for the site
+     * i.e. the page landed on after login
      *
-     * @return the landing page template
+     * @return The landing page template
      */
     @GetMapping("/")
     public String root() {
@@ -35,8 +34,13 @@ public class MainController {
         return "nav";
     }
 
+    /**
+     * Gets the login page for the site
+     *
+     * @return The login page
+     */
     @GetMapping("/login")
-    public String login(Model model) {
+    public String login() {
         return "login";
     }
 

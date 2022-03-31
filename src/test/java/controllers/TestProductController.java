@@ -5,7 +5,6 @@ import com.productreviews.models.User;
 import com.productreviews.repositories.UserRepository;
 import org.junit.After;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -57,7 +56,7 @@ public class TestProductController {
      * Test that a product page is rendered for a product and can use the product page
      * to add reviews to the product
      *
-     * @throws Exception
+     * @throws Exception Thrown if a GET request is unsuccessful
      */
     @Test
     @WithMockUser(username = "testuser")

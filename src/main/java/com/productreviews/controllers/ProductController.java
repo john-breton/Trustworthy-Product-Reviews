@@ -2,7 +2,6 @@ package com.productreviews.controllers;
 
 import java.util.*;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import com.productreviews.models.Product;
 import com.productreviews.models.Review;
@@ -40,28 +39,6 @@ public class ProductController {
 
     @Autowired
     private ReviewRepository reviewRepository;
-
-    /**
-     * REMOVE LATER
-     * Creates a product for the system that can be reviewed by users.
-     *
-     * @param productId The unique ID number of the product being created
-     * @param model     The model which the changes will be rendered on
-     * @return On successful product creation, the createProduct page
-     */
-    @GetMapping("/create/{productId}/{productName}/{category}")
-    public String createProduct(@PathVariable int productId, @PathVariable String productName,
-                                @PathVariable String category, Authentication authentication, Model model) {
-
-        if (category.equals("book")) {
-            Product product = new Product(productName, "product1.jpg", Category.BOOK, (long) productId);
-            productRepository.save(product);
-        } else {
-            Product product = new Product(productName, "product1.jpg", Category.NOT_BOOK, (long) productId);
-            productRepository.save(product);
-        }
-        return "createProduct";
-    }
 
     /**
      * View the product page for a product, should it exist. This product
@@ -118,7 +95,7 @@ public class ProductController {
 
         model.addAttribute("users", sorted.keySet());
         model.addAttribute("products", productRepository.findAll());
-        return "landingPage";
+        return "landing-page";
     }
 
 
@@ -143,19 +120,20 @@ public class ProductController {
             log.error("User not found or not authenticated");
         }
         boolean reviewExists = false;
-        Long reviewID = new Long(0);
+        long reviewID = 0L;
         Review review;
 
         //check if the user already reviewed this product, then override with the new review
-        for (int i = 0; i < product.getReviews().size(); i++) {
-            if (user.hasReview(product.getReviews().get(i).getId())) {
+        for (int i = 0; i < Objects.requireNonNull(product).getReviews().size(); i++) {
+            if (Objects.requireNonNull(user).hasReview(product.getReviews().get(i).getId())) {
                 reviewID = product.getReviews().get(i).getId();
                 reviewExists = true;
+                break;
             }
         }
         if (reviewExists) {
             review = reviewRepository.findById(reviewID).orElse(null);
-            review.setScore(score);
+            Objects.requireNonNull(review).setScore(score);
             review.setContent(content);
             reviewRepository.save(review);
         } else {
@@ -176,7 +154,6 @@ public class ProductController {
     }
 
     /**
-     * SHOULD MAP TO THE USER PAGE
      * View the user page of a user that has written a review for a product. This
      * is meant to occur after a user follows another user.
      *
@@ -203,13 +180,13 @@ public class ProductController {
     }
 
     /**
-     * sort the products by averahe rating. Sorting could be by average rating low to high
+     * Sort the products by average rating. Sorting could be by average rating low to high
      * or by average rating high to low
      *
      * @param model The model which the changes will be rendered on
      * @return On successful review creation, the review page
      */
-    @GetMapping("/products/filterandsearch")
+    @GetMapping("/products/filter")
     public String viewReviewPage(@RequestParam(required = false) String sort,
                                  @RequestParam(required = false) String category, Authentication authentication,
                                  Model model) {
@@ -240,14 +217,14 @@ public class ProductController {
             Category categoryEnum = Category.valueOf(category);
             model.addAttribute("products", productRepository.findByCategoryOrderByAverageRatingDesc(categoryEnum));
         }
-        return "landingPage";
+        return "landing-page";
     }
 
     /**
-     * Filters reviews based on followage or the entire list of reviews. Also filters based on min and max rating
+     * Filters reviews based on followers or the entire list of reviews. Also filters based on min and max rating
      *
-     * @param productId        the ID of the product to retreive the reviews for
-     * @param userReviewFilter indicates whether the reviews should include all or only the users the the current user follows
+     * @param productId        the ID of the product to retrieve the reviews for
+     * @param userReviewFilter indicates whether the reviews should include all or only the users the current user follows
      *                         //* @param JaccardFilter indicates whether the reviews should be ordered from High to Low Jaccard Distance or Low to High
      * @param minStarFilter    indicates the minimum rating that the user wishes to see
      * @param maxStarFilter    indicates the maximum rating that the user wished to see
