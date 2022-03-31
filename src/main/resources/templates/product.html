@@ -131,6 +131,7 @@
                         <td th:if="${review.getUserID() != user.getId() and user.isFollowing(review.getUser()) }">
                             <button type="submit" id="unfollow"> Unfollow</button>
                         <td>
+                    </form>
                 </tr>
                 </tbody>
             </table>
