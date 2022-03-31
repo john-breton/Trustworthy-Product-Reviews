@@ -1,7 +1,10 @@
 package controllers;
 
 import com.productreviews.TrustworthyProductReviewsApplication;
+import com.productreviews.models.Product;
 import com.productreviews.models.User;
+import com.productreviews.models.common.Category;
+import com.productreviews.repositories.ProductRepository;
 import com.productreviews.repositories.UserRepository;
 import org.junit.After;
 import org.junit.jupiter.api.Test;
@@ -32,10 +35,18 @@ public class TestProductController {
     private UserRepository userRepository;
 
     @Autowired
+    private ProductRepository productRepository;
+
+    @Autowired
     private WebApplicationContext context;
 
     @BeforeEach
     public void setup() {
+        Product product = new Product();
+        product.setName("name1");
+        product.setId(1L);
+        product.setCategory(Category.BOOK);
+        productRepository.save(product);
         mockMvc = MockMvcBuilders
                 .webAppContextSetup(context)
                 .apply(springSecurity())
@@ -49,6 +60,7 @@ public class TestProductController {
     @After
     public void cleanUp() {
         userRepository.deleteAll();
+        productRepository.deleteAll();
     }
 
 
@@ -65,18 +77,6 @@ public class TestProductController {
         //user authentication
         userRepository.save(new User("testuser", "testpassword"));
         System.out.println(formLogin());
-
-        //add a product and check the connection
-        mockMvc.perform(get("/create/1/name1/book")
-                        .contentType(MediaType.APPLICATION_FORM_URLENCODED))
-                .andExpect(model().hasNoErrors())
-                .andExpect(status().is2xxSuccessful());
-
-        //add a product and check that the product is created
-        mockMvc.perform(get("/create/1/name1/book")
-                        .contentType(MediaType.APPLICATION_FORM_URLENCODED))
-                .andExpect(model().hasNoErrors())
-                .andExpect(content().string(containsString("Product Created")));
 
         //access the product page and check that there initially no reviews
         mockMvc.perform(get("/product/1")

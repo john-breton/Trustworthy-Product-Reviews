@@ -84,7 +84,7 @@ public class TrustworthyProductReviewsApplication {
             // Create the products
             ArrayList<Product> products = new ArrayList<>();
             try {
-                File file = new File("C:\\Users\\John_\\IdeaProjects\\SYSC4806-Project\\SYSC4806-Project\\products.txt");
+                File file = new File("products.txt");
                 Scanner myReader = new Scanner(file);
                 Product product;
                 while (myReader.hasNextLine()) {
