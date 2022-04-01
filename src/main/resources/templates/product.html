@@ -119,19 +119,27 @@
                     <td colspan="2"> No Reviews</td>
                 </tr>
                 <tr th:each="review : ${reviews}">
-                    <form action="#" class="form-horizontal"
-                          th:action="@{/follow/__${product.id}__/__${review.user.username}__}" method="get">
-                        <td><a th:href="@{/user/{username}(username=${review.user.username})}"><span th:text="${review.user.username}">  </span></a></td>
-                        <td><span th:text="${user.getDegreesOfSeparation(review.user)}"></span></td>
-                        <td><span th:text="${review.score}">  </span></td>
-                        <td><span th:text="${review.content}">  </span></td>
-                        <td><span th:text="${user.getJaccardDistanceReviews(review.user)}">  </span></td>
+                    <td><a th:href="@{/user/{username}(username=${review.user.username})}"><span th:text="${review.user.username}">  </span></a></td>
+                    <td><span th:text="${user.getDegreesOfSeparation(review.user)}"></span></td>
+                    <td><span th:text="${review.score}">  </span></td>
+                    <td><span th:text="${review.content}">  </span></td>
+                    <td><span th:text="${user.getJaccardDistanceReviews(review.user)}">  </span></td>
 
+                    <td>
                         <!-- follow button that allows the user to follow another user and redirects to the user page -->
-                        <td th:if="${review.getUserID() != user.getId() and !(user.isFollowing(review.getUser())) }">
-                            <button type="submit" id="follow">Follow</button>
-                        <td>
-                    </form>
+                        <form action="#" class="form-horizontal"
+                              th:action="@{/follow/__${product.id}__/__${review.user.username}__}" method="get">
+                            <div th:if="${review.getUserID() != user.getId() and !(user.isFollowing(review.getUser())) }">
+                                <button type="submit" id="follow">Follow</button>
+                            </div>
+                        </form>
+                        <form action="#" class="form-horizontal"
+                              th:action="@{/user/unfollow/__${review.getUserID()}__/__${product.id}__}" method="get">
+                            <div th:if="${review.getUserID() != user.getId() and user.isFollowing(review.getUser()) }">
+                                <button type="submit" id="unfollow"> Unfollow</button>
+                            </div>
+                        </form>
+                    </td>
                 </tr>
                 </tbody>
             </table>

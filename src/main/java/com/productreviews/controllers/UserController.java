@@ -45,7 +45,7 @@ public class UserController {
     }
 
     /**
-     * Gets the page when a user visits their user page
+     * Gets the page when a user visits another user page
      *
      * @param username The username of the user page we will return
      * @param authentication The authentication status of the current user
@@ -77,24 +77,85 @@ public class UserController {
     }
 
     /**
-     * Gets the page when a user tries to go to another user's profile
-     *
-     * @param username The username that the current user is trying to view
+     * handles clicking on the 'follow' button in the user page.
+     * @param username The username of the person to follow
+     * @param redirectUsername The username of the person who's page we're on
      * @param authentication The authentication status of the current user
-     * @return The user-page of the target user if the current user is authenticated, error-page otherwise
+     * @return The same user page that called this method, or an error page if request was invalid
      */
-    @GetMapping("/follow/{username}")
-    public String follow(@PathVariable String username, Authentication authentication) {
+    @GetMapping("/follow/{username}/{redirectUsername}")
+    public String follow(@PathVariable String username, @PathVariable(required = false) String redirectUsername,
+                         Authentication authentication){
         String currentUser = authentication.getName();
         User user = userRepository.findByUsername(currentUser);
+
         if (user == null || !authentication.isAuthenticated()) {
             log.error("User not found or not authenticated");
             return "error-page";
         }
+
+        if (redirectUsername == null){
+            redirectUsername = user.getUsername();
+        }
+
         User followedUser = userRepository.findByUsername(username);
         Objects.requireNonNull(user).addFollowing(followedUser);
         userRepository.save(user);
-        return "redirect:/user/" + followedUser.getUsername();
+        return "redirect:/user/" + redirectUsername;
+    }
+
+    /**
+     * Unfollow a user from the following page
+     * @param authentication of the current logged in user
+     * @param model of the app
+     * @return the page that confirms the unfollowing of the user
+     */
+    @GetMapping("/unfollowUser/{username}/{redirectUsername}")
+    public String unfollowUser(@PathVariable String username, @PathVariable(required = false) String redirectUsername,
+                               Authentication authentication, Model model) {
+
+
+        User unfollowed = userRepository.findByUsername(username);
+        String currentUser = authentication.getName();
+        User user = userRepository.findByUsername(currentUser);
+
+        if (unfollowed == null || user == null || !authentication.isAuthenticated()) {
+            log.error("User not found or not authenticated");
+            return "error-page";
+        }
+
+        if (redirectUsername == null){
+            redirectUsername = unfollowed.getUsername();
+        }
+
+        user.unFollow(unfollowed);
+        userRepository.save(user);
+        model.addAttribute("user", unfollowed);
+        return "redirect:/user/" + redirectUsername;
+
+    }
+
+    /**
+     * Unfollow a user from the product page
+     * @param userId of the user to be unfollowed
+     * @param authentication of the current logged in user
+     * @param model of the app
+     * @return the page that confirms the unfollowing of the user
+     */
+    @GetMapping("/unfollow/{userId}/{productId}")
+    public String unfollowUserProduct(@PathVariable Long userId,@PathVariable Long productId, Authentication authentication,
+                               Model model) {
+        User unfollowed = userRepository.findById(userId).orElse(null);
+        String currentUser = authentication.getName();
+        User user = userRepository.findByUsername(currentUser);
+        if (user == null || !authentication.isAuthenticated()) {
+            log.error("User not found or not authenticated");
+        }
+        user.unFollow(unfollowed);
+        userRepository.save(user);
+        model.addAttribute("user", unfollowed);
+        model.addAttribute("productid", productId);
+        return "unfollow";
     }
 
     /**
