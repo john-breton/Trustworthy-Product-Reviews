@@ -28,8 +28,9 @@
 </p>
 
 <main>
+
     <section>
-        <form th:action="@{/products/filterandsearch}" method="GET">
+        <form th:action="@{/products/filter}" method="GET">
 
             <script>
                 window.onload = function() {
@@ -47,7 +48,7 @@
                 });
             </script>
 
-            <h4>Filters/Search</h4>
+            <h4>Filters</h4>
             <div>
                 <label>Sort By</label>
                 <select name ="sort" id = "sort">
@@ -65,12 +66,8 @@
                     <option value="FURNITURE">Furniture</option>
                 </select>
             </div>
-            <div>
-                <label>Search</label>
-                <input type="text" id="search"/>
-            </div>
             <button type="submit" id="filter">
-                <i></i> Filter/Search
+                <i></i> Filter
             </button>
         </form>
     </section>
@@ -114,7 +111,7 @@
                 <td colspan="2"> No Other Users </td>
             </tr>
             <tr th:each="user : ${users}">
-                <td th:if="${user.id != mainUser.id}"><span th:text="${user.username}"> User </span></td>
+                <td th:if="${user.id != mainUser.id}"><a th:href="@{/user/{username}(username=${user.getUsername()})}"><span th:text="${user.username}"> User </span></a></td>
                 <td th:if="${user.id != mainUser.id}"><span th:text="${mainUser.getJaccardDistanceReviews(user)}"> Jaccard Distance </span></td>
             </tr>
             </tbody>
