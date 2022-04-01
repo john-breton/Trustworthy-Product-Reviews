@@ -2,10 +2,21 @@ package com.productreviews.models;
 
 import javax.validation.constraints.NotEmpty;
 
+/**
+ * UserRegistrationDto is a minimal model class used strictly
+ * for user authentication purposes and is required for Spring.
+ */
 public class UserRegistrationDto {
+
+    /**
+     * A required username to identify the user account.
+     */
     @NotEmpty
     private String username;
 
+    /**
+     * A required password to authenticate the user account.
+     */
     @NotEmpty
     private String password;
 

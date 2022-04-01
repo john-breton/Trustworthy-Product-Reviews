@@ -2,8 +2,6 @@ package controllers;
 
 import com.productreviews.TrustworthyProductReviewsApplication;
 import com.productreviews.controllers.RegistrationController;
-import com.productreviews.repositories.UserRepository;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -30,7 +28,7 @@ public class TestRegistrationController {
 
     /**
      * Test that a new user can be added to the application
-     * @throws Exception
+     * @throws Exception Thrown if a GET request is unsuccessful
      */
     @Test
     public void addValidNewUser() throws Exception {
@@ -58,7 +56,7 @@ public class TestRegistrationController {
 
     /**
      * Tests that a duplicate user cannot be added to the application and ensures the error is displayed correctly
-     * @throws Exception
+     * @throws Exception Thrown if a GET request is unsuccessful
      */
     @Test
     public void addDuplicateUser() throws Exception {

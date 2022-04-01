@@ -27,6 +27,12 @@ public class UserServiceImpl implements UserService {
         return userRepository.findByUsername(username);
     }
 
+    /**
+     * Save a User to the system.
+     * @param registration The UserRegistrationDto containing the username and password
+     *                     of the User being added to the system.
+     * @return The new User object being saved to the system.
+     */
     public User save(UserRegistrationDto registration) {
         User user = new User();
         user.setUsername(registration.getUsername());
@@ -34,6 +40,13 @@ public class UserServiceImpl implements UserService {
         return userRepository.save(user);
     }
 
+    /**
+     * Get a User by their username.
+     *
+     * @param username The username for the user we which to load
+     * @return The UserDeatils of a given User.
+     * @throws UsernameNotFoundException Thrown if the username is not within the system.
+     */
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         User user = userRepository.findByUsername(username);
@@ -45,6 +58,13 @@ public class UserServiceImpl implements UserService {
         );
     }
 
+    /**
+     * Get the available actions of a user based on their assigned role.
+     *
+     * @param role The role for the user, as a String. Currently, only the USER roles exist,
+     *             but this would allow for additional roles to be added such as ADMIN or SUPERUSER
+     * @return The actions of a user based on the provided role, as a Singleton Collection.
+     */
     private Collection<? extends GrantedAuthority> getAuthorities(String role) {
         return Collections.singletonList(new SimpleGrantedAuthority(role));
     }
