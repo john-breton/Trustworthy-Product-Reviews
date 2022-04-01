@@ -30,8 +30,8 @@
 <main>
 
     <section>
-        <form th:action="@{/products/filterandsearch}" method="GET">
-            <h4>Filters/Search</h4>
+        <form th:action="@{/products/filter}" method="GET">
+            <h4>Filters</h4>
             <div>
                 <label>Sort By</label>
                 <select name ="sort" id = "sort">
@@ -49,12 +49,8 @@
                     <option value="FURNITURE">Furniture</option>
                 </select>
             </div>
-            <div>
-                <label>Search</label>
-                <input type="text" id="search"/>
-            </div>
             <button type="submit">
-                <i></i> Filter/Search
+                <i></i> Filter
             </button>
         </form>
     </section>

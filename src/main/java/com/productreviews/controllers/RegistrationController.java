@@ -9,7 +9,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
@@ -30,16 +29,33 @@ public class RegistrationController {
 
     private static final Logger log = LoggerFactory.getLogger(RegistrationController.class);
 
+    /**
+     * Add the user to the model upon registration
+     *
+     * @return A new UserRegistrationDto used for secure registration into the system.
+     */
     @ModelAttribute("user")
     public UserRegistrationDto userRegistrationDto() {
         return new UserRegistrationDto();
     }
 
+    /**
+     * Gets the registration page for the site
+     *
+     * @return The registration page
+     */
     @GetMapping
-    public String showRegistrationForm(Model model) {
+    public String showRegistrationForm() {
         return "registration";
     }
 
+    /**
+     * Attempts to register the user into the system
+     *
+     * @param userDto The object used to capture the credentials of the user to be
+     * @param result  The result of the registration
+     * @return The registration page with a success message on successful user addition, the registration page with a notice if the username selected already exists within the system.
+     */
     @PostMapping
     public String registerUserAccount(@ModelAttribute("user") @Valid UserRegistrationDto userDto,
                                       BindingResult result) {

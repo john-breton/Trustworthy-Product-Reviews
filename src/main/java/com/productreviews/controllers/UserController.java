@@ -12,9 +12,15 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+
 import java.util.*;
 import java.util.stream.Collectors;
 
+/**
+ * The UserController is responsible for handling all
+ * user related mappings. This currently includes
+ * the users stuff which covers their followers and reviews.
+ */
 @Controller
 @CrossOrigin
 @RequestMapping("/user")
@@ -28,7 +34,7 @@ public class UserController {
     /**
      * A request to just 'user' will redirect to the products page
      *
-     * @return redirect to products
+     * @return Redirect to products
      */
     @GetMapping
     public String user(Authentication authentication) {
@@ -38,49 +44,48 @@ public class UserController {
         return "redirect:/user/" + curr_user.getUsername();
     }
 
+    /**
+     * Gets the page when a user visits another user page
+     *
+     * @param username The username of the user page we will return
+     * @param authentication The authentication status of the current user
+     * @param model The model we will be adding the user page details to
+     * @return The user-page if the user is authenticated, error-page otherwise
+     */
     @GetMapping("/{username}")
-    public String other_user(@PathVariable String username, Authentication authentication, Model model){
+    public String otherUser(@PathVariable String username, Authentication authentication, Model model) {
         User user = userRepository.findByUsername(username);
 
         // Get current user
-        String current_user = authentication.getName();
-        User curr_user = userRepository.findByUsername(current_user);
-        if (user==null || curr_user == null || !authentication.isAuthenticated()) {
+        String currentUser = authentication.getName();
+        User currUser = userRepository.findByUsername(currentUser);
+        if (user == null || currUser == null || !authentication.isAuthenticated()) {
             log.error("user not found or not authenticated");
             return "error-page";
         }
 
-        Double jacc_distance = curr_user.getJaccardDistanceReviews(user);
+        Double jaccDistance = currUser.getJaccardDistanceReviews(user);
 
         // Order the users by Jaccard distance to avoid using JS at all costs
-        Map<User, Double> usersAndJaccard = new HashMap<>();
-        for (User currUser : Objects.requireNonNull(user).getFollowingList()) {
-            usersAndJaccard.put(currUser, Objects.requireNonNull(user).getJaccardDistanceReviews(currUser));
-        }
+        Map<User, Double> sorted = getJaccardMap(user);
 
-        // Magic
-        Map<User, Double> sorted = usersAndJaccard.entrySet().stream()
-                .sorted(Map.Entry.comparingByValue())
-                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
-
-        model.addAttribute("jacc_distance", jacc_distance);
+        model.addAttribute("jacc_distance", jaccDistance);
         model.addAttribute("followers", sorted.keySet());
         model.addAttribute("user", user);
-        model.addAttribute("curr_user", curr_user);
+        model.addAttribute("curr_user", currUser);
         return "user-page";
     }
 
     /**
      * handles clicking on the 'follow' button in the user page.
-     * @param username
-     * @param redirectUsername
-     * @param authentication
-     * @param model
-     * @return
+     * @param username The username of the person to follow
+     * @param redirectUsername The username of the person who's page we're on
+     * @param authentication The authentication status of the current user
+     * @return The same user page that called this method, or an error page if request was invalid
      */
     @GetMapping("/follow/{username}/{redirectUsername}")
     public String follow(@PathVariable String username, @PathVariable(required = false) String redirectUsername,
-                         Authentication authentication, Model model){
+                         Authentication authentication){
         String currentUser = authentication.getName();
         User user = userRepository.findByUsername(currentUser);
 
@@ -151,5 +156,24 @@ public class UserController {
         model.addAttribute("user", unfollowed);
         model.addAttribute("productid", productId);
         return "unfollow";
+    }
+
+    /**
+     * Order all users in the system by the Jaccard distance from a target user.
+     *
+     * @param user The target user for which all other users will be ordered based on their Jaccard distance.
+     * @return A Map of Users and their Jaccard distance from the target User.
+     */
+    private Map<User, Double> getJaccardMap(User user) {
+        // Order the users by Jaccard distance to avoid using JS at all costs
+        Map<User, Double> usersAndJaccard = new HashMap<>();
+        for (User currUser : Objects.requireNonNull(user).getFollowingList()) {
+            usersAndJaccard.put(currUser, Objects.requireNonNull(user).getJaccardDistanceReviews(currUser));
+        }
+
+        // Magic
+        return usersAndJaccard.entrySet().stream()
+                .sorted(Map.Entry.comparingByValue())
+                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
     }
 }

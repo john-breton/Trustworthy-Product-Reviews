@@ -40,6 +40,12 @@
             <h3 th:text="'Description: ' +${product.description}"></h3>
         </div>
     </div>
+    <!-- Link to the listing for the product-->
+    <div class="row">
+        <div class="col-md-12">
+            <h3><a th:href="${product.url}">Click Here to Purchase</a></h3>
+        </div>
+    </div>
     <!-- Add a product review -->
     <div class="row">
         <div class="col-md-6">
