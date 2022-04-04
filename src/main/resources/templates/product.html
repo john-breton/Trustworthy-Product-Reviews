@@ -70,22 +70,27 @@
             <form th:action="@{/filterreviews/__${product.id}__}" method="get">
 
                 <script>
+                    const minRatingID = "minRating";
+                    const maxRatingID = "maxRating";
+                    const userFilterID = "userfilter";
                     window.onload = function() {
-                        const minRating = sessionStorage.getItem("minRating") ? sessionStorage.getItem("minRating") : 1;
-                        const maxRating = sessionStorage.getItem("maxRating") ? sessionStorage.getItem("maxRating") : 1;
-                        const userFilter = sessionStorage.getItem("userFilter") ? sessionStorage.getItem("userFilter") : "all";
+                        const minRating = sessionStorage.getItem(minRatingID) ? sessionStorage.getItem(minRatingID) : 1;
+                        const maxRating = sessionStorage.getItem(maxRatingID) ? sessionStorage.getItem(maxRatingID) : 5;
+                        const userFilter = sessionStorage.getItem(userFilterID) ? sessionStorage.getItem(userFilterID) : "all";
+                        
                         $('#minStarFilter').val(minRating);
                         $('#maxStarFilter').val(maxRating);
                         $('#userReviewFilter').val(userFilter);
                     }
+
                     $(document).on("click", "#filter", function() {
                         const minRating = $('#minStarFilter').val();
                         const maxRating = $('#maxStarFilter').val();
                         const userFilter = $('#userReviewFilter').val();
 
-                        sessionStorage.setItem("minRating", minRating);
-                        sessionStorage.setItem("maxRating", maxRating);
-                        sessionStorage.setItem("userFilter", userFilter);
+                        sessionStorage.setItem(minRatingID, minRating);
+                        sessionStorage.setItem(maxRatingID, maxRating);
+                        sessionStorage.setItem(userFilterID, userFilter);
                     });
                 </script>
 

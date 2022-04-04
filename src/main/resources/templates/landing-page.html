@@ -34,8 +34,8 @@
 
             <script>
                 window.onload = function() {
-                    const sort = sessionStorage.getItem("sort") ? sessionStorage.getItem("sort") : "asc";
-                    const category = sessionStorage.getItem("category") ? sessionStorage.getItem("category") : "BOOK";
+                    const sort = sessionStorage.getItem("sort") ? sessionStorage.getItem("sort") : "none";
+                    const category = sessionStorage.getItem("category") ? sessionStorage.getItem("category") : "none";
                     $('#sort').val(sort);
                     $('#category').val(category);
                 }
