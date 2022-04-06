@@ -23,9 +23,6 @@ public class TestRegistrationController {
     @Autowired
     private MockMvc mockMvc;
 
-    @Autowired
-    private RegistrationController rc;
-
     /**
      * Test that a new user can be added to the application
      * @throws Exception Thrown if a GET request is unsuccessful

@@ -46,6 +46,7 @@ public class TestUserController {
      */
     @BeforeEach
     public void setup() {
+        userRepository.deleteAll();
         User user = new User();
         user.setUsername(USERNAME);
         user.setPassword(PASSWORD);

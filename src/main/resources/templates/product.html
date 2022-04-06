@@ -50,7 +50,7 @@
     <div class="row">
         <div class="col-md-6">
             <form action="#" th:action="@{/review/__${product.id}__}" th:object="${newReview}" method="get">
-                Rating: <select id="score" class="col-sm" th:field="*{score}" style="margin: 5px">
+                Rating: <select id="score" class="col-sm" th:field="*{score}" style="margin: 5px; width: 10%;">
                 <option value="1">1</option>
                 <option value="2">2</option>
                 <option value="3">3</option>
@@ -68,9 +68,35 @@
     <div class="row" style="margin-top: 20px;">
         <div class="col-md-6">
             <form th:action="@{/filterreviews/__${product.id}__}" method="get">
+
+                <script>
+                    const minRatingID = "minRating";
+                    const maxRatingID = "maxRating";
+                    const userFilterID = "userfilter";
+                    window.onload = function() {
+                        const minRating = sessionStorage.getItem(minRatingID) ? sessionStorage.getItem(minRatingID) : 1;
+                        const maxRating = sessionStorage.getItem(maxRatingID) ? sessionStorage.getItem(maxRatingID) : 5;
+                        const userFilter = sessionStorage.getItem(userFilterID) ? sessionStorage.getItem(userFilterID) : "all";
+                        
+                        $('#minStarFilter').val(minRating);
+                        $('#maxStarFilter').val(maxRating);
+                        $('#userReviewFilter').val(userFilter);
+                    }
+
+                    $(document).on("click", "#filter", function() {
+                        const minRating = $('#minStarFilter').val();
+                        const maxRating = $('#maxStarFilter').val();
+                        const userFilter = $('#userReviewFilter').val();
+
+                        sessionStorage.setItem(minRatingID, minRating);
+                        sessionStorage.setItem(maxRatingID, maxRating);
+                        sessionStorage.setItem(userFilterID, userFilter);
+                    });
+                </script>
+
                 <strong>Filter by User</strong>
                 <br/>
-                <select id="userReviewFilter" name="userReviewFilter" class="col-sm" style="margin-top: 5px; margin-bottom: 5px;">
+                <select id="userReviewFilter" name="userReviewFilter" class="col-sm" style="margin-top: 5px; margin-bottom: 5px; width: 25%;">
                     <option value="all">All Reviews</option>
                     <option value="following">Users I Follow</option>
                 </select>
@@ -86,20 +112,22 @@
                 -->
                 <strong>Filter by Rating</strong>
                 <br/>
-                Minimum Rating: <select id="minStarFilter" name="minStarFilter" class="col-sm" style="margin-top: 5px; margin-bottom: 5px;">
-                    <option value="1" selected>1</option>
+                Minimum Rating:
+                <select id="minStarFilter" name="minStarFilter" class="col-sm" style="margin-top: 5px; margin-bottom: 5px; width: 10%;">
+                    <option value="1">1</option>
                     <option value="2">2</option>
                     <option value="3">3</option>
                     <option value="4">4</option>
                     <option value="5">5</option>
                 </select>
                 <br/>
-                Maximum Rating: <select id="maxStarFilter" name="maxStarFilter" class="col-sm" style="margin: 5px;">
+                Maximum Rating: 
+                <select id="maxStarFilter" name="maxStarFilter" class="col-sm" style="margin-top: 5px; margin-bottom: 5px; width: 10%;">
                     <option value="1">1</option>
                     <option value="2">2</option>
                     <option value="3">3</option>
                     <option value="4">4</option>
-                    <option value="5" selected>5</option>
+                    <option value="5">5</option>
                 </select>
                 <br/>
                 <button type="submit" id="filter" style="margin-top: 5px; margin-bottom: 5px;">Filter Reviews</button>

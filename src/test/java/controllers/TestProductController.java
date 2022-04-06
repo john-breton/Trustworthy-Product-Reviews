@@ -6,7 +6,7 @@ import com.productreviews.models.User;
 import com.productreviews.models.common.Category;
 import com.productreviews.repositories.ProductRepository;
 import com.productreviews.repositories.UserRepository;
-import org.junit.After;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.BeforeEach;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,6 +42,7 @@ public class TestProductController {
 
     @BeforeEach
     public void setup() {
+        userRepository.deleteAll();
         Product product = new Product();
         product.setName("name1");
         product.setId(1L);
@@ -51,13 +52,12 @@ public class TestProductController {
                 .webAppContextSetup(context)
                 .apply(springSecurity())
                 .build();
-        userRepository.deleteAll();
     }
 
     /**
      * Delete all records in the repository after each test so that the user objects don't interfere with eachother.
      */
-    @After
+    @AfterEach
     public void cleanUp() {
         userRepository.deleteAll();
         productRepository.deleteAll();
