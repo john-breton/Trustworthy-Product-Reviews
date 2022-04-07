@@ -1,8 +1,6 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org"
-      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="utf-8" />
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <script src="/webjars/jquery/3.6.0/jquery.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
@@ -112,14 +110,14 @@
                             <td><span th:text="${curr_user.getDegreesOfSeparation(follower)}"></span></td>
                             <td>
                                 <form action="#" class="form-horizontal"
-                                  th:action="@{/user/follow/{username}/{redirectUsername}(username=${follower.getUsername()},redirectUsername=${user.getUsername()})}" method="get">
+                                      th:action="@{/user/follow/{username}/{redirectUsername}(username=${follower.getUsername()},redirectUsername=${user.getUsername()})}" method="get">
 
-                                <!-- follow button that allows the user to follow another user and redirects to the user page -->
-                                <div th:if="${follower.getId() != curr_user.getId() and !(curr_user.isFollowing(follower)) }">
-                                    <button type="submit">Follow</button>
-                                </div>
+                                    <!-- follow button that allows the user to follow another user and redirects to the user page -->
+                                    <div th:if="${follower.getId() != curr_user.getId() and !(curr_user.isFollowing(follower)) }">
+                                        <button type="submit">Follow</button>
+                                    </div>
 
-                            </form>
+                                </form>
                             <form action="#" class="form-horizontal"
                                   th:action="@{/user/unfollowUser/{username}/{redirectUsername}(username=${follower.getUsername()},redirectUsername=${user.getUsername()})}"
                                   method="get">

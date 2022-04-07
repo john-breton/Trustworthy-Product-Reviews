@@ -176,7 +176,7 @@ public class ProductController {
         userRepository.save(user);
         model.addAttribute("product", product);
         model.addAttribute("author", username);
-        return "follow-page";
+        return "redirect:/product/" + productId;
     }
 
     /**
