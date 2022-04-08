@@ -235,7 +235,7 @@ public class ProductController {
     @GetMapping("/filterreviews/{productId}")
     public String viewFilteredReviews(@PathVariable int productId,
                                       @RequestParam(required = false) String userReviewFilter,
-                                      @RequestParam(required = false) String JaccardFilter,
+                                      @RequestParam(required = false) String jaccardFilter,
                                       @RequestParam(required = false) int minStarFilter,
                                       @RequestParam(required = false) int maxStarFilter,
                                       Authentication authentication, Model model) {
@@ -264,7 +264,7 @@ public class ProductController {
         if (userReviewFilter.equals("all")) {
             List<Review> reviews = reviewRepository.findAllByAssociatedProductIdAndScoreGreaterThanEqualAndScoreLessThanEqual(productId, minStarFilter,
                     maxStarFilter);
-            if (JaccardFilter.equals("LH")) {
+            if (jaccardFilter.equals("LH")) {
                 Map<Review, Double> reviewsAndJaccard = new HashMap<>();
                 for (Review review : reviews) {
                     reviewsAndJaccard.put(review,user.getJaccardDistanceReviews(review.getUser()));
@@ -281,7 +281,7 @@ public class ProductController {
                 reviews.addAll(sorted.keySet());
 
 
-            } else if (JaccardFilter.equals("HL")) {
+            } else if (jaccardFilter.equals("HL")) {
                 Map<Review, Double> reviewsAndJaccard = new HashMap<>();
                 for (Review review : reviews) {
                     reviewsAndJaccard.put(review,user.getJaccardDistanceReviews(review.getUser()));
@@ -304,7 +304,7 @@ public class ProductController {
         } else if (userReviewFilter.equals("following")) {
             List<Review> reviews = reviewRepository.findAllByAssociatedProductIdAndUserInAndScoreGreaterThanEqualAndScoreLessThanEqual(productId, user.getFollowingList(), minStarFilter,
                     maxStarFilter);
-            if (JaccardFilter.equals("LH")) {
+            if (jaccardFilter.equals("LH")) {
                 Map<Review, Double> reviewsAndJaccard = new HashMap<>();
                 for (Review review : reviews) {
                     reviewsAndJaccard.put(review,user.getJaccardDistanceReviews(review.getUser()));
@@ -319,7 +319,7 @@ public class ProductController {
                 System.out.println(sorted.keySet());
                 reviews.clear();
                 reviews.addAll(sorted.keySet());
-            } else if (JaccardFilter.equals("HL")) {
+            } else if (jaccardFilter.equals("HL")) {
                 Map<Review, Double> reviewsAndJaccard = new HashMap<>();
                 for (Review review : reviews) {
                     reviewsAndJaccard.put(review,user.getJaccardDistanceReviews(review.getUser()));
