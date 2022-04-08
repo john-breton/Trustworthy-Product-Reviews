@@ -87,7 +87,7 @@ public class TestRegistrationController {
                         .param("password", password))
                 .andExpect(model().hasErrors())
                 .andExpect(model().attributeHasErrors("user"))
-                .andExpect(content().string(containsString("<span class=\"badge alert-warning\" >" +
+                .andExpect(content().string(containsString("<span class=\"badge alert-warning\">" +
                         "There is already an account registered with that username</span>")))
                 .andExpect(status().is2xxSuccessful());
     }
