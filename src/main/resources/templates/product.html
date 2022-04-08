@@ -6,15 +6,15 @@
     <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@300;700;900&display=swap" rel="stylesheet">
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link th:href="@{/public/style.css}" rel="stylesheet" />
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <link th:href="@{/public/style.css}" rel="stylesheet"/>
     <script type="text/javascript" src="/webjars/bootstrap/js/bootstrap.min.js"></script>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" />
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
-
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"/>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
 </head>
 <body>
-<div th:insert="nav :: nav">  </div>
+<div th:insert="nav :: nav"></div>
 <div class="container">
     <!-- Display product name -->
     <div class="row">
@@ -40,11 +40,17 @@
             <h3 th:text="'Description: ' +${product.description}"></h3>
         </div>
     </div>
+    <!-- Link to the listing for the product-->
+    <div class="row">
+        <div class="col-md-12">
+            <h3><a th:href="${product.url}">Click Here to Purchase</a></h3>
+        </div>
+    </div>
     <!-- Add a product review -->
     <div class="row">
         <div class="col-md-6">
             <form action="#" th:action="@{/review/__${product.id}__}" th:object="${newReview}" method="get">
-                Rating: <select id="score" class="col-sm" th:field="*{score}" style="margin: 5px">
+                Rating: <select id="score" class="col-sm" th:field="*{score}" style="margin: 5px; width: 10%;">
                 <option value="1">1</option>
                 <option value="2">2</option>
                 <option value="3">3</option>
@@ -62,43 +68,81 @@
     <div class="row" style="margin-top: 20px;">
         <div class="col-md-6">
             <form th:action="@{/filterreviews/__${product.id}__}" method="get">
+
+                <script>
+                    const minRatingID = "minRating";
+                    const maxRatingID = "maxRating";
+                    const userFilterID = "userfilter";
+                    const jaccardFilterID = "jaccardFilter";
+
+                    window.onload = function () {
+                        const minRating = sessionStorage.getItem(minRatingID) ? sessionStorage.getItem(minRatingID) : 1;
+                        const maxRating = sessionStorage.getItem(maxRatingID) ? sessionStorage.getItem(maxRatingID) : 5;
+                        const userFilter = sessionStorage.getItem(userFilterID) ? sessionStorage.getItem(userFilterID) : "all";
+                        const jaccardFilter = sessionStorage.getItem(jaccardFilterID) ? sessionStorage.getItem(jaccardFilterID) : "LH";
+
+
+                        $('#minStarFilter').val(minRating);
+                        $('#maxStarFilter').val(maxRating);
+                        $('#userReviewFilter').val(userFilter);
+                        $('#jaccardFilter').val(jaccardFilter);
+                    }
+
+                    $(document).on("click", "#filter", function () {
+                        const minRating = $('#minStarFilter').val();
+                        const maxRating = $('#maxStarFilter').val();
+                        const userFilter = $('#userReviewFilter').val();
+                        const jaccardFilter = $('#jaccardFilter').val();
+
+                        sessionStorage.setItem(minRatingID, minRating);
+                        sessionStorage.setItem(maxRatingID, maxRating);
+                        sessionStorage.setItem(userFilterID, userFilter);
+                        sessionStorage.setItem(jaccardFilterID, jaccardFilter);
+                    });
+                </script>
+
                 <strong>Filter by User</strong>
                 <br/>
-                <select id="userReviewFilter" name="userReviewFilter" class="col-sm" style="margin-top: 5px; margin-bottom: 5px;">
+                <select id="userReviewFilter" name="userReviewFilter" class="col-sm"
+                        style="margin-top: 5px; margin-bottom: 5px; width: 25%;">
                     <option value="all">All Reviews</option>
                     <option value="following">Users I Follow</option>
                 </select>
                 <br/><br/>
-                <!--
+
                 <strong>Filter by Jaccard</strong>
                 <br/>
-                <select id="JaccardFilter" name="JaccardFilter" class="col-sm" style="margin-top: 5px; margin-bottom: 5px;">
+                <select id="jaccardFilter" name="jaccardFilter" class="col-sm"
+                        style="margin-top: 5px; margin-bottom: 5px;">
                     <option value="LH">Low to High</option>
                     <option value="HL">High to Low</option>
                 </select>
                 <br/><br/>
-                -->
                 <strong>Filter by Rating</strong>
                 <br/>
-                Minimum Rating: <select id="minStarFilter" name="minStarFilter" class="col-sm" style="margin-top: 5px; margin-bottom: 5px;">
-                    <option value="1" selected>1</option>
+                Minimum Rating:
+                <select id="minStarFilter" name="minStarFilter" class="col-sm"
+                        style="margin-top: 5px; margin-bottom: 5px; width: 10%;">
+                    <option value="1">1</option>
                     <option value="2">2</option>
                     <option value="3">3</option>
                     <option value="4">4</option>
                     <option value="5">5</option>
                 </select>
                 <br/>
-                Maximum Rating: <select id="maxStarFilter" name="maxStarFilter" class="col-sm" style="margin: 5px;">
+                Maximum Rating:
+                <select id="maxStarFilter" name="maxStarFilter" class="col-sm"
+                        style="margin-top: 5px; margin-bottom: 5px; width: 10%;">
                     <option value="1">1</option>
                     <option value="2">2</option>
                     <option value="3">3</option>
                     <option value="4">4</option>
-                    <option value="5" selected>5</option>
+                    <option value="5">5</option>
                 </select>
                 <br/>
                 <button type="submit" id="filter" style="margin-top: 5px; margin-bottom: 5px;">Filter Reviews</button>
             </form>
-            <table class="table">
+            <table class="table" id="ReviewsTable">
                 <thead>
                 <tr>
                     <th>User</th>
@@ -113,25 +157,28 @@
                     <td colspan="2"> No Reviews</td>
                 </tr>
                 <tr th:each="review : ${reviews}">
-                        <td><span th:text="${review.user.username}">  </span></td>
-                        <td><span th:text="${user.getDegreesOfSeparation(review.user)}"></span></td>
-                        <td><span th:text="${review.score}">  </span></td>
-                        <td><span th:text="${review.content}">  </span></td>
-                        <td><span th:text="${user.getJaccardDistanceReviews(review.user)}">  </span></td>
+                    <td><a th:href="@{/user/{username}(username=${review.user.username})}"><span
+                            th:text="${review.user.username}">  </span></a></td>
+                    <td><span th:text="${user.getDegreesOfSeparation(review.user)}"></span></td>
+                    <td><span th:text="${review.score}">  </span></td>
+                    <td><span th:text="${review.content}">  </span></td>
+                    <td><span th:text="${user.getJaccardDistanceReviews(review.user)}">  </span></td>
 
+                    <td>
                         <!-- follow button that allows the user to follow another user and redirects to the user page -->
-                    <form action="#" class="form-horizontal"
-                          th:action="@{/follow/__${product.id}__/__${review.user.username}__}" method="get">
-                        <td th:if="${review.getUserID() != user.getId() and !(user.isFollowing(review.getUser())) }">
-                            <button type="submit" id="follow">Follow</button>
-                        <td>
-                    </form>
-                    <form action="#" class="form-horizontal"
-                          th:action="@{/user/unfollow/__${review.getUserID()}__/__${product.id}__}" method="get">
-                        <td th:if="${review.getUserID() != user.getId() and user.isFollowing(review.getUser()) }">
-                            <button type="submit" id="unfollow"> Unfollow</button>
-                        <td>
-                    </form>
+                        <form action="#" class="form-horizontal"
+                              th:action="@{/follow/__${product.id}__/__${review.user.username}__}" method="get">
+                            <div th:if="${review.getUserID() != user.getId() and !(user.isFollowing(review.getUser())) }">
+                                <button type="submit" id="follow">Follow</button>
+                            </div>
+                        </form>
+                        <form action="#" class="form-horizontal"
+                              th:action="@{/user/unfollow/__${review.getUserID()}__/__${product.id}__}" method="get">
+                            <div th:if="${review.getUserID() != user.getId() and user.isFollowing(review.getUser()) }">
+                                <button type="submit" id="unfollow"> Unfollow</button>
+                            </div>
+                        </form>
+                    </td>
                 </tr>
                 </tbody>
             </table>

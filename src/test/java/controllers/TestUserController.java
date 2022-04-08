@@ -46,6 +46,7 @@ public class TestUserController {
      */
     @BeforeEach
     public void setup() {
+        userRepository.deleteAll();
         User user = new User();
         user.setUsername(USERNAME);
         user.setPassword(PASSWORD);
@@ -65,31 +66,15 @@ public class TestUserController {
     }
 
     /**
-     * Test that the product page is rendered with the correct user
+     * Test that the user page is rendered with the correct user.
      *
-     * @throws Exception
+     * @throws Exception Thrown if a GET request is unsuccessful
      */
     @Test
     @WithMockUser(username = USERNAME)
-    public void testProductsPage() throws Exception {
+    public void testPersonPage() throws Exception {
         mvc
-                .perform(get("/user/products")
-                        .contentType(MediaType.APPLICATION_FORM_URLENCODED))
-                .andExpect(model().hasNoErrors())
-                .andExpect(content().string(containsString(USERNAME)))
-                .andExpect(status().isOk());
-    }
-
-    /**
-     * Test that the people page is rendered with the correct user.
-     *
-     * @throws Exception
-     */
-    @Test
-    @WithMockUser(username = USERNAME)
-    public void testPeoplePage() throws Exception {
-        mvc
-                .perform(get("/user/people")
+                .perform(get("/user/" + USERNAME)
                         .contentType(MediaType.APPLICATION_FORM_URLENCODED))
                 .andExpect(model().hasNoErrors())
                 .andExpect(content().string(containsString(USERNAME)))

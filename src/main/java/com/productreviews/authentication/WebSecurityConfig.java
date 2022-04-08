@@ -27,6 +27,13 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private UserService userService;
 
+    /**
+     * Configures the initial security for the site based
+     * on allowed patterns
+     *
+     * @param http The HTTP security object used for the allowed configurations
+     * @throws Exception Thrown if the security cannot be properly configured
+     */
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
@@ -56,6 +63,12 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         return new BCryptPasswordEncoder();
     }
 
+    /**
+     * Get the secure DAO authentication provider to be used for
+     * all authentication purposes on the site
+     *
+     * @return The DAO authentication provider
+     */
     @Bean
     public DaoAuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider auth = new DaoAuthenticationProvider();
@@ -64,6 +77,13 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         return auth;
     }
 
+    /**
+     * Configures the AuthenticationManagerBuilder to use a
+     * DaoAuthenticationProvider
+     *
+     * @param auth The AuthenticationManagerBuilder that will be
+     *             configured using a DaoAuthenticationProvider
+     */
     @Override
     protected void configure(AuthenticationManagerBuilder auth) {
         auth.authenticationProvider(authenticationProvider());

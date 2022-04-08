@@ -176,7 +176,7 @@ public class TestUserModel {
     }
 
     @Test
-    public void testDegreesOfSeparation(){
+    public void testDegreesOfSeparation() {
         User user1 = new User("john", "john");
         User user2 = new User("John2", "John2");
         User user3 = new User("john3", "john3");

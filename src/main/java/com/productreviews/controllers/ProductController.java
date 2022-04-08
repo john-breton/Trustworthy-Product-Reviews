@@ -2,7 +2,6 @@ package com.productreviews.controllers;
 
 import java.util.*;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import com.productreviews.models.Product;
 import com.productreviews.models.Review;
@@ -40,28 +39,6 @@ public class ProductController {
 
     @Autowired
     private ReviewRepository reviewRepository;
-
-    /**
-     * REMOVE LATER
-     * Creates a product for the system that can be reviewed by users.
-     *
-     * @param productId The unique ID number of the product being created
-     * @param model     The model which the changes will be rendered on
-     * @return On successful product creation, the createProduct page
-     */
-    @GetMapping("/create/{productId}/{productName}/{category}")
-    public String createProduct(@PathVariable int productId, @PathVariable String productName,
-                                @PathVariable String category, Authentication authentication, Model model) {
-
-        if (category.equals("book")) {
-            Product product = new Product(productName, "product1.jpg", Category.BOOK, (long) productId);
-            productRepository.save(product);
-        } else {
-            Product product = new Product(productName, "product1.jpg", Category.NOT_BOOK, (long) productId);
-            productRepository.save(product);
-        }
-        return "createProduct";
-    }
 
     /**
      * View the product page for a product, should it exist. This product
@@ -105,20 +82,20 @@ public class ProductController {
         }
         model.addAttribute("mainUser", user);
 
-        // Order the users by Jaccard distance to avoid using JS at all costs
+        // Order the users by Jaccard distance
         Map<User, Double> usersAndJaccard = new HashMap<>();
         for (User currUser : userRepository.findAll()) {
             usersAndJaccard.put(currUser, Objects.requireNonNull(user).getJaccardDistanceReviews(currUser));
         }
 
-        // Magic
+        // Sort the keys of the entry set using their values and return the new sorting
         Map<User, Double> sorted = usersAndJaccard.entrySet().stream()
                 .sorted(Map.Entry.comparingByValue())
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
 
         model.addAttribute("users", sorted.keySet());
         model.addAttribute("products", productRepository.findAll());
-        return "landingPage";
+        return "landing-page";
     }
 
 
@@ -143,19 +120,20 @@ public class ProductController {
             log.error("User not found or not authenticated");
         }
         boolean reviewExists = false;
-        Long reviewID = new Long(0);
+        long reviewID = 0L;
         Review review;
 
         //check if the user already reviewed this product, then override with the new review
-        for (int i = 0; i < product.getReviews().size(); i++) {
-            if (user.hasReview(product.getReviews().get(i).getId())) {
+        for (int i = 0; i < Objects.requireNonNull(product).getReviews().size(); i++) {
+            if (Objects.requireNonNull(user).hasReview(product.getReviews().get(i).getId())) {
                 reviewID = product.getReviews().get(i).getId();
                 reviewExists = true;
+                break;
             }
         }
         if (reviewExists) {
             review = reviewRepository.findById(reviewID).orElse(null);
-            review.setScore(score);
+            Objects.requireNonNull(review).setScore(score);
             review.setContent(content);
             reviewRepository.save(review);
         } else {
@@ -172,11 +150,10 @@ public class ProductController {
         productRepository.save(product);
         model.addAttribute("product", product);
         model.addAttribute("review", review);
-        return "review";
+        return "redirect:/product/" + productId;
     }
 
     /**
-     * SHOULD MAP TO THE USER PAGE
      * View the user page of a user that has written a review for a product. This
      * is meant to occur after a user follows another user.
      *
@@ -199,17 +176,17 @@ public class ProductController {
         userRepository.save(user);
         model.addAttribute("product", product);
         model.addAttribute("author", username);
-        return "follow-page";
+        return "redirect:/product/" + productId;
     }
 
     /**
-     * sort the products by averahe rating. Sorting could be by average rating low to high
+     * Sort the products by average rating. Sorting could be by average rating low to high
      * or by average rating high to low
      *
      * @param model The model which the changes will be rendered on
      * @return On successful review creation, the review page
      */
-    @GetMapping("/products/filterandsearch")
+    @GetMapping("/products/filter")
     public String viewReviewPage(@RequestParam(required = false) String sort,
                                  @RequestParam(required = false) String category, Authentication authentication,
                                  Model model) {
@@ -240,25 +217,26 @@ public class ProductController {
             Category categoryEnum = Category.valueOf(category);
             model.addAttribute("products", productRepository.findByCategoryOrderByAverageRatingDesc(categoryEnum));
         }
-        return "landingPage";
+        return "landing-page";
     }
 
     /**
-     * Filters reviews based on followage or the entire list of reviews. Also filters based on min and max rating
+     * Filters reviews based on followers or the entire list of reviews. Also filters based on min and max rating, and
+     * their similarity scores using Jaccard distance
      *
-     * @param productId        the ID of the product to retreive the reviews for
-     * @param userReviewFilter indicates whether the reviews should include all or only the users the the current user follows
-     *                         //* @param JaccardFilter indicates whether the reviews should be ordered from High to Low Jaccard Distance or Low to High
-     * @param minStarFilter    indicates the minimum rating that the user wishes to see
-     * @param maxStarFilter    indicates the maximum rating that the user wished to see
-     * @param authentication   provides access to the current user object
+     * @param productId        The ID of the product to retrieve the reviews for
+     * @param userReviewFilter Indicates whether the reviews should include all or only the users the current user follows
+     * @param jaccardFilter    Indicates whether the reviews should be ordered from High to Low Jaccard Distance or Low to High
+     * @param minStarFilter    Indicates the minimum rating that the user wishes to see
+     * @param maxStarFilter    Indicates the maximum rating that the user wished to see
+     * @param authentication   Provides access to the current user object
      * @param model            The model which the changes will be rendered on
-     * @return On successful product page updated, error page on error
+     * @return On success the updated product page, error page otherwise
      */
     @GetMapping("/filterreviews/{productId}")
     public String viewFilteredReviews(@PathVariable int productId,
                                       @RequestParam(required = false) String userReviewFilter,
-                                      //@RequestParam(required = false) String JaccardFilter,
+                                      @RequestParam(required = false) String jaccardFilter,
                                       @RequestParam(required = false) int minStarFilter,
                                       @RequestParam(required = false) int maxStarFilter,
                                       Authentication authentication, Model model) {
@@ -287,28 +265,54 @@ public class ProductController {
         if (userReviewFilter.equals("all")) {
             List<Review> reviews = reviewRepository.findAllByAssociatedProductIdAndScoreGreaterThanEqualAndScoreLessThanEqual(productId, minStarFilter,
                     maxStarFilter);
-            model.addAttribute("reviews", reviews);
-            product.setAverageRating(reviews.size() > 0 ? reviews.stream().mapToDouble(Review::getScore).sum() / reviews.size() : 0.0);
+            jaccardFiltering(jaccardFilter, model, product, user, reviews);
         } else if (userReviewFilter.equals("following")) {
             List<Review> reviews = reviewRepository.findAllByAssociatedProductIdAndUserInAndScoreGreaterThanEqualAndScoreLessThanEqual(productId, user.getFollowingList(), minStarFilter,
                     maxStarFilter);
-            model.addAttribute("reviews", reviews);
-            product.setAverageRating(reviews.size() > 0 ? reviews.stream().mapToDouble(Review::getScore).sum() / reviews.size() : 0.0);
+            jaccardFiltering(jaccardFilter, model, product, user, reviews);
         }
 
-      /*  if (JaccardFilter.equals("LH")) {
-            List<Review> reviews = reviewRepository.findAllByAssociatedProductIdAndScoreGreaterThanEqualAndScoreLessThanEqual(productId, minStarFilter,
-                    maxStarFilter);
-            model.addAttribute("reviews", reviews);
-            product.setAverageRating(reviews.size() > 0 ? reviews.stream().mapToDouble(Review::getScore).sum()/reviews.size() : 0.0);
-        } else if (JaccardFilter.equals("HL")) {
-            List<Review> reviews = reviewRepository.findAllByAssociatedProductIdAndUserInAndScoreGreaterThanEqualAndScoreLessThanEqual(productId, user.getFollowingList(), minStarFilter,
-                    maxStarFilter);
-            model.addAttribute("reviews", reviews);
-            product.setAverageRating(reviews.size() > 0 ? reviews.stream().mapToDouble(Review::getScore).sum()/reviews.size() : 0.0);
-        } */
-
         return "product";
+    }
+
+    /**
+     * Filters reviews by Jaccard distance and returns them in order depending on the selected filter option.
+     *
+     * @param jaccardFilter Indicates whether the reviews should be ordered from High to Low Jaccard distance or Low to High
+     * @param model         The model which the changes will be rendered on
+     * @param product       The product object where the reviews are located
+     * @param user          The current user logged into the system
+     * @param reviews       A list of review objects that will be filtered by their relative Jaccard distances to the current user.
+     */
+    private void jaccardFiltering(@RequestParam(required = false) String jaccardFilter, Model model, Product product, User user, List<Review> reviews) {
+        jaccardReviews(model, user, reviews);
+        if (jaccardFilter.equals("HL")) {
+            Collections.reverse(reviews);
+        }
+
+        model.addAttribute("reviews", reviews);
+        product.setAverageRating(reviews.size() > 0 ? reviews.stream().mapToDouble(Review::getScore).sum() / reviews.size() : 0.0);
+    }
+
+    /**
+     * Stream reviews and sort a map of reviews and Jaccard distances
+     *
+     * @param model   The model which the changes will be rendered on
+     * @param user    The current user logged into the system
+     * @param reviews A list of review objects that will be filtered by their relative Jaccard distances to the current user.
+     */
+    private void jaccardReviews(Model model, User user, List<Review> reviews) {
+        Map<Review, Double> reviewsAndJaccard = new HashMap<>();
+        for (Review review : reviews) {
+            reviewsAndJaccard.put(review, user.getJaccardDistanceReviews(review.getUser()));
+        }
+
+        Map<Review, Double> sorted = reviewsAndJaccard.entrySet().stream()
+                .sorted(Map.Entry.comparingByValue())
+                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
+        model.addAttribute("sortedset", sorted.keySet());
+        reviews.clear();
+        reviews.addAll(sorted.keySet());
     }
 
 }
