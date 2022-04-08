@@ -150,7 +150,7 @@ public class ProductController {
         productRepository.save(product);
         model.addAttribute("product", product);
         model.addAttribute("review", review);
-        return "review";
+        return "redirect:/product/" + productId;
     }
 
     /**

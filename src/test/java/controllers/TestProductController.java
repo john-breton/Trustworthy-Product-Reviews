@@ -84,18 +84,6 @@ public class TestProductController {
                 .andExpect(model().hasNoErrors())
                 .andExpect(content().string(containsString("No Reviews")));
 
-        //try to add a review to the product and check that the review is added on the review page
-        mockMvc.perform(get("/review/1?score=1&content=review1")
-                        .contentType(MediaType.APPLICATION_FORM_URLENCODED))
-                .andExpect(model().hasNoErrors())
-                .andExpect(content().string(containsString("review1")));
-
-        //access the product page and check that the review is added
-        mockMvc.perform(get("/product/1")
-                        .contentType(MediaType.APPLICATION_FORM_URLENCODED))
-                .andExpect(model().hasNoErrors())
-                .andExpect(content().string(containsString("review1")));
-
         //go the home page
         mockMvc.perform(get("/home")
                         .contentType(MediaType.APPLICATION_FORM_URLENCODED))
