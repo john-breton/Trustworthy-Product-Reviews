@@ -47,9 +47,9 @@ public class UserController {
     /**
      * Gets the page when a user visits another user page
      *
-     * @param username The username of the user page we will return
+     * @param username       The username of the user page we will return
      * @param authentication The authentication status of the current user
-     * @param model The model we will be adding the user page details to
+     * @param model          The model we will be adding the user page details to
      * @return The user-page if the user is authenticated, error-page otherwise
      */
     @GetMapping("/{username}")
@@ -77,15 +77,16 @@ public class UserController {
     }
 
     /**
-     * handles clicking on the 'follow' button in the user page.
-     * @param username The username of the person to follow
+     * Handles clicking on the 'follow' button in the user page.
+     *
+     * @param username         The username of the person to follow
      * @param redirectUsername The username of the person who's page we're on
-     * @param authentication The authentication status of the current user
+     * @param authentication   The authentication status of the current user
      * @return The same user page that called this method, or an error page if request was invalid
      */
     @GetMapping("/follow/{username}/{redirectUsername}")
     public String follow(@PathVariable String username, @PathVariable(required = false) String redirectUsername,
-                         Authentication authentication){
+                         Authentication authentication) {
         String currentUser = authentication.getName();
         User user = userRepository.findByUsername(currentUser);
 
@@ -94,7 +95,7 @@ public class UserController {
             return "error-page";
         }
 
-        if (redirectUsername == null){
+        if (redirectUsername == null) {
             redirectUsername = user.getUsername();
         }
 
@@ -106,9 +107,10 @@ public class UserController {
 
     /**
      * Unfollow a user from the following page
+     *
      * @param authentication of the current logged in user
-     * @param model of the app
-     * @return the page that confirms the unfollowing of the user
+     * @param model          of the app
+     * @return The page that confirms the unfollowing of the user
      */
     @GetMapping("/unfollowUser/{username}/{redirectUsername}")
     public String unfollowUser(@PathVariable String username, @PathVariable(required = false) String redirectUsername,
@@ -124,7 +126,7 @@ public class UserController {
             return "error-page";
         }
 
-        if (redirectUsername == null){
+        if (redirectUsername == null) {
             redirectUsername = unfollowed.getUsername();
         }
 
@@ -137,21 +139,23 @@ public class UserController {
 
     /**
      * Unfollow a user from the product page
-     * @param userId of the user to be unfollowed
+     *
+     * @param userId         of the user to be unfollowed
      * @param authentication of the current logged in user
-     * @param model of the app
+     * @param model          of the app
      * @return the page that confirms the unfollowing of the user
      */
     @GetMapping("/unfollow/{userId}/{productId}")
-    public String unfollowUserProduct(@PathVariable Long userId,@PathVariable Long productId, Authentication authentication,
+    public String unfollowUserProduct(@PathVariable Long userId, @PathVariable Long productId, Authentication authentication,
                                       Model model) {
         User unfollowed = userRepository.findById(userId).orElse(null);
         String currentUser = authentication.getName();
         User user = userRepository.findByUsername(currentUser);
         if (user == null || !authentication.isAuthenticated()) {
             log.error("User not found or not authenticated");
+            return "error-page";
         }
-        user.unFollow(unfollowed);
+        Objects.requireNonNull(user).unFollow(unfollowed);
         userRepository.save(user);
         model.addAttribute("user", unfollowed);
         model.addAttribute("productid", productId);
@@ -172,7 +176,7 @@ public class UserController {
             usersAndJaccard.put(currUser, Objects.requireNonNull(user).getJaccardDistanceReviews(currUser));
         }
 
-        // Magic
+        // Sort the keys of the entry set using their values and return the new sorting
         return usersAndJaccard.entrySet().stream()
                 .sorted(Map.Entry.comparingByValue())
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));

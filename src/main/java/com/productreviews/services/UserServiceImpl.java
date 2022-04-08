@@ -29,6 +29,7 @@ public class UserServiceImpl implements UserService {
 
     /**
      * Save a User to the system.
+     *
      * @param registration The UserRegistrationDto containing the username and password
      *                     of the User being added to the system.
      * @return The new User object being saved to the system.

@@ -25,6 +25,7 @@ public class TestRegistrationController {
 
     /**
      * Test that a new user can be added to the application
+     *
      * @throws Exception Thrown if a GET request is unsuccessful
      */
     @Test
@@ -34,25 +35,26 @@ public class TestRegistrationController {
 
         //ensure it loads
         mockMvc.perform(get("/registration"))
-               .andExpect(model().attributeExists("user"))
-               .andExpect(status().isOk());
+                .andExpect(model().attributeExists("user"))
+                .andExpect(status().isOk());
 
         //try to add user with values and receive success
         mockMvc.perform(post("/registration")
-                            .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                            .param("username", username)
-                            .param("password", password))
-               .andExpect(model().hasNoErrors())
-               .andExpect(status().is3xxRedirection());
+                        .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                        .param("username", username)
+                        .param("password", password))
+                .andExpect(model().hasNoErrors())
+                .andExpect(status().is3xxRedirection());
 
         // check the database to make sure the user is present
         mockMvc.perform(get("/users"))
-               .andExpect(content().string(containsString("\"username\" : \""+ username + "\"")))
-               .andExpect(status().isOk());
+                .andExpect(content().string(containsString("\"username\" : \"" + username + "\"")))
+                .andExpect(status().isOk());
     }
 
     /**
      * Tests that a duplicate user cannot be added to the application and ensures the error is displayed correctly
+     *
      * @throws Exception Thrown if a GET request is unsuccessful
      */
     @Test
@@ -62,31 +64,31 @@ public class TestRegistrationController {
 
         //ensure it loads
         mockMvc.perform(get("/registration"))
-               .andExpect(model().attributeExists("user"))
-               .andExpect(status().isOk());
+                .andExpect(model().attributeExists("user"))
+                .andExpect(status().isOk());
 
         //try to add user with values and receive success
         mockMvc.perform(post("/registration")
-                            .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                            .param("username", username)
-                            .param("password", password))
-               .andExpect(model().hasNoErrors())
-               .andExpect(status().is3xxRedirection());
+                        .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                        .param("username", username)
+                        .param("password", password))
+                .andExpect(model().hasNoErrors())
+                .andExpect(status().is3xxRedirection());
 
         // check the database to make sure the user is present
         mockMvc.perform(get("/users"))
-               .andExpect(content().string(containsString("\"username\" : \""+ username + "\"")))
-               .andExpect(status().isOk());
+                .andExpect(content().string(containsString("\"username\" : \"" + username + "\"")))
+                .andExpect(status().isOk());
 
         //try to add user again with values and receive 200 (meaning not successful and prompting user to try again)
         mockMvc.perform(post("/registration")
-                            .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                            .param("username", username)
-                            .param("password", password))
-               .andExpect(model().hasErrors())
-               .andExpect(model().attributeHasErrors("user"))
-               .andExpect(content().string(containsString("<span class=\"badge alert-warning\" >" +
-                                                       "There is already an account registered with that username</span>")))
-               .andExpect(status().is2xxSuccessful());
+                        .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                        .param("username", username)
+                        .param("password", password))
+                .andExpect(model().hasErrors())
+                .andExpect(model().attributeHasErrors("user"))
+                .andExpect(content().string(containsString("<span class=\"badge alert-warning\" >" +
+                        "There is already an account registered with that username</span>")))
+                .andExpect(status().is2xxSuccessful());
     }
 }

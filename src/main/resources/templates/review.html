@@ -2,8 +2,8 @@
 <html xmlns:th="https://www.thymeleaf.org">
 <head>
     <title>Review Page</title>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" />
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"/>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
     <script src="spa.js"></script>
 </head>
@@ -11,7 +11,7 @@
 <h1>Review Submitted !</h1>
 <p th:text="'rating: ' + ${review.score}"></p>
 <p th:text="'comment: ' + ${review.content}"></p>
-<form action="#" th:action="@{/product/__${product.id}__}"  method="get">
+<form action="#" th:action="@{/product/__${product.id}__}" method="get">
     <button type="submit" id="submit">Back</button>
 </form>
 

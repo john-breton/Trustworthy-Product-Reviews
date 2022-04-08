@@ -74,7 +74,7 @@ public class TestUserController {
     @WithMockUser(username = USERNAME)
     public void testPersonPage() throws Exception {
         mvc
-                .perform(get("/user/"+USERNAME)
+                .perform(get("/user/" + USERNAME)
                         .contentType(MediaType.APPLICATION_FORM_URLENCODED))
                 .andExpect(model().hasNoErrors())
                 .andExpect(content().string(containsString(USERNAME)))

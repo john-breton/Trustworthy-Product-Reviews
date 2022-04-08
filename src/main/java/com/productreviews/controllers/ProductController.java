@@ -82,13 +82,13 @@ public class ProductController {
         }
         model.addAttribute("mainUser", user);
 
-        // Order the users by Jaccard distance to avoid using JS at all costs
+        // Order the users by Jaccard distance
         Map<User, Double> usersAndJaccard = new HashMap<>();
         for (User currUser : userRepository.findAll()) {
             usersAndJaccard.put(currUser, Objects.requireNonNull(user).getJaccardDistanceReviews(currUser));
         }
 
-        // Magic
+        // Sort the keys of the entry set using their values and return the new sorting
         Map<User, Double> sorted = usersAndJaccard.entrySet().stream()
                 .sorted(Map.Entry.comparingByValue())
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
@@ -221,16 +221,17 @@ public class ProductController {
     }
 
     /**
-     * Filters reviews based on followers or the entire list of reviews. Also filters based on min and max rating
+     * Filters reviews based on followers or the entire list of reviews. Also filters based on min and max rating, and
+     * their similarity scores using Jaccard distance
      *
-     * @param productId        the ID of the product to retrieve the reviews for
-     * @param userReviewFilter indicates whether the reviews should include all or only the users the current user follows
-     *                         //* @param JaccardFilter indicates whether the reviews should be ordered from High to Low Jaccard Distance or Low to High
-     * @param minStarFilter    indicates the minimum rating that the user wishes to see
-     * @param maxStarFilter    indicates the maximum rating that the user wished to see
-     * @param authentication   provides access to the current user object
+     * @param productId        The ID of the product to retrieve the reviews for
+     * @param userReviewFilter Indicates whether the reviews should include all or only the users the current user follows
+     * @param jaccardFilter    Indicates whether the reviews should be ordered from High to Low Jaccard Distance or Low to High
+     * @param minStarFilter    Indicates the minimum rating that the user wishes to see
+     * @param maxStarFilter    Indicates the maximum rating that the user wished to see
+     * @param authentication   Provides access to the current user object
      * @param model            The model which the changes will be rendered on
-     * @return On successful product page updated, error page on error
+     * @return On success the updated product page, error page otherwise
      */
     @GetMapping("/filterreviews/{productId}")
     public String viewFilteredReviews(@PathVariable int productId,
@@ -264,86 +265,54 @@ public class ProductController {
         if (userReviewFilter.equals("all")) {
             List<Review> reviews = reviewRepository.findAllByAssociatedProductIdAndScoreGreaterThanEqualAndScoreLessThanEqual(productId, minStarFilter,
                     maxStarFilter);
-            if (jaccardFilter.equals("LH")) {
-                Map<Review, Double> reviewsAndJaccard = new HashMap<>();
-                for (Review review : reviews) {
-                    reviewsAndJaccard.put(review,user.getJaccardDistanceReviews(review.getUser()));
-                }
-
-                Map<Review, Double> sorted = reviewsAndJaccard.entrySet().stream()
-                        .sorted(Map.Entry.comparingByValue())
-                        .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
-                model.addAttribute("sortedset", sorted.keySet());
-                System.out.println("Hes a phantom");
-                System.out.println(sorted);
-                System.out.println(sorted.keySet());
-                reviews.clear();
-                reviews.addAll(sorted.keySet());
-
-
-            } else if (jaccardFilter.equals("HL")) {
-                Map<Review, Double> reviewsAndJaccard = new HashMap<>();
-                for (Review review : reviews) {
-                    reviewsAndJaccard.put(review,user.getJaccardDistanceReviews(review.getUser()));
-                }
-
-                Map<Review, Double> sorted = reviewsAndJaccard.entrySet().stream()
-                        .sorted(Map.Entry.comparingByValue())
-                        .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
-                model.addAttribute("sortedset", sorted.keySet());
-                System.out.println("Hes a phantom");
-                System.out.println(sorted);
-                System.out.println(sorted.keySet());
-                reviews.clear();
-                reviews.addAll(sorted.keySet());
-                Collections.reverse(reviews);
-
-            }
-            model.addAttribute("reviews", reviews);
-            product.setAverageRating(reviews.size() > 0 ? reviews.stream().mapToDouble(Review::getScore).sum() / reviews.size() : 0.0);
+            jaccardFiltering(jaccardFilter, model, product, user, reviews);
         } else if (userReviewFilter.equals("following")) {
             List<Review> reviews = reviewRepository.findAllByAssociatedProductIdAndUserInAndScoreGreaterThanEqualAndScoreLessThanEqual(productId, user.getFollowingList(), minStarFilter,
                     maxStarFilter);
-            if (jaccardFilter.equals("LH")) {
-                Map<Review, Double> reviewsAndJaccard = new HashMap<>();
-                for (Review review : reviews) {
-                    reviewsAndJaccard.put(review,user.getJaccardDistanceReviews(review.getUser()));
-                }
-
-                Map<Review, Double> sorted = reviewsAndJaccard.entrySet().stream()
-                        .sorted(Map.Entry.comparingByValue())
-                        .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
-                model.addAttribute("sortedset", sorted.keySet());
-                System.out.println("Hes a phantom");
-                System.out.println(sorted);
-                System.out.println(sorted.keySet());
-                reviews.clear();
-                reviews.addAll(sorted.keySet());
-            } else if (jaccardFilter.equals("HL")) {
-                Map<Review, Double> reviewsAndJaccard = new HashMap<>();
-                for (Review review : reviews) {
-                    reviewsAndJaccard.put(review,user.getJaccardDistanceReviews(review.getUser()));
-                }
-
-                Map<Review, Double> sorted = reviewsAndJaccard.entrySet().stream()
-                        .sorted(Map.Entry.comparingByValue())
-                        .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
-                model.addAttribute("sortedset", sorted.keySet());
-                System.out.println("Hes a phantom");
-                System.out.println(sorted);
-                System.out.println(sorted.keySet());
-                reviews.clear();
-                reviews.addAll(sorted.keySet());
-                Collections.reverse(reviews);
-            }
-            model.addAttribute("reviews", reviews);
-            product.setAverageRating(reviews.size() > 0 ? reviews.stream().mapToDouble(Review::getScore).sum() / reviews.size() : 0.0);
-
+            jaccardFiltering(jaccardFilter, model, product, user, reviews);
         }
 
-
-
         return "product";
+    }
+
+    /**
+     * Filters reviews by Jaccard distance and returns them in order depending on the selected filter option.
+     *
+     * @param jaccardFilter Indicates whether the reviews should be ordered from High to Low Jaccard distance or Low to High
+     * @param model         The model which the changes will be rendered on
+     * @param product       The product object where the reviews are located
+     * @param user          The current user logged into the system
+     * @param reviews       A list of review objects that will be filtered by their relative Jaccard distances to the current user.
+     */
+    private void jaccardFiltering(@RequestParam(required = false) String jaccardFilter, Model model, Product product, User user, List<Review> reviews) {
+        jaccardReviews(model, user, reviews);
+        if (jaccardFilter.equals("HL")) {
+            Collections.reverse(reviews);
+        }
+
+        model.addAttribute("reviews", reviews);
+        product.setAverageRating(reviews.size() > 0 ? reviews.stream().mapToDouble(Review::getScore).sum() / reviews.size() : 0.0);
+    }
+
+    /**
+     * Stream reviews and sort a map of reviews and Jaccard distances
+     *
+     * @param model   The model which the changes will be rendered on
+     * @param user    The current user logged into the system
+     * @param reviews A list of review objects that will be filtered by their relative Jaccard distances to the current user.
+     */
+    private void jaccardReviews(Model model, User user, List<Review> reviews) {
+        Map<Review, Double> reviewsAndJaccard = new HashMap<>();
+        for (Review review : reviews) {
+            reviewsAndJaccard.put(review, user.getJaccardDistanceReviews(review.getUser()));
+        }
+
+        Map<Review, Double> sorted = reviewsAndJaccard.entrySet().stream()
+                .sorted(Map.Entry.comparingByValue())
+                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
+        model.addAttribute("sortedset", sorted.keySet());
+        reviews.clear();
+        reviews.addAll(sorted.keySet());
     }
 
 }

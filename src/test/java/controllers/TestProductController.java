@@ -98,13 +98,13 @@ public class TestProductController {
 
         //go the home page
         mockMvc.perform(get("/home")
-                .contentType(MediaType.APPLICATION_FORM_URLENCODED))
+                        .contentType(MediaType.APPLICATION_FORM_URLENCODED))
                 .andExpect(model().hasNoErrors())
                 .andExpect(status().is2xxSuccessful());
 
         //check that the product is on the home page
         mockMvc.perform(get("/home")
-                .contentType(MediaType.APPLICATION_FORM_URLENCODED))
+                        .contentType(MediaType.APPLICATION_FORM_URLENCODED))
                 .andExpect(model().hasNoErrors())
                 .andExpect(content().string(containsString("name1")));
     }
