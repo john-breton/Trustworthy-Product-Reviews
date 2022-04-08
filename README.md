@@ -16,11 +16,10 @@ Users review Products. These products could be identified by a link to the websi
 ### Milestone 3
  - [X] Add an Unfollow button
  - [X] Add a user page for all users in the system, not just the user currently logged in
- - [ ] Add the ability to rank product reviews based on the similarity score of the people who have reviewed them
- - [ ] Make all dropdowns persist after they have been used
- - [ ] Add the ability to rank product reviews based on the similarity score of the people that have reviewed them
- - [ ] Add an external link to the actual product page for any product on in the service
- - [ ] Unify the styling of the site
+ - [X] Add the ability to rank product reviews based on the similarity score of the people who have reviewed them
+ - [X] Make all dropdowns persist after they have been used
+ - [X] Add an external link to the actual product page for any product on in the service
+ - [X] Unify the styling of the site
 
 ## Current ER Diagram
 
