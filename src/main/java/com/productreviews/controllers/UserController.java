@@ -144,7 +144,7 @@ public class UserController {
      */
     @GetMapping("/unfollow/{userId}/{productId}")
     public String unfollowUserProduct(@PathVariable Long userId,@PathVariable Long productId, Authentication authentication,
-                               Model model) {
+                                      Model model) {
         User unfollowed = userRepository.findById(userId).orElse(null);
         String currentUser = authentication.getName();
         User user = userRepository.findByUsername(currentUser);
@@ -155,8 +155,9 @@ public class UserController {
         userRepository.save(user);
         model.addAttribute("user", unfollowed);
         model.addAttribute("productid", productId);
-        return "unfollow";
+        return "redirect:/product/" + productId;
     }
+
 
     /**
      * Order all users in the system by the Jaccard distance from a target user.

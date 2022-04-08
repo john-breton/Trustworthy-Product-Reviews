@@ -176,7 +176,7 @@ public class ProductController {
         userRepository.save(user);
         model.addAttribute("product", product);
         model.addAttribute("author", username);
-        return "follow-page";
+        return "redirect:/product/" + productId;
     }
 
     /**
@@ -235,7 +235,7 @@ public class ProductController {
     @GetMapping("/filterreviews/{productId}")
     public String viewFilteredReviews(@PathVariable int productId,
                                       @RequestParam(required = false) String userReviewFilter,
-                                      //@RequestParam(required = false) String JaccardFilter,
+                                      @RequestParam(required = false) String jaccardFilter,
                                       @RequestParam(required = false) int minStarFilter,
                                       @RequestParam(required = false) int maxStarFilter,
                                       Authentication authentication, Model model) {
@@ -264,26 +264,84 @@ public class ProductController {
         if (userReviewFilter.equals("all")) {
             List<Review> reviews = reviewRepository.findAllByAssociatedProductIdAndScoreGreaterThanEqualAndScoreLessThanEqual(productId, minStarFilter,
                     maxStarFilter);
+            if (jaccardFilter.equals("LH")) {
+                Map<Review, Double> reviewsAndJaccard = new HashMap<>();
+                for (Review review : reviews) {
+                    reviewsAndJaccard.put(review,user.getJaccardDistanceReviews(review.getUser()));
+                }
+
+                Map<Review, Double> sorted = reviewsAndJaccard.entrySet().stream()
+                        .sorted(Map.Entry.comparingByValue())
+                        .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
+                model.addAttribute("sortedset", sorted.keySet());
+                System.out.println("Hes a phantom");
+                System.out.println(sorted);
+                System.out.println(sorted.keySet());
+                reviews.clear();
+                reviews.addAll(sorted.keySet());
+
+
+            } else if (jaccardFilter.equals("HL")) {
+                Map<Review, Double> reviewsAndJaccard = new HashMap<>();
+                for (Review review : reviews) {
+                    reviewsAndJaccard.put(review,user.getJaccardDistanceReviews(review.getUser()));
+                }
+
+                Map<Review, Double> sorted = reviewsAndJaccard.entrySet().stream()
+                        .sorted(Map.Entry.comparingByValue())
+                        .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
+                model.addAttribute("sortedset", sorted.keySet());
+                System.out.println("Hes a phantom");
+                System.out.println(sorted);
+                System.out.println(sorted.keySet());
+                reviews.clear();
+                reviews.addAll(sorted.keySet());
+                Collections.reverse(reviews);
+
+            }
             model.addAttribute("reviews", reviews);
             product.setAverageRating(reviews.size() > 0 ? reviews.stream().mapToDouble(Review::getScore).sum() / reviews.size() : 0.0);
         } else if (userReviewFilter.equals("following")) {
             List<Review> reviews = reviewRepository.findAllByAssociatedProductIdAndUserInAndScoreGreaterThanEqualAndScoreLessThanEqual(productId, user.getFollowingList(), minStarFilter,
                     maxStarFilter);
+            if (jaccardFilter.equals("LH")) {
+                Map<Review, Double> reviewsAndJaccard = new HashMap<>();
+                for (Review review : reviews) {
+                    reviewsAndJaccard.put(review,user.getJaccardDistanceReviews(review.getUser()));
+                }
+
+                Map<Review, Double> sorted = reviewsAndJaccard.entrySet().stream()
+                        .sorted(Map.Entry.comparingByValue())
+                        .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
+                model.addAttribute("sortedset", sorted.keySet());
+                System.out.println("Hes a phantom");
+                System.out.println(sorted);
+                System.out.println(sorted.keySet());
+                reviews.clear();
+                reviews.addAll(sorted.keySet());
+            } else if (jaccardFilter.equals("HL")) {
+                Map<Review, Double> reviewsAndJaccard = new HashMap<>();
+                for (Review review : reviews) {
+                    reviewsAndJaccard.put(review,user.getJaccardDistanceReviews(review.getUser()));
+                }
+
+                Map<Review, Double> sorted = reviewsAndJaccard.entrySet().stream()
+                        .sorted(Map.Entry.comparingByValue())
+                        .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
+                model.addAttribute("sortedset", sorted.keySet());
+                System.out.println("Hes a phantom");
+                System.out.println(sorted);
+                System.out.println(sorted.keySet());
+                reviews.clear();
+                reviews.addAll(sorted.keySet());
+                Collections.reverse(reviews);
+            }
             model.addAttribute("reviews", reviews);
             product.setAverageRating(reviews.size() > 0 ? reviews.stream().mapToDouble(Review::getScore).sum() / reviews.size() : 0.0);
+
         }
 
-      /*  if (JaccardFilter.equals("LH")) {
-            List<Review> reviews = reviewRepository.findAllByAssociatedProductIdAndScoreGreaterThanEqualAndScoreLessThanEqual(productId, minStarFilter,
-                    maxStarFilter);
-            model.addAttribute("reviews", reviews);
-            product.setAverageRating(reviews.size() > 0 ? reviews.stream().mapToDouble(Review::getScore).sum()/reviews.size() : 0.0);
-        } else if (JaccardFilter.equals("HL")) {
-            List<Review> reviews = reviewRepository.findAllByAssociatedProductIdAndUserInAndScoreGreaterThanEqualAndScoreLessThanEqual(productId, user.getFollowingList(), minStarFilter,
-                    maxStarFilter);
-            model.addAttribute("reviews", reviews);
-            product.setAverageRating(reviews.size() > 0 ? reviews.stream().mapToDouble(Review::getScore).sum()/reviews.size() : 0.0);
-        } */
+
 
         return "product";
     }
